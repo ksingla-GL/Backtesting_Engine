@@ -1,26 +1,9 @@
 {
-  "entry": {
-    "ma_period": 50,
-    "fed_stance_max": 2,
-    "cnn_index_min": 35,
-    "naaim_min": 40,
-    "buffett_ratio_max": 200,
-    "vix_max": 25,
-    "market_breadth_min": 40,
-    "es_decline_pct": -1,
-    "rolling_high_days": 10,
-    "vx_spike_max": 25,
-    "vix_vxv_ratio_max": 1.0,
-    "rsi2_min": 10,
-    "trin_max": 1.5
-  },
-  "exit": {
-    "stop_loss_pct": 1,
-    "trailing_start_pct": 2,
-    "trailing_stop_pct": 3,
-    "take_profit_pct": 3,
-    "ma_fast": 9,
-    "ma_slow": 15
-  },
-  "transaction_cost": 0.0005
+  "settings": {
+    "db_path": "../backtesting_v2.db",
+    "primary_instrument": "ES",
+    "start_date": "2013-01-01",
+    "end_date": "2024-12-31",
+    "transaction_cost_pct": 0.0005
+  }
 }
