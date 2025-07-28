@@ -1,8 +1,7 @@
 """
 signal_generator.py
 Module to dynamically calculate ALL technical indicators and generate trading signals.
-This version supports simple, conditional, and complex 'sum_of_conditions' rules,
-as well as dynamic percentile-based indicators.
+Enhanced to support both long and short positions.
 """
 import pandas as pd
 import numpy as np
@@ -22,12 +21,12 @@ def calculate_indicator(df, indicator_config):
 
     logging.info(f"Calculating {name} -> {out_col}")
     
-    if name != 'IsUpDay' and on_col and on_col not in df.columns:
+    if name not in ['IsUpDay', 'MACD'] and on_col and on_col not in df.columns:
         logging.error(f"Input column '{on_col}' not found for indicator {name}")
         df[out_col] = np.nan
         return df
     
-    if name != 'IsUpDay' and on_col and df[on_col].isna().all():
+    if name not in ['IsUpDay', 'MACD'] and on_col and df[on_col].isna().all():
         logging.error(f"Input column '{on_col}' is all NaN for indicator {name}")
         df[out_col] = np.nan
         return df
@@ -57,6 +56,12 @@ def calculate_indicator(df, indicator_config):
             rolling_data = daily_data.rolling(window=window_size, min_periods=1).max()
             df[out_col] = rolling_data.reindex(df.index, method='ffill').ffill()
         
+        elif name == 'RollingLow':
+            daily_data = df[on_col].resample('D').min()
+            window_size = params.get('window', 10)
+            rolling_data = daily_data.rolling(window=window_size, min_periods=1).min()
+            df[out_col] = rolling_data.reindex(df.index, method='ffill').ffill()
+        
         elif name == 'PrevDayClose':
             daily_data = df[on_col].resample('D').last()
             df[out_col] = daily_data.shift(1).reindex(df.index, method='ffill').ffill()
@@ -75,9 +80,7 @@ def calculate_indicator(df, indicator_config):
                 return df
             df[out_col] = np.where(df[peak_col] > 0, (df[on_col] / df[peak_col] - 1) * 100, np.nan)
 
-        # --- NEW CONFIRMATION INDICATOR ---
         elif name == 'IsUpDay':
-            # This indicator checks if the close is greater than the open for the primary instrument
             close_col = f"{params['instrument']}_close"
             open_col = f"{params['instrument']}_open"
             if close_col not in df.columns or open_col not in df.columns:
@@ -85,6 +88,29 @@ def calculate_indicator(df, indicator_config):
                  df[out_col] = False
                  return df
             df[out_col] = df[close_col] > df[open_col]
+
+        elif name == 'MACD':
+            # MACD calculation
+            fast = params.get('fast', 12)
+            slow = params.get('slow', 26)
+            signal = params.get('signal', 9)
+            
+            # Calculate on daily data
+            daily_close = df[on_col].resample('D').last().dropna()
+            
+            # Calculate MACD line
+            ema_fast = daily_close.ewm(span=fast, adjust=False).mean()
+            ema_slow = daily_close.ewm(span=slow, adjust=False).mean()
+            macd_line = ema_fast - ema_slow
+            
+            # Calculate signal line
+            signal_line = macd_line.ewm(span=signal, adjust=False).mean()
+            
+            # Calculate histogram
+            macd_histogram = macd_line - signal_line
+            
+            # Reindex to 1-minute
+            df[out_col] = macd_histogram.reindex(df.index, method='ffill').ffill()
 
         else:
             logging.warning(f"Indicator '{name}' is not recognized.")
@@ -115,6 +141,10 @@ def generate_signals(df, strategy_config):
     
     if not isinstance(df.index, pd.DatetimeIndex):
         df.index = pd.to_datetime(df.index)
+    
+    # Check if this is a short strategy
+    position_type = strategy_config.get('position_type', 'long')
+    signal_value = -1 if position_type == 'short' else 1
     
     for ind_config in strategy_config['indicators']:
         df = calculate_indicator(df, ind_config)
@@ -188,12 +218,19 @@ def generate_signals(df, strategy_config):
         final_entry_condition = pd.concat(all_conditions, axis=1).all(axis=1)
         
         signal_col_name = f"entry_signal_{value}"
-        df[signal_col_name] = np.where(final_entry_condition, 1, 0)
+        df[signal_col_name] = np.where(final_entry_condition, signal_value, 0)
         
-        df[signal_col_name] = df[signal_col_name].groupby(df.index.date).transform(
-            lambda x: (x.cumsum() == 1) & (x == 1)
-        ).astype(int)
+        # Fix: For shorts, we need to handle the one-signal-per-day logic differently
+        if position_type == 'short':
+            df[signal_col_name] = df[signal_col_name].groupby(df.index.date).transform(
+                lambda x: (x.cumsum() == -1) & (x == -1)
+            ).astype(int) * -1
+        else:
+            df[signal_col_name] = df[signal_col_name].groupby(df.index.date).transform(
+                lambda x: (x.cumsum() == 1) & (x == 1)
+            ).astype(int)
         
-        logging.info(f"Generated {df[signal_col_name].sum()} final signals for {signal_col_name}")
+        logging.info(f"Generated {abs(df[signal_col_name]).sum()} final signals for {signal_col_name}")
+        logging.info(f"Position type: {position_type} (signal value: {signal_value})")
 
     return df

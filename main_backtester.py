@@ -1,12 +1,6 @@
 """
 main_backtester.py
-The main script to run the backtesting engine. It's a high-level orchestrator
-that takes a strategy config file as input and produces a performance report.
-
-Usage:
-    python main_backtester.py <strategy_name>
-Example:
-    python main_backtester.py quick_panic
+The main script to run the backtesting engine. Updated to properly handle short positions.
 """
 import json
 import pandas as pd
@@ -15,7 +9,7 @@ import logging
 import argparse
 import os
 import sys
-import inspect # <-- Added import
+import inspect
 
 # Import the refactored modules
 import data_handler
@@ -70,12 +64,22 @@ def main():
     
     # --- 4. Select the Correct Backtest Function ---
     exit_type = strategy_config.get('exit_type', 'simple_exits')
+    position_type = strategy_config.get('position_type', 'long')
+    
+    # CRITICAL FIX: Check position type to select correct function
+    if position_type == 'short':
+        if exit_type == 'simple_exits_no_ma_cross':
+            exit_type = 'simple_exits_short_no_ma_cross'
+        elif exit_type == 'simple_exits':
+            exit_type = 'simple_exits_short'
+        logging.info(f"Using SHORT position logic for '{strategy_name}'")
+    
     if exit_type not in backtest_engine.BACKTEST_FUNCTIONS:
         logging.error(f"Exit type '{exit_type}' specified in '{strategy_name}.json' is not a valid backtest function.")
         return
     
     run_backtest_func = backtest_engine.BACKTEST_FUNCTIONS[exit_type]
-    logging.info(f"Using '{exit_type}' exit logic.")
+    logging.info(f"Using '{exit_type}' exit logic with position type: {position_type}")
 
     # --- 5. Run Backtests for each parameter set ---
     all_results = {}
@@ -83,7 +87,7 @@ def main():
     param_name = list(param_grid.keys())[0]
     param_values = param_grid[param_name]
     
-    # --- ROBUST FIX: Get the expected parameters from the function's signature ---
+    # Get the expected parameters from the function's signature
     func_signature = inspect.signature(run_backtest_func)
     expected_params = list(func_signature.parameters.keys())
     
@@ -94,8 +98,6 @@ def main():
         
         if signal_col not in df_with_signals.columns:
             # This can happen if the parameter is for exits, not entries.
-            # In this case, we need to find a valid signal column to use.
-            # We'll default to the first signal column generated.
             first_param_val = param_values[0]
             signal_col = f"entry_signal_{first_param_val}"
             if signal_col not in df_with_signals.columns:
@@ -103,6 +105,16 @@ def main():
                  continue
             logging.info(f"Parameter '{param_name}' is not an entry rule. Using signals from '{signal_col}'.")
 
+        # CRITICAL CHECK: Verify we have short signals (-1) for short strategies
+        if position_type == 'short':
+            short_signals = (df_with_signals[signal_col] == -1).sum()
+            long_signals = (df_with_signals[signal_col] == 1).sum()
+            logging.info(f"Signal check - Short signals: {short_signals}, Long signals: {long_signals}")
+            
+            if short_signals == 0 and long_signals > 0:
+                logging.error("ERROR: Short strategy is generating long signals! Converting...")
+                # Convert long signals to short signals
+                df_with_signals[signal_col] = df_with_signals[signal_col] * -1
 
         data_for_numba = {
             'timestamps': df_with_signals.index.values.astype(np.int64),
@@ -119,7 +131,7 @@ def main():
         backtest_params[param_name] = value
         backtest_params['cost_pct'] = global_config['settings']['transaction_cost_pct']
         
-        # --- ROBUST FIX: Filter the dictionary to only pass expected parameters ---
+        # Filter the dictionary to only pass expected parameters
         final_backtest_params = {k: v for k, v in backtest_params.items() if k in expected_params}
 
         trades_list = run_backtest_func(
@@ -136,10 +148,25 @@ def main():
         trade_log['exit_time'] = pd.to_datetime(trade_log['exit_time'])
         trade_log['pnl_pct'] = trade_log['pnl_pct'] * 100
         
+        # Add position type to trade log
+        trade_log['position_type'] = position_type
+        
         if value == param_values[0]:
             log_filename = f"trade_log_{strategy_config['strategy_name']}_{value}.csv"
             trade_log.to_csv(log_filename, index=False)
             logging.info(f"Saved detailed trade log to {log_filename}")
+            
+            # Verify a sample trade
+            if len(trade_log) > 0:
+                sample = trade_log.iloc[0]
+                logging.info(f"Sample trade verification:")
+                logging.info(f"  Position: {position_type}")
+                logging.info(f"  Entry: ${sample['entry_price']:.2f}")
+                logging.info(f"  Exit: ${sample['exit_price']:.2f}")
+                logging.info(f"  P&L: {sample['pnl_pct']:.2f}%")
+                if position_type == 'short':
+                    expected_pnl = ((sample['entry_price'] / sample['exit_price'] - 1) * 100) - (backtest_params['cost_pct'] * 100)
+                    logging.info(f"  Expected P&L for short: {expected_pnl:.2f}%")
         
         metrics = backtest_engine.calculate_metrics(trade_log)
         all_results[value] = metrics
@@ -155,6 +182,7 @@ def main():
     
     print("\n" + "="*80)
     print(f"FINAL BACKTEST RESULTS: {strategy_config['strategy_name']}")
+    print(f"POSITION TYPE: {position_type.upper()}")
     print("="*80)
     
     formatted_df = results_df.copy()

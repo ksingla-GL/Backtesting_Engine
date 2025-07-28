@@ -1,6 +1,6 @@
 {
   "strategy_name": "TopReversalShort_FearBounce_MoreTrades",
-  "position_type": "short",
+  "position_type": "long",
   "exit_type": "simple_exits_no_ma_cross",
   "indicators": [
     { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
