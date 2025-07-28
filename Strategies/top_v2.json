@@ -1,0 +1,36 @@
+{
+  "strategy_name": "TopReversalShort_FearBounce_MoreTrades",
+  "position_type": "short",
+  "exit_type": "simple_exits_no_ma_cross",
+  "indicators": [
+    { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
+    { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
+    { "name": "RSI", "params": { "window": 2 }, "on_column": "ES_close", "output_col": "ES_RSI_2" }
+  ],
+  "param_grid": {
+    "fear_threshold": [20, 25, 30, 35, 40, 45]
+  },
+  "base_entry_rules": [
+    "CNN_FEAR_GREED < @fear_threshold",
+    "ES_RSI_2 > 50"
+  ],
+  "conditional_entry_rules": [
+    {
+      "condition": "True",
+      "rule": {
+        "type": "sum_of_conditions",
+        "conditions": [
+          "VIX_close > 20",
+          "ES_RSI_2 > 60",
+          "TRIN_close < 0.9"
+        ],
+        "threshold": "1"
+      }
+    }
+  ],
+  "exit_conditions": {
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 4.0,
+    "trailing_stop_loss_pct": 2.0
+  }
+}

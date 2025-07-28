@@ -1,0 +1,27 @@
+{
+  "strategy_name": "TopReversalShort",
+  "position_type": "short",
+  "exit_type": "simple_exits_short",
+  "indicators": [
+    { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
+    { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
+    { "name": "RSI", "params": { "window": 2 }, "on_column": "ES_close", "output_col": "ES_RSI_2" },
+    { "name": "MACD", "params": { "fast": 12, "slow": 26, "signal": 9 }, "on_column": "ES_close", "output_col": "ES_MACD_histogram" }
+  ],
+  "param_grid": {
+    "rsi_threshold": [75, 80, 85]
+  },
+  "entry_rules": [
+    "CNN_FEAR_GREED > 75",
+    "NAAIM > 80",
+    "BUFFETT_INDICATOR > 200",
+    "MARKET_BREADTH < 30",
+    "ES_RSI_2 > @rsi_threshold",
+    "ES_MACD_histogram < 0"
+  ],
+  "exit_conditions": {
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 5.0,
+    "trailing_stop_loss_pct": 3.0
+  }
+}

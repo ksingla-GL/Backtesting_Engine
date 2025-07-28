@@ -1,5 +1,5 @@
 {
-  "strategy_name": "QuickPanicES_10of12",
+  "strategy_name": "QuickPanicES_11of12",
   "exit_type": "simple_exits",
   "indicators": [
     { "name": "SMA", "params": { "window": 50 }, "on_column": "ES_close", "output_col": "ES_SMA_50" },
