@@ -1,0 +1,30 @@
+{
+  "strategy_name": "RideTrendFollowingV2",
+  "position_type": "long",
+  "exit_type": "simple_exits",
+  "indicators": [
+    { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
+    { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
+    { "name": "SMA", "params": { "window": 50 }, "on_column": "SPX_close", "output_col": "SPX_SMA_50" },
+    { "name": "ADX", "params": { "window": 14 }, "on_column": "ES_close", "output_col": "ES_ADX_14" },
+    { "name": "EMASlope", "params": { "span": 9, "lookback": 1 }, "on_column": "ES_close", "output_col": "ES_EMA_9_slope" },
+    { "name": "EMASlope", "params": { "span": 15, "lookback": 1 }, "on_column": "ES_close", "output_col": "ES_EMA_15_slope" }
+  ],
+  "param_grid": {
+    "vix_threshold": [30, 35, 40]
+  },
+  "entry_rules": [
+    "SPX_close > SPX_SMA_50",
+    "FED_STANCE <= 2",
+    "VIX_close < @vix_threshold",
+    "ES_ADX_14 > 15",
+    "ES_EMA_9 > ES_EMA_15",
+    "ES_EMA_9_slope > 0",
+    "ES_EMA_15_slope > 0"
+  ],
+  "exit_conditions": {
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 5.0,
+    "trailing_stop_loss_pct": 2.0
+  }
+}

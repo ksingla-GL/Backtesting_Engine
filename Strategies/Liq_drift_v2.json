@@ -1,0 +1,23 @@
+{
+  "strategy_name": "MomentumPlay",
+  "position_type": "long",
+  "exit_type": "simple_exits",
+  "indicators": [
+    { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
+    { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
+    { "name": "ConsecutiveGreenDays", "params": { "instrument": "ES" }, "on_column": "", "output_col": "ES_consecutive_green" }
+  ],
+  "param_grid": {
+    "vix_cap": [30, 35, 40, 50]
+  },
+  "entry_rules": [
+    "ES_consecutive_green >= 1",
+    "ES_close > ES_EMA_9",
+    "VIX_close < @vix_cap"
+  ],
+  "exit_conditions": {
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 4.0,
+    "trailing_stop_loss_pct": 2.0
+  }
+}

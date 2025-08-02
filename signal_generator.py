@@ -1,7 +1,7 @@
 """
 signal_generator.py
 Module to dynamically calculate ALL technical indicators and generate trading signals.
-Enhanced to support both long and short positions.
+Enhanced to support both long and short positions and handle new strategies.
 """
 import pandas as pd
 import numpy as np
@@ -21,12 +21,12 @@ def calculate_indicator(df, indicator_config):
 
     logging.info(f"Calculating {name} -> {out_col}")
     
-    if name not in ['IsUpDay', 'MACD'] and on_col and on_col not in df.columns:
+    if name not in ['IsUpDay', 'MACD', 'ConsecutiveGreenDays', 'BreakoutRetest', 'OBVHighN'] and on_col and on_col not in df.columns:
         logging.error(f"Input column '{on_col}' not found for indicator {name}")
         df[out_col] = np.nan
         return df
     
-    if name not in ['IsUpDay', 'MACD'] and on_col and df[on_col].isna().all():
+    if name not in ['IsUpDay', 'MACD', 'ConsecutiveGreenDays', 'BreakoutRetest', 'OBVHighN'] and on_col and df[on_col].isna().all():
         logging.error(f"Input column '{on_col}' is all NaN for indicator {name}")
         df[out_col] = np.nan
         return df
@@ -111,6 +111,99 @@ def calculate_indicator(df, indicator_config):
             
             # Reindex to 1-minute
             df[out_col] = macd_histogram.reindex(df.index, method='ffill').ffill()
+
+        # NEW INDICATORS START HERE
+        elif name == 'ADX':
+            window = params.get('window', 14)
+            # Need high, low, close for ADX calculation
+            instrument = on_col.split('_')[0]
+            daily_high = df[f"{instrument}_high"].resample('D').max().dropna()
+            daily_low = df[f"{instrument}_low"].resample('D').min().dropna()
+            daily_close = df[on_col].resample('D').last().dropna()
+            daily_adx = ta.trend.adx(daily_high, daily_low, daily_close, window=window)
+            df[out_col] = daily_adx.reindex(df.index, method='ffill').ffill()
+
+        elif name == 'EMASlope':
+            span = params.get('span')
+            lookback = params.get('lookback', 1)
+            daily_close = df[on_col].resample('D').last().dropna()
+            daily_ema = daily_close.ewm(span=span, adjust=False).mean()
+            daily_slope = (daily_ema - daily_ema.shift(lookback)) / daily_ema.shift(lookback)
+            df[out_col] = daily_slope.reindex(df.index, method='ffill').ffill()
+
+        elif name == 'VIXChange':
+            lookback = params.get('lookback', 20)
+            daily_vix = df[on_col].resample('D').last().dropna()
+            vix_sma = daily_vix.rolling(window=lookback).mean()
+            vix_declining = daily_vix < vix_sma
+            df[out_col] = vix_declining.reindex(df.index, method='ffill').ffill()
+
+        elif name == 'SMASlope':
+            window = params.get('window', 50)
+            lookback = params.get('lookback', 1)
+            daily_close = df[on_col].resample('D').last().dropna()
+            daily_sma = daily_close.rolling(window=window, min_periods=window).mean()
+            sma_slope = (daily_sma - daily_sma.shift(lookback)) > 0
+            df[out_col] = sma_slope.reindex(df.index, method='ffill').ffill()
+
+        elif name == 'RealizedVolatility':
+            window = params.get('window', 10)
+            daily_close = df[on_col].resample('D').last().dropna()
+            daily_returns = daily_close.pct_change()
+            realized_vol = daily_returns.rolling(window=window).std() * np.sqrt(252) * 100
+            df[out_col] = realized_vol.reindex(df.index, method='ffill').ffill()
+
+        elif name == 'ConsecutiveGreenDays':
+            instrument = params.get('instrument', 'SPX')
+            close_col = f"{instrument}_close"
+            open_col = f"{instrument}_open"
+            
+            # Calculate daily green/red
+            daily_open = df[open_col].resample('D').first()
+            daily_close = df[close_col].resample('D').last()
+            is_green = daily_close > daily_open
+            
+            # Count consecutive green days
+            consecutive = is_green.astype(int).groupby((~is_green).cumsum()).cumsum()
+            df[out_col] = consecutive.reindex(df.index, method='ffill').ffill()
+
+        elif name == 'VolumeRatio':
+            window = params.get('window', 20)
+            daily_volume = df[on_col].resample('D').sum()
+            avg_volume = daily_volume.rolling(window=window).mean()
+            volume_ratio = daily_volume / avg_volume
+            df[out_col] = volume_ratio.reindex(df.index, method='ffill').ffill()
+
+        elif name == 'OBV':
+            # On Balance Volume
+            instrument = on_col.split('_')[0]
+            close_col = f"{instrument}_close"
+            
+            daily_close = df[close_col].resample('D').last()
+            daily_volume = df[on_col].resample('D').sum()
+            
+            # Calculate OBV
+            close_diff = daily_close.diff()
+            obv = daily_volume.copy()
+            obv[close_diff < 0] *= -1
+            obv[close_diff == 0] = 0
+            obv = obv.cumsum()
+            
+            df[out_col] = obv.reindex(df.index, method='ffill').ffill()
+
+        elif name == 'OBVHighN':
+            # OBV is at N-day high
+            window = params.get('window', 20)
+            obv_col = params.get('obv_column')
+            
+            if obv_col not in df.columns:
+                df[out_col] = False
+                return df
+                
+            daily_obv = df[obv_col].resample('D').last()
+            rolling_max = daily_obv.rolling(window=window).max()
+            is_new_high = daily_obv >= rolling_max
+            df[out_col] = is_new_high.reindex(df.index, method='ffill').fillna(False)
 
         else:
             logging.warning(f"Indicator '{name}' is not recognized.")
@@ -232,5 +325,22 @@ def generate_signals(df, strategy_config):
         
         logging.info(f"Generated {abs(df[signal_col_name]).sum()} final signals for {signal_col_name}")
         logging.info(f"Position type: {position_type} (signal value: {signal_value})")
+        
+    # Special handling for LiquidityDrift strategy - delay signals by 1 day
+    if strategy_config['strategy_name'] == 'LiquidityDrift':
+        for value in param_values:
+            signal_col_name = f"entry_signal_{value}"
+            if signal_col_name in df.columns:
+                # Shift signals by 1 day
+                daily_signals = df[signal_col_name].resample('D').max()
+                next_day_signals = daily_signals.shift(1)
+                df[signal_col_name] = next_day_signals.reindex(df.index, method='ffill').fillna(0).astype(int)
+                
+                # Re-apply one signal per day logic
+                df[signal_col_name] = df[signal_col_name].groupby(df.index.date).transform(
+                    lambda x: (x.cumsum() == 1) & (x == 1)
+                ).astype(int)
+                
+                logging.info(f"Delayed signals for {signal_col_name} - now {df[signal_col_name].sum()} signals")
 
     return df
