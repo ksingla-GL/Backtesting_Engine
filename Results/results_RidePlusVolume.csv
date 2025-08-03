@@ -1,0 +1,2 @@
+Parameter: vix_threshold,Total Trades,Win Rate (%),Profit Factor,Total Return (%),Max Drawdown (%),Avg Duration (hrs),Stop Loss Exits,Trailing SL Exits,Take Profit Exits,MA Cross Exits,Price Below MA Exits,VIX Spike Exits
+16,13.0,23.076923076923077,0.589341683048314,-3.411611257760949,-6.095376948223608,192.91025641025638,6.0,0.0,1.0,0.0,6.0,0.0

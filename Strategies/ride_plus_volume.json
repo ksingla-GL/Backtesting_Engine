@@ -1,0 +1,40 @@
+{
+  "strategy_name": "RidePlusVolume",
+  "position_type": "long",
+  "exit_type": "trend_exits",
+  "indicators": [
+    { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
+    { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
+    { "name": "SMA", "params": { "window": 50 }, "on_column": "SPX_close", "output_col": "SPX_SMA_50" },
+    { "name": "SMASlope", "params": { "window": 50, "lookback": 1 }, "on_column": "ES_close", "output_col": "ES_SMA_50_slope" },
+    { "name": "ADX", "params": { "window": 14 }, "on_column": "ES_close", "output_col": "ES_ADX_14" },
+    { "name": "EMASlope", "params": { "span": 9, "lookback": 1 }, "on_column": "ES_close", "output_col": "ES_EMA_9_slope" },
+    { "name": "EMASlope", "params": { "span": 15, "lookback": 1 }, "on_column": "ES_close", "output_col": "ES_EMA_15_slope" },
+    { "name": "VIXChange", "params": { "lookback": 20 }, "on_column": "VIX_close", "output_col": "VIX_declining" },
+    { "name": "VolumeRatio", "params": { "window": 20 }, "on_column": "ES_volume", "output_col": "ES_volume_ratio" },
+    { "name": "OBV", "params": {}, "on_column": "ES_volume", "output_col": "ES_OBV" },
+    { "name": "OBVHighN", "params": { "window": 20, "obv_column": "ES_OBV" }, "on_column": "", "output_col": "ES_OBV_high_20" }
+  ],
+  "param_grid": {
+    "vix_threshold": [16]
+  },
+  "entry_rules": [
+    "SPX_close > SPX_SMA_50",
+    "FED_STANCE <= 2",
+    "VIX_close < @vix_threshold",
+    "VIX_declining == True",
+    "NAAIM < 80",
+    "CNN_FEAR_GREED < 70",
+    "ES_ADX_14 > 20",
+    "ES_SMA_50_slope == True",
+    "(ES_volume_ratio > 1.5) | (ES_OBV_high_20 == True)",
+    "ES_EMA_9 > ES_EMA_15",
+    "ES_EMA_9_slope > 0",
+    "ES_EMA_15_slope > 0"
+  ],
+  "exit_conditions": {
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 3.0,
+    "trailing_stop_loss_pct": 3.0
+  }
+}

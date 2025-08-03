@@ -205,8 +205,115 @@ def calculate_indicator(df, indicator_config):
             is_new_high = daily_obv >= rolling_max
             df[out_col] = is_new_high.reindex(df.index, method='ffill').fillna(False)
 
-        else:
-            logging.warning(f"Indicator '{name}' is not recognized.")
+        elif name == 'BreakoutRetest':
+            # Breakout and retest logic based on user's specification
+            instrument = params.get('instrument', 'ES')
+            high_col = f"{instrument}_high"
+            low_col = f"{instrument}_low"
+            close_col = f"{instrument}_close"
+            breakout_window = params.get('breakout_window', 20)
+            retest_window = params.get('retest_window', 7)
+            
+            # Check if columns exist
+            if high_col not in df.columns or low_col not in df.columns:
+                logging.error(f"Required columns {high_col} or {low_col} not found!")
+                df[out_col] = False
+                return df
+            
+            # Calculate on daily data - drop NaN values to handle weekends/holidays
+            daily_high = df[high_col].resample('D').max().dropna()
+            daily_low = df[low_col].resample('D').min().dropna()
+            daily_close = df[close_col].resample('D').last().dropna()
+            
+            # Debug: Check data quality
+            logging.info(f"    BreakoutRetest Debug - Daily data shape after dropping NaN: {len(daily_high)} days")
+            logging.info(f"    First few daily highs: {daily_high.head()}")
+            logging.info(f"    Daily high range: {daily_high.min():.2f} to {daily_high.max():.2f}")
+            
+            # Step 1: Calculate 20-day rolling high (not including today)
+            # Use min_periods=1 to handle the beginning of the series
+            rolling_20d_high = daily_high.rolling(window=breakout_window, min_periods=min(breakout_window, len(daily_high))).max().shift(1)
+            
+            # Debug: Check rolling calculation
+            non_nan_rolling = rolling_20d_high.dropna()
+            logging.info(f"    Rolling 20d high - non-NaN values: {len(non_nan_rolling)}")
+            if len(non_nan_rolling) > 0:
+                logging.info(f"    Rolling 20d high range: {non_nan_rolling.min():.2f} to {non_nan_rolling.max():.2f}")
+                
+                # Check if highs ever exceed rolling highs
+                daily_high_aligned = daily_high.reindex(non_nan_rolling.index)
+                potential_breakouts = daily_high_aligned > non_nan_rolling
+                logging.info(f"    Days where high > 20d high: {potential_breakouts.sum()}")
+                
+                # Show a few examples
+                if potential_breakouts.sum() > 0:
+                    examples = potential_breakouts[potential_breakouts].head(5)
+                    for date in examples.index:
+                        logging.info(f"      {date.date()}: High={daily_high_aligned[date]:.2f} > 20d_high={non_nan_rolling[date]:.2f}")
+                else:
+                    # Show why no breakouts - look at some recent data
+                    sample_dates = non_nan_rolling.index[-10:-5] if len(non_nan_rolling) > 10 else non_nan_rolling.index[:5]
+                    logging.info("    Sample of recent data (no breakouts found):")
+                    for date in sample_dates:
+                        if date in daily_high_aligned.index:
+                            logging.info(f"      {date.date()}: High={daily_high_aligned[date]:.2f}, 20d_high={non_nan_rolling[date]:.2f}")
+            
+            # Continue with original logic but with better alignment
+            # Only proceed if we have valid rolling data
+            if len(non_nan_rolling) == 0:
+                logging.warning("    No valid rolling 20d high data - setting all signals to False")
+                df[out_col] = False
+                return df
+            
+            # Align all series to the same index
+            valid_dates = non_nan_rolling.index
+            daily_high = daily_high.reindex(valid_dates)
+            daily_low = daily_low.reindex(valid_dates)
+            daily_close = daily_close.reindex(valid_dates)
+            rolling_20d_high = non_nan_rolling
+            
+            # Step 2: Identify breakouts - when today's high breaks above 20-day high
+            is_breakout_day = daily_high > rolling_20d_high
+            breakout_levels = rolling_20d_high.where(is_breakout_day, np.nan)
+            
+            # Step 3: Track breakout levels for retest_window days using forward fill
+            # This remembers the breakout level for up to 7 trading days
+            breakout_memory = breakout_levels.ffill(limit=retest_window-1)
+            
+            # Step 4: Identify successful retests
+            has_past_breakout = breakout_memory.notna()
+            low_above_support = daily_low <= breakout_memory * 1.01
+            
+            retest_signals = has_past_breakout & low_above_support & (~is_breakout_day)
+            
+            # Log results
+            total_breakouts = is_breakout_day.sum()
+            total_retests = retest_signals.sum()
+            logging.info(f"  BreakoutRetest: Found {total_breakouts} breakout days and {total_retests} retest signals")
+            
+            # If we found breakouts but no retests, show why
+            if total_breakouts > 0 and total_retests == 0:
+                logging.info(f"    Days with breakout memory: {has_past_breakout.sum()}")
+                logging.info(f"    Days where low > breakout level: {(has_past_breakout & low_above_support).sum()}")
+                
+                # Show what happened after first breakout
+                first_breakout = is_breakout_day[is_breakout_day].index[0]
+                logging.info(f"    First breakout on {first_breakout.date()}, level={rolling_20d_high[first_breakout]:.2f}")
+                
+                # Show next 7 trading days
+                start_idx = valid_dates.get_loc(first_breakout)
+                for i in range(1, min(8, len(valid_dates) - start_idx)):
+                    date = valid_dates[start_idx + i]
+                    low = daily_low[date]
+                    breakout_mem = breakout_memory[date]
+                    logging.info(f"      {date.date()}: Low={low:.2f}, Breakout_level={breakout_mem:.2f if pd.notna(breakout_mem) else 'None'}, "
+                               f"Low>Level={low > breakout_mem if pd.notna(breakout_mem) else 'N/A'}")
+            
+            # Convert to boolean and reindex to original dataframe
+            retest_signals = retest_signals.fillna(False).astype(bool)
+            
+            # Reindex to intraday data
+            df[out_col] = retest_signals.reindex(df.index, method='ffill').fillna(False)
             
     except Exception as e:
         logging.error(f"Failed to calculate indicator {name}: {e}")
