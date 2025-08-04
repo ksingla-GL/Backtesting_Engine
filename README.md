@@ -30,7 +30,7 @@ Custom_Backtesting_Engine/
 - Python 3.8+
 - Required packages:
 ```bash
-pip install pandas numpy numba ta sqlite3 logging
+pip install pandas numpy numba ta logging
 ```
 
 ## Setup Instructions
