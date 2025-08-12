@@ -1,6 +1,7 @@
 """
 main_backtester.py
-The main script to run the backtesting engine. Updated to properly handle short positions.
+The main script to run the backtesting engine. 
+Optimized to extract required columns from strategy and pass to data_handler.
 """
 import json
 import pandas as pd
@@ -11,6 +12,7 @@ import os
 import sys
 import inspect
 import traceback
+import re
 
 # Import the refactored modules
 import data_handler
@@ -26,6 +28,110 @@ def list_available_strategies():
     if not os.path.isdir(strategy_dir):
         return []
     return [f.replace('.json', '') for f in os.listdir(strategy_dir) if f.endswith('.json')]
+
+def extract_required_columns_from_strategy(strategy_config):
+    """
+    Extract all columns that will be needed by a strategy.
+    This includes columns from indicators, entry rules, and exit conditions.
+    """
+    required_columns = set()
+    
+    # 1. Extract columns from indicators
+    for indicator in strategy_config.get('indicators', []):
+        # Input column
+        if 'on_column' in indicator and indicator['on_column']:
+            required_columns.add(indicator['on_column'])
+        
+        # Output column (will be created, but we need to know dependencies)
+        if 'output_col' in indicator:
+            required_columns.add(indicator['output_col'])
+        
+        # Special indicator dependencies
+        indicator_name = indicator['name']
+        params = indicator.get('params', {})
+        
+        # Handle indicators that need multiple columns
+        if indicator_name == 'ADX':
+            instrument = indicator['on_column'].split('_')[0] if 'on_column' in indicator else 'ES'
+            required_columns.update([f"{instrument}_high", f"{instrument}_low", f"{instrument}_close"])
+        elif indicator_name == 'VIXSpike':
+            if 'prev_close_col' in indicator:
+                required_columns.add(indicator['prev_close_col'])
+        elif indicator_name == 'DeclineFromPeak':
+            if 'peak_column' in indicator:
+                required_columns.add(indicator['peak_column'])
+        elif indicator_name in ['IsUpDay', 'ConsecutiveGreenDays']:
+            instrument = params.get('instrument', 'ES')
+            required_columns.update([f"{instrument}_open", f"{instrument}_close"])
+        elif indicator_name == 'OBV':
+            instrument = indicator['on_column'].split('_')[0] if 'on_column' in indicator else 'ES'
+            required_columns.update([f"{instrument}_close", f"{instrument}_volume"])
+        elif indicator_name == 'OBVHighN':
+            if 'obv_column' in params:
+                required_columns.add(params['obv_column'])
+        elif indicator_name == 'VolumeRatio':
+            required_columns.add(indicator['on_column'])
+        elif indicator_name == 'BreakoutRetest':
+            instrument = params.get('instrument', 'ES')
+            required_columns.update([f"{instrument}_high", f"{instrument}_low", f"{instrument}_close"])
+        elif indicator_name == 'VWAP':
+            instrument = params.get('instrument', 'ES')
+            required_columns.update([f"{instrument}_close", f"{instrument}_volume"])
+        elif indicator_name == 'MarketBreadthStrong':
+            required_columns.update(['MARKET_BREADTH', 'TRIN_close'])
+        elif indicator_name == 'VXDeclineWindow':
+            required_columns.add('VX_close')
+    
+    # 2. Extract columns from entry rules
+    all_rules = []
+    
+    # Base entry rules
+    base_rules = strategy_config.get('base_entry_rules', strategy_config.get('entry_rules', []))
+    all_rules.extend(base_rules)
+    
+    # Conditional entry rules
+    for cond_rule in strategy_config.get('conditional_entry_rules', []):
+        if 'rule' in cond_rule:
+            if isinstance(cond_rule['rule'], str):
+                all_rules.append(cond_rule['rule'])
+            elif isinstance(cond_rule['rule'], dict) and 'conditions' in cond_rule['rule']:
+                all_rules.extend(cond_rule['rule']['conditions'])
+    
+    # Parse rules for column names
+    for rule in all_rules:
+        if isinstance(rule, str):
+            # Extract column names (identifiers that aren't keywords)
+            columns = re.findall(r'\b(?<!@)([a-zA-Z_][a-zA-Z0-9_]*)\b', rule)
+            keywords = {'and', 'or', 'not', 'in', 'is', 'True', 'False', 'None'}
+            required_columns.update([col for col in columns if col not in keywords and not col.isnumeric()])
+    
+    # 3. Always include primary instrument OHLCV
+    primary_instrument = strategy_config.get('primary_instrument', 'ES')
+    required_columns.update([
+        f"{primary_instrument}_open",
+        f"{primary_instrument}_high", 
+        f"{primary_instrument}_low",
+        f"{primary_instrument}_close",
+        f"{primary_instrument}_volume"
+    ])
+    
+    # 4. Add EMA columns for exit logic (always needed)
+    required_columns.update(['ES_EMA_9', 'ES_EMA_15'])
+    
+    # 5. Add VIX for liquidity exits
+    if strategy_config.get('exit_type') == 'liquidity_exits':
+        required_columns.update(['VIX_close'])
+    
+    # 6. Check for macro event requirements
+    macro_keywords = ['cpi', 'fomc', 'fed', 'nfp', 'is_pre_', 'is_post_', '_inline', '_better', '_worse']
+    needs_macro = any(keyword in col.lower() for col in required_columns for keyword in macro_keywords)
+    
+    if needs_macro:
+        # Add base columns needed for macro calculations
+        required_columns.update(['ES_close', 'VIX_close'])
+    
+    # Convert to sorted list for consistent ordering
+    return sorted(list(required_columns))
 
 def main():
     """Main execution function."""
@@ -63,17 +169,27 @@ def main():
         traceback.print_exc()
         return
 
-    # --- 2. Get Prepared Data ---
+    # --- 2. Extract Required Columns ---
+    try:
+        logging.info("Extracting required columns from strategy...")
+        required_columns = extract_required_columns_from_strategy(strategy_config)
+        logging.info(f"Strategy requires {len(required_columns)} columns: {required_columns[:10]}..." if len(required_columns) > 10 else f"Strategy requires columns: {required_columns}")
+    except Exception as e:
+        logging.error(f"Error extracting required columns: {e}")
+        traceback.print_exc()
+        required_columns = None  # Fall back to loading all data
+
+    # --- 3. Get Prepared Data ---
     try:
         logging.info("Loading and preparing data...")
-        master_df = data_handler.get_merged_data(global_config)
+        master_df = data_handler.get_merged_data(global_config, required_columns)
         logging.info(f"Data loaded successfully. Shape: {master_df.shape}")
     except Exception as e:
         logging.error(f"Error loading data: {e}")
         traceback.print_exc()
         return
     
-    # --- 3. Generate Signals ---
+    # --- 4. Generate Signals ---
     try:
         logging.info("Generating trading signals...")
         df_with_signals = signal_generator.generate_signals(master_df, strategy_config)
@@ -94,7 +210,7 @@ def main():
         traceback.print_exc()
         return
     
-    # --- 4. Select the Correct Backtest Function ---
+    # --- 5. Select the Correct Backtest Function ---
     exit_type = strategy_config.get('exit_type', 'simple_exits')
     position_type = strategy_config.get('position_type', 'long')
     
@@ -114,7 +230,7 @@ def main():
     run_backtest_func = backtest_engine.BACKTEST_FUNCTIONS[exit_type]
     logging.info(f"Using '{exit_type}' exit logic with position type: {position_type}")
 
-    # --- 5. Run Backtests for each parameter set ---
+    # --- 6. Run Backtests for each parameter set ---
     all_results = {}
     param_grid = strategy_config['param_grid']
     param_name = list(param_grid.keys())[0]
@@ -150,7 +266,6 @@ def main():
             logging.info(f"Signal check - Short signals: {short_signals}, Long signals: {long_signals}")
             
             if short_signals == 0 and long_signals > 0:
-                #logging.error("ERROR: Short strategy is generating long signals! Converting...")
                 # Convert long signals to short signals
                 df_with_signals[signal_col] = df_with_signals[signal_col] * -1
 
@@ -218,6 +333,10 @@ def main():
             # Add position type to trade log
             trade_log['position_type'] = position_type
             
+            # Create Trade_Logs directory if it doesn't exist
+            if not os.path.exists('Trade_Logs'):
+                os.makedirs('Trade_Logs')
+            
             if value == param_values[0] and len(trade_log) > 0:
                 log_filename = f"Trade_Logs/trade_log_{strategy_config['strategy_name']}_{value}.csv"
                 trade_log.to_csv(log_filename, index=False)
@@ -239,7 +358,7 @@ def main():
             traceback.print_exc()
             continue
     
-    # --- 6. Display Final Comparison Report ---
+    # --- 7. Display Final Comparison Report ---
     if not all_results:
         logging.error("No results to display. Something went wrong during backtesting.")
         return
@@ -265,6 +384,10 @@ def main():
         
         print(formatted_df.to_string())
         print("="*80)
+        
+        # Create Results directory if it doesn't exist
+        if not os.path.exists('Results'):
+            os.makedirs('Results')
         
         results_filename = f"Results/results_{strategy_config['strategy_name']}.csv"
         results_df.to_csv(results_filename)

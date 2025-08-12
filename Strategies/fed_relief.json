@@ -1,0 +1,46 @@
+{
+  "strategy_name": "FedRelief",
+  "position_type": "long",
+  "exit_type": "simple_exits",
+  "indicators": [
+    {
+      "name": "PriceAtTime",
+      "params": { "time": "15:00:00" },
+      "on_column": "ES_close",
+      "output_col": "ES_300pm_price"
+    },
+    {
+      "name": "ESNotDownFromTime",
+      "params": { "base_price_col": "ES_300pm_price" },
+      "on_column": "",
+      "output_col": "es_not_down_from_3pm"
+    },
+    {
+      "name": "VIXDeclineFromTime",
+      "params": { "time": "15:00:00" },
+      "on_column": "",
+      "output_col": "vix_change_from_3pm"
+    },
+    {
+      "name": "PostEventTime",
+      "params": { "event_time": "14:45:00" },
+      "on_column": "",
+      "output_col": "mins_after_245pm"
+    }
+  ],
+  "param_grid": {
+    "dummy_param": [1]
+  },
+  "entry_rules": [
+    "is_post_fomc == True",
+    "fomc_pre_es_3d < 0",
+    "es_not_down_from_3pm == True",
+    "vix_change_from_3pm < 0",
+    "mins_after_245pm >= 15"
+  ],
+  "exit_conditions": {
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 4.0,
+    "trailing_stop_loss_pct": 2.0
+  }
+}

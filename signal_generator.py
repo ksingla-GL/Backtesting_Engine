@@ -21,12 +21,12 @@ def calculate_indicator(df, indicator_config):
 
     logging.info(f"Calculating {name} -> {out_col}")
     
-    if name not in ['IsUpDay', 'MACD', 'ConsecutiveGreenDays', 'BreakoutRetest', 'OBVHighN'] and on_col and on_col not in df.columns:
+    if name not in ['IsUpDay', 'MACD', 'ConsecutiveGreenDays', 'BreakoutRetest', 'OBVHighN', 'PreEventWeakness', 'PostEventVIXDecline', 'IntraydayESDecline', 'MarketBreadthStrong', 'VWAPReclaim', 'FedDovishSurprise', 'PostEventRally', 'PostEventTime'] and on_col and on_col not in df.columns:
         logging.error(f"Input column '{on_col}' not found for indicator {name}")
         df[out_col] = np.nan
         return df
     
-    if name not in ['IsUpDay', 'MACD', 'ConsecutiveGreenDays', 'BreakoutRetest', 'OBVHighN'] and on_col and df[on_col].isna().all():
+    if name not in ['IsUpDay', 'MACD', 'ConsecutiveGreenDays', 'BreakoutRetest', 'OBVHighN', 'PreEventWeakness', 'PostEventVIXDecline', 'IntraydayESDecline', 'MarketBreadthStrong', 'VWAPReclaim', 'FedDovishSurprise', 'PostEventRally', 'PostEventTime'] and on_col and df[on_col].isna().all():
         logging.error(f"Input column '{on_col}' is all NaN for indicator {name}")
         df[out_col] = np.nan
         return df
@@ -113,6 +113,207 @@ def calculate_indicator(df, indicator_config):
             df[out_col] = macd_histogram.reindex(df.index, method='ffill').ffill()
 
         # NEW INDICATORS START HERE
+        elif name == 'PriceAtTime':
+            """Capture price at specific time"""
+            target_time = params.get('time', '08:25:00')
+            target_hour = int(target_time.split(':')[0])
+            target_minute = int(target_time.split(':')[1])
+            
+            # Get prices at target time
+            target_mask = (df.index.hour == target_hour) & (df.index.minute == target_minute)
+            
+            if target_mask.sum() > 0:
+                # Create a Series with date as index and price as value
+                daily_prices = df[target_mask][on_col].copy()
+                daily_prices.index = daily_prices.index.date
+                
+                # Map prices to all timestamps
+                df['_temp_date'] = df.index.date
+                df[out_col] = df['_temp_date'].map(daily_prices)
+                
+                # Only keep values after target time
+                before_target = (df.index.hour < target_hour) | \
+                              ((df.index.hour == target_hour) & (df.index.minute < target_minute))
+                df.loc[before_target, out_col] = np.nan
+                
+                # Cleanup temp column
+                df.drop('_temp_date', axis=1, inplace=True)
+            else:
+                df[out_col] = np.nan
+                
+            logging.info(f"    PriceAtTime {target_time}: Set {df[out_col].notna().sum()} values")
+            
+        elif name == 'ESDeclineFromTime':
+            """ES decline from specific time price - VECTORIZED"""
+            base_price_col = params.get('base_price_col')
+            threshold = params.get('threshold', -1.0)
+            
+            if base_price_col not in df.columns:
+                df[out_col] = False
+                return df
+            
+            # Vectorized decline calculation
+            valid_mask = df[base_price_col].notna()
+            decline_pct = np.full(len(df), np.nan)
+            decline_pct[valid_mask] = (df.loc[valid_mask, 'ES_close'] / df.loc[valid_mask, base_price_col] - 1) * 100
+            
+            df[out_col] = decline_pct <= threshold
+            df[out_col] = df[out_col].fillna(False)
+            
+            logging.info(f"    ESDeclineFromTime threshold {threshold}%: {df[out_col].sum()} times met")
+            
+        elif name == 'VXDeclineWindow':
+            """Check if VX declined from 8:30 to 8:45 on CPI days - VECTORIZED"""
+            if 'VX_close' not in df.columns:
+                df[out_col] = False
+                return df
+            
+            df[out_col] = False
+            
+            # Get all CPI days
+            cpi_days = df[df.get('is_cpi_day', False)].index.date
+            unique_cpi_days = pd.unique(cpi_days)
+            
+            for date in unique_cpi_days:
+                # Get VX at 8:30 and 8:45
+                vx_830 = df[(df.index.date == date) & (df.index.hour == 8) & (df.index.minute == 30)]['VX_close']
+                vx_845 = df[(df.index.date == date) & (df.index.hour == 8) & (df.index.minute == 45)]['VX_close']
+                
+                if len(vx_830) > 0 and len(vx_845) > 0:
+                    if vx_845.iloc[0] <= vx_830.iloc[0]:
+                        # Set True for CPI window on this day
+                        mask = (df.index.date == date) & df.get('is_cpi_window', False)
+                        df.loc[mask, out_col] = True
+            
+            logging.info(f"    VXDeclineWindow: {df[out_col].sum()} times True")
+            
+        elif name == 'VIXRollingDecline':
+            """VIX decline in rolling window - VECTORIZED"""
+            window = params.get('window', 10)
+            
+            if 'VIX_close' not in df.columns:
+                df[out_col] = 0
+                return df
+            
+            # Vectorized rolling max and decline calculation
+            vix_rolling_max = df['VIX_close'].rolling(window=window, min_periods=1).max()
+            df[out_col] = (df['VIX_close'] / vix_rolling_max - 1) * 100
+            
+            logging.info(f"    VIXRollingDecline: {(df[out_col] < 0).sum()} periods show decline")
+            
+        elif name == 'VIXDeclineFromTime':
+            """VIX change from specific time - VECTORIZED"""
+            base_time = params.get('time', '15:00:00')
+            base_hour = int(base_time.split(':')[0])
+            base_minute = int(base_time.split(':')[1])
+            
+            if 'VIX_close' not in df.columns:
+                df[out_col] = 0
+                return df
+            
+            # Get VIX at base time for each day
+            time_mask = (df.index.hour == base_hour) & (df.index.minute == base_minute)
+            base_vix = df[time_mask]['VIX_close'].groupby(df[time_mask].index.date).first()
+            
+            # Reindex to full dataframe
+            daily_base_vix = base_vix.reindex(df.index.date).values
+            
+            # Calculate change, but only for times after base time
+            df[out_col] = 0
+            after_time = (df.index.hour > base_hour) | \
+                        ((df.index.hour == base_hour) & (df.index.minute >= base_minute))
+            valid = after_time & ~pd.isna(daily_base_vix)
+            df.loc[valid, out_col] = (df.loc[valid, 'VIX_close'] / daily_base_vix[valid] - 1) * 100
+            
+            logging.info(f"    VIXDeclineFromTime: Calculated for {(df[out_col] != 0).sum()} periods")
+            
+        elif name == 'ESNotDownFromTime':
+            """Check if ES is not down from specific time - VECTORIZED"""
+            base_price_col = params.get('base_price_col')
+            
+            if base_price_col not in df.columns or 'ES_close' not in df.columns:
+                df[out_col] = False
+                return df
+            
+            valid_mask = df[base_price_col].notna()
+            df[out_col] = False
+            df.loc[valid_mask, out_col] = df.loc[valid_mask, 'ES_close'] >= df.loc[valid_mask, base_price_col]
+            
+            logging.info(f"    ESNotDownFromTime: {df[out_col].sum()} times True")
+            
+        elif name == 'FedDayQualified':
+            """Check if Fed day met all conditions for next day entry"""
+            if 'ES_close' not in df.columns or 'VIX_close' not in df.columns:
+                df[out_col] = False
+                return df
+            
+            df[out_col] = False
+            
+            # Get unique FOMC days
+            fomc_days = df[df.get('is_fomc_day', False)].index.date
+            unique_fomc_days = pd.unique(fomc_days)
+            
+            logging.info(f"    Found {len(unique_fomc_days)} FOMC days")
+            
+            for date in unique_fomc_days:
+                day_data = df[df.index.date == date]
+                
+                if len(day_data) == 0:
+                    continue
+                
+                # Check breadth
+                breadth_check = False
+                if 'TRIN_close' in df.columns:
+                    avg_trin = day_data['TRIN_close'].mean()
+                    if not pd.isna(avg_trin):
+                        breadth_proxy = 100 * (2 - np.clip(avg_trin, 0.5, 2.0)) / 1.5
+                        breadth_check = breadth_proxy > 60
+                else:
+                    breadth_check = True  # Don't block if no data
+                
+                # Check ES gain
+                es_gain = (day_data['ES_close'].iloc[-1] / day_data['ES_open'].iloc[0] - 1) * 100
+                es_check = es_gain > 0.5
+                
+                # Check VIX decline vs previous day
+                vix_check = False
+                prev_day_data = df[df.index.date < date]
+                if len(prev_day_data) > 0:
+                    prev_vix = prev_day_data['VIX_close'].iloc[-1]
+                    curr_vix = day_data['VIX_close'].iloc[-1]
+                    vix_check = curr_vix < prev_vix
+                
+                # Mark next trading day if all conditions met
+                if breadth_check and es_check and vix_check:
+                    next_days = df[df.index.date > date].index.date
+                    if len(next_days) > 0:
+                        next_date = pd.unique(next_days)[0]
+                        df.loc[df.index.date == next_date, out_col] = True
+                        logging.info(f"      {date}: Qualified, marking {next_date}")
+            
+            logging.info(f"    FedDayQualified: {df[out_col].sum()} rows marked")
+            
+        elif name == 'NextDaySignal':
+            """Delay signal to next trading day"""
+            signal_col = params.get('signal_col')
+            
+            if signal_col not in df.columns:
+                df[out_col] = False
+                return df
+            
+            # Get days where signal was true
+            daily_signals = df[df[signal_col]].groupby(df[df[signal_col]].index.date).first()
+            
+            # Shift to next trading day
+            df[out_col] = False
+            for date in daily_signals.index:
+                # Find next trading day
+                next_day_mask = df.index.date > date
+                if next_day_mask.any():
+                    next_date = df[next_day_mask].index.date[0]
+                    next_day_full_mask = df.index.date == next_date
+                    df.loc[next_day_full_mask, out_col] = True
+        
         elif name == 'ADX':
             window = params.get('window', 14)
             # Need high, low, close for ADX calculation
@@ -314,6 +515,24 @@ def calculate_indicator(df, indicator_config):
             
             # Reindex to intraday data
             df[out_col] = retest_signals.reindex(df.index, method='ffill').fillna(False)
+
+        # MACRO INDICATORS
+        elif name == 'PostEventTime':
+            """Track time since event announcement"""
+            event_time = params.get('event_time', '08:30:00')
+            event_hour = int(event_time.split(':')[0])
+            event_minute = int(event_time.split(':')[1])
+            
+            # Minutes since event time
+            df['hour'] = df.index.hour
+            df['minute'] = df.index.minute
+            df[out_col] = (df['hour'] - event_hour) * 60 + (df['minute'] - event_minute)
+            
+            # Only positive values (after event)
+            df[out_col] = df[out_col].clip(lower=0)
+            
+            # Cleanup temp columns
+            df.drop(['hour', 'minute'], axis=1, inplace=True)
             
     except Exception as e:
         logging.error(f"Failed to calculate indicator {name}: {e}")
@@ -361,8 +580,29 @@ def generate_signals(df, strategy_config):
     required_columns = get_columns_from_rules(all_possible_rules)
     logging.info(f"Columns required by strategy rules: {required_columns}")
     
+    # Check which columns are missing or all NaN
+    missing_columns = []
+    nan_columns = []
+    for col in required_columns:
+        if col not in df.columns:
+            missing_columns.append(col)
+        elif df[col].isna().all():
+            nan_columns.append(col)
+    
+    if missing_columns:
+        logging.error(f"Missing columns: {missing_columns}")
+    if nan_columns:
+        logging.error(f"All-NaN columns: {nan_columns}")
+    
+    # Filter required columns to only those that exist and have data
+    valid_required_columns = [col for col in required_columns if col in df.columns and not df[col].isna().all()]
+    
+    if not valid_required_columns:
+        logging.error("No valid columns for signal generation")
+        return df
+    
     # Drop NaNs after all calculations are done
-    df = df.ffill().dropna(subset=required_columns)
+    df = df.ffill().dropna(subset=valid_required_columns)
     logging.info(f"Data cleaned. {len(df)} valid rows remaining.")
     
     if df.empty:
@@ -377,60 +617,81 @@ def generate_signals(df, strategy_config):
         logging.info(f"--- Generating signals for {param_name} = {value} ---")
         local_vars = {param_name: value}
         
-        current_rules = list(base_rules)
-        if conditional_rules_list:
-            for cond_rule in conditional_rules_list:
-                condition_str = cond_rule['condition'].replace(f"@{param_name}", str(value))
-                if eval(condition_str):
-                    current_rules.append(cond_rule['rule'])
+        logging.info(f"Evaluating rule set for {param_name}={value}:")
+        logging.info(f"  Base rules: {len(base_rules)}")
+        logging.info(f"  Conditional rules: {len(conditional_rules_list)}")
         
-        logging.info(f"Evaluating final rule set for {param_name}={value}")
-        
-        if not current_rules:
-            df[f"entry_signal_{value}"] = 0
-            continue
-
         all_conditions = []
-        for i, rule in enumerate(current_rules):
+        
+        # ALWAYS evaluate base rules first
+        for i, rule in enumerate(base_rules):
             try:
                 if isinstance(rule, str):
                     condition = df.eval(rule, local_dict=local_vars)
-                    logging.info(f"  Rule {i+1:02d} (Simple) '{rule}': Met {condition.sum():,} times.")
-                
-                elif isinstance(rule, dict) and rule.get('type') == 'sum_of_conditions':
-                    sub_conditions = []
-                    for sub_rule in rule['conditions']:
-                        sub_conditions.append(df.eval(sub_rule, local_dict=local_vars))
-                    
-                    summed_conds = pd.concat(sub_conditions, axis=1).sum(axis=1)
-                    
-                    threshold_str = str(rule['threshold']).replace(f"@{param_name}", str(value))
-                    threshold = int(threshold_str)
-                    
-                    condition = (summed_conds >= threshold)
-                    logging.info(f"  Rule {i+1:02d} (Cluster): '{len(rule['conditions'])} sub-rules, threshold >= {threshold}': Met {condition.sum():,} times.")
-
-                all_conditions.append(condition)
+                    logging.info(f"  Base Rule {i+1:02d} '{rule}': Met {condition.sum():,} times.")
+                    all_conditions.append(condition)
             except Exception as e:
-                logging.error(f"  Rule {i+1:02d} '{rule}': FAILED TO EVALUATE. Error: {e}")
+                logging.error(f"  Base Rule {i+1:02d} '{rule}': FAILED TO EVALUATE. Error: {e}")
                 all_conditions.append(pd.Series(False, index=df.index))
         
+        # Then evaluate conditional rules
+        if conditional_rules_list:
+            for j, cond_rule in enumerate(conditional_rules_list):
+                condition_str = cond_rule['condition'].replace(f"@{param_name}", str(value))
+                if eval(condition_str):
+                    rule = cond_rule['rule']
+                    try:
+                        if isinstance(rule, str):
+                            condition = df.eval(rule, local_dict=local_vars)
+                            logging.info(f"  Conditional Rule {j+1:02d} '{rule}': Met {condition.sum():,} times.")
+                            all_conditions.append(condition)
+                        elif isinstance(rule, dict) and rule.get('type') == 'sum_of_conditions':
+                            sub_conditions = []
+                            for sub_rule in rule['conditions']:
+                                sub_cond = df.eval(sub_rule, local_dict=local_vars)
+                                sub_conditions.append(sub_cond)
+                            
+                            summed_conds = pd.concat(sub_conditions, axis=1).sum(axis=1)
+                            
+                            threshold_str = str(rule['threshold']).replace(f"@{param_name}", str(value))
+                            threshold = int(threshold_str)
+                            
+                            condition = (summed_conds >= threshold)
+                            logging.info(f"  Conditional Rule {j+1:02d} (Cluster): {len(rule['conditions'])} sub-rules, threshold >= {threshold}: Met {condition.sum():,} times.")
+                            all_conditions.append(condition)
+                    except Exception as e:
+                        logging.error(f"  Conditional Rule {j+1:02d}: FAILED TO EVALUATE. Error: {e}")
+                        all_conditions.append(pd.Series(False, index=df.index))
+        
+        if not all_conditions:
+            logging.warning(f"No conditions to evaluate for {param_name}={value}")
+            df[f"entry_signal_{value}"] = 0
+            continue
+            
         final_entry_condition = pd.concat(all_conditions, axis=1).all(axis=1)
         
         signal_col_name = f"entry_signal_{value}"
         df[signal_col_name] = np.where(final_entry_condition, signal_value, 0)
         
-        # Fix: For shorts, we need to handle the one-signal-per-day logic differently
+        # One-signal-per-day logic - FIXED VERSION
         if position_type == 'short':
-            df[signal_col_name] = df[signal_col_name].groupby(df.index.date).transform(
-                lambda x: (x.cumsum() == -1) & (x == -1)
-            ).astype(int) * -1
+            # For shorts, group by date and keep only first -1 signal
+            signal_df = df[df[signal_col_name] == -1]
+            if len(signal_df) > 0:
+                daily_first = signal_df.groupby(signal_df.index.date).head(1)
+                df[signal_col_name] = 0  # Reset all to 0
+                df.loc[daily_first.index, signal_col_name] = -1  # Set only first signal of each day
         else:
-            df[signal_col_name] = df[signal_col_name].groupby(df.index.date).transform(
-                lambda x: (x.cumsum() == 1) & (x == 1)
-            ).astype(int)
+            # For longs, group by date and keep only first 1 signal
+            signal_df = df[df[signal_col_name] == 1]
+            if len(signal_df) > 0:
+                daily_first = signal_df.groupby(signal_df.index.date).head(1)
+                df[signal_col_name] = 0  # Reset all to 0
+                df.loc[daily_first.index, signal_col_name] = 1  # Set only first signal of each day
         
-        logging.info(f"Generated {abs(df[signal_col_name]).sum()} final signals for {signal_col_name}")
+        signal_count = abs(df[signal_col_name]).sum()
+        unique_days = len(np.unique(df[df[signal_col_name] != 0].index.date)) if signal_count > 0 else 0
+        logging.info(f"Generated {signal_count} final signals for {signal_col_name} on {unique_days} unique days")
         logging.info(f"Position type: {position_type} (signal value: {signal_value})")
         
     # Special handling for LiquidityDrift strategy - delay signals by 1 day

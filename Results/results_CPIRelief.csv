@@ -1,0 +1,2 @@
+Parameter: dummy_param,Total Trades,Win Rate (%),Profit Factor,Total Return (%),Max Drawdown (%),Avg Duration (hrs),Stop Loss Exits,Trailing SL Exits,Take Profit Exits,MA Cross Exits,Price Below MA Exits,VIX Spike Exits
+1,5.0,20.0,0.48245289277736003,-1.489843192434237,-2.8292964811444503,155.53333333333333,2.0,3.0,0.0,0.0,0.0,0.0

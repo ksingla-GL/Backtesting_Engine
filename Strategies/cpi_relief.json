@@ -1,0 +1,47 @@
+{
+  "strategy_name": "CPIRelief",
+  "position_type": "long",
+  "exit_type": "simple_exits",
+  "indicators": [
+    {
+      "name": "PriceAtTime",
+      "params": { "time": "08:31:00" },
+      "on_column": "ES_close",
+      "output_col": "ES_831_price"
+    },
+    {
+      "name": "ESDeclineFromTime",
+      "params": { "base_price_col": "ES_831_price", "threshold": -0.3 },
+      "on_column": "",
+      "output_col": "es_dip_from_831"
+    },
+    {
+      "name": "VXDeclineWindow",
+      "params": {},
+      "on_column": "",
+      "output_col": "vx_not_increasing"
+    },
+    {
+      "name": "PostEventTime",
+      "params": { "event_time": "08:30:00" },
+      "on_column": "",
+      "output_col": "mins_after_cpi"
+    }
+  ],
+  "param_grid": {
+    "dummy_param": [1]
+  },
+  "entry_rules": [
+    "is_cpi_window == True",
+    "(cpi_inline == True) | (cpi_better == True)",
+    "cpi_pre_es_3d < 0",
+    "es_dip_from_831 == True",
+    "vx_not_increasing == True",
+    "mins_after_cpi >= 15"
+  ],
+  "exit_conditions": {
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 4.0,
+    "trailing_stop_loss_pct": 2.0
+  }
+}
