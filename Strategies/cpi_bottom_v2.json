@@ -1,0 +1,19 @@
+{
+  "strategy_name": "CPIBottomBasic",
+  "position_type": "long",
+  "exit_type": "simple_exits",
+  "indicators": [],
+  "param_grid": {
+    "dummy": [1]
+  },
+  "entry_rules": [
+    "is_post_cpi == True",
+    "cpi_worse == True",
+    "cpi_pre_es_3d < 0"
+  ],
+  "exit_conditions": {
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 5.0,
+    "trailing_stop_loss_pct": 3.0
+  }
+}
