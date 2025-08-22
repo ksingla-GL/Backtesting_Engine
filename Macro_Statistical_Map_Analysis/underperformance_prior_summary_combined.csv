@@ -1,0 +1,5 @@
+Category,Event,Surprise,Underperformance Time,Sample_Size,-1d_Return,-1d_WinRate,0d_Return,0d_WinRate,1d_Return,1d_WinRate,2d_Return,2d_WinRate
+underperformance_prior,CPI,combined,Just 1d,67,-0.581428994,0%,0.252216935,0.611940299,-0.042035518,0.537313433,0.066628244,0.582089552
+underperformance_prior,CPI,combined,2d ,35,-0.652550218,0%,0.32790086,0.685714286,-0.065747895,0.514285714,0.208995188,0.657142857
+underperformance_prior,FOMC,combined,Just 1d,41,-0.756533967,0%,-0.450950773,0.487804878,-0.5425038,0.390243902,0.099313348,0.512195122
+underperformance_prior,FOMC,combined,2d ,17,-0.41090247,0%,-0.151919051,0.529411765,-0.091076632,0.470588235,0.068361021,0.588235294
