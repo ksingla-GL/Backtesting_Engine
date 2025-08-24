@@ -1,0 +1,5 @@
+Category,Event,Surprise,Sample_Size,-2d_Return,-2d_WinRate,-1d_Return,-1d_WinRate,0d_Return,0d_WinRate,1d_Return,1d_WinRate,2d_Return,2d_WinRate
+outperformance_prior,CPI,better,25,0.42%,72%,0.96%,100%,0.13%,64%,0.40%,64%,0.01%,52%
+outperformance_prior,CPI,worse,29,0.20%,72%,1.01%,100%,-0.31%,38%,-0.24%,59%,0.20%,48%
+outperformance_prior,FOMC,inline,26,0.41%,58%,0.97%,100%,0.09%,62%,0.27%,62%,-0.09%,42%
+outperformance_prior,FOMC,worse,6,0.48%,83%,1.06%,100%,-0.13%,33%,-0.86%,50%,-0.87%,17%

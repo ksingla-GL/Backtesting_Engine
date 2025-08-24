@@ -1,0 +1,5 @@
+Category,Event,Surprise,Sample_Size,-2d_Return,-2d_WinRate,-1d_Return,-1d_WinRate,0d_Return,0d_WinRate,1d_Return,1d_WinRate,2d_Return,2d_WinRate
+neutral_prior,CPI,better,27,0.12%,63%,-0.04%,37%,0.01%,52%,0.11%,63%,0.24%,67%
+neutral_prior,CPI,worse,22,-0.10%,45%,-0.03%,45%,-0.01%,59%,0.04%,50%,0.09%,64%
+neutral_prior,FOMC,inline,30,-0.19%,43%,0.04%,63%,-0.13%,47%,-0.05%,53%,-0.15%,43%
+neutral_prior,FOMC,worse,5,-0.12%,60%,-0.01%,40%,-0.34%,40%,0.06%,60%,0.52%,80%

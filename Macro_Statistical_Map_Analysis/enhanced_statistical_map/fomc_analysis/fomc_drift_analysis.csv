@@ -1,0 +1,4 @@
+Surprise_Direction,Sample_Size,T0_Return,T0_WinRate,T1_Return,T1_WinRate,T2_Return,T2_WinRate,T3_Return,T3_WinRate,T4_Return,T4_WinRate,T5_Return,T5_WinRate,Cumulative_T0_T2,Cumulative_T0_T5
+better,12,-1.51%,42%,-0.72%,58%,0.56%,67%,0.09%,67%,0.56%,75%,0.13%,58%,-1.67%,-0.89%
+inline,69,0.06%,57%,-0.03%,51%,-0.11%,43%,-0.08%,51%,-0.16%,51%,-0.20%,48%,-0.09%,-0.53%
+worse,16,-0.41%,38%,-0.59%,44%,0.03%,56%,-0.15%,56%,-0.15%,56%,-0.04%,56%,-0.97%,-1.31%

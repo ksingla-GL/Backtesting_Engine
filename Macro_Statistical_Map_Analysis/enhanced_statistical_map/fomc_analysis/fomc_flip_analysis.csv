@@ -1,0 +1,4 @@
+FOMC_T0_Category,Sample_Size,T0_Avg_Return,T0_WinRate,T1_Avg_Return,T1_WinRate,Flip_Probability
+strong_positive,9,1.59%,100%,-0.26%,44%,56%
+weak_positive,41,0.29%,100%,0.14%,61%,39%
+negative,47,-1.00%,0%,-0.51%,43%,43%
