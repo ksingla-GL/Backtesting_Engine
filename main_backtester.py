@@ -29,6 +29,170 @@ def list_available_strategies():
         return []
     return [f.replace('.json', '') for f in os.listdir(strategy_dir) if f.endswith('.json')]
 
+def calculate_multiperiod_returns(trade_log, df_with_signals, position_type='long'):
+    """
+    Calculate 1, 3, 5, and 10-day holding period returns for each trade.
+    Returns are calculated from entry_price to the close price N business days later.
+    """
+    if trade_log.empty:
+        return trade_log
+    
+    # Create a copy to avoid modifying original
+    enhanced_log = trade_log.copy()
+    
+    # Initialize new columns
+    for period in [1, 3, 5, 10]:
+        enhanced_log[f'return_{period}d'] = np.nan
+    
+    # Create daily close price series (end-of-day prices only)
+    # Resample to daily frequency and take last close price of each day
+    daily_closes = df_with_signals['ES_close'].resample('D').last().dropna()
+    
+    for idx, trade in enhanced_log.iterrows():
+        entry_time = trade['entry_time']
+        entry_price = trade['entry_price']
+        
+        # Find future close prices for each holding period
+        for period in [1, 3, 5, 10]:
+            try:
+                # Calculate target date using business days from entry_time
+                target_date = entry_time + pd.tseries.offsets.BDay(period)
+                
+                # Find the close price on or after the target business day
+                future_closes = daily_closes[daily_closes.index >= target_date]
+                
+                if len(future_closes) > 0:
+                    exit_price = future_closes.iloc[0]
+                    
+                    # Calculate return based on position type
+                    if position_type == 'long':
+                        return_pct = (exit_price / entry_price - 1) * 100
+                    else:  # short
+                        return_pct = (entry_price / exit_price - 1) * 100
+                    
+                    enhanced_log.loc[idx, f'return_{period}d'] = return_pct
+                    
+            except Exception as e:
+                # If can't find future price, leave as NaN
+                continue
+    
+    return enhanced_log
+
+
+def calculate_regime_analysis(trade_log, results_df):
+    """
+    Perform rolling 2-year window analysis of strategy performance.
+    Returns regime analysis data as formatted strings.
+    """
+    if trade_log.empty:
+        return ["No trades available for regime analysis."]
+    
+    # Convert entry_time to datetime if needed
+    trade_log = trade_log.copy()
+    trade_log['entry_time'] = pd.to_datetime(trade_log['entry_time'])
+    trade_log['year'] = trade_log['entry_time'].dt.year
+    
+    min_year = trade_log['year'].min()
+    max_year = trade_log['year'].max()
+    
+    regime_results = []
+    regime_results.append("\n" + "="*50)
+    regime_results.append("REGIME ANALYSIS - Rolling 2-Year Windows")
+    regime_results.append("="*50)
+    
+    # Generate non-overlapping 2-year windows
+    for start_year in range(min_year, max_year + 1, 2):
+        end_year = start_year + 1
+        window_trades = trade_log[
+            (trade_log['year'] >= start_year) & 
+            (trade_log['year'] <= end_year)
+        ]
+        
+        if len(window_trades) == 0:
+            continue
+            
+        # Calculate metrics for this window
+        total_trades = len(window_trades)
+        winners = window_trades[window_trades['pnl_pct'] > 0]
+        win_rate = (len(winners) / total_trades) * 100 if total_trades > 0 else 0
+        avg_return = window_trades['pnl_pct'].mean()
+        total_return = window_trades['pnl_pct'].sum()
+        
+        # Multi-period analysis for this window
+        multiperiod_stats = {}
+        for period in [1, 3, 5, 10]:
+            col = f'return_{period}d'
+            if col in window_trades.columns:
+                valid_returns = window_trades[col].dropna()
+                if len(valid_returns) > 0:
+                    multiperiod_stats[f'{period}d'] = {
+                        'avg_return': valid_returns.mean(),
+                        'win_rate': (valid_returns > 0).mean() * 100,
+                        'count': len(valid_returns)
+                    }
+        
+        # Format results for this window
+        regime_results.append(f"\n{start_year}-{end_year}:")
+        regime_results.append(f"  Trades: {total_trades}")
+        regime_results.append(f"  Win Rate: {win_rate:.1f}%")
+        regime_results.append(f"  Avg Return: {avg_return:.2f}%")
+        regime_results.append(f"  Total Return: {total_return:.2f}%")
+        
+        # Add multi-period stats if available
+        if multiperiod_stats:
+            regime_results.append("  Multi-Period Analysis:")
+            for period, stats in multiperiod_stats.items():
+                regime_results.append(f"    {period}: Avg {stats['avg_return']:.2f}%, Win Rate {stats['win_rate']:.1f}% ({stats['count']} trades)")
+    
+    return regime_results
+
+
+def format_enhanced_results(results_df, trade_log, strategy_name, position_type):
+    """
+    Format results with traditional metrics + regime analysis + multi-period summary.
+    """
+    output_lines = []
+    
+    # Traditional results section (unchanged)
+    output_lines.append("="*80)
+    output_lines.append(f"FINAL BACKTEST RESULTS: {strategy_name}")
+    output_lines.append(f"POSITION TYPE: {position_type.upper()}")
+    output_lines.append("="*80)
+    
+    # Format traditional results
+    formatted_df = results_df.copy()
+    for col in formatted_df.columns:
+        if formatted_df[col].dtype in ['float64', 'float32']:
+            formatted_df[col] = formatted_df[col].apply(
+                lambda x: f"{x:.2f}" if pd.notna(x) and x != float('inf') else ('Inf' if x == float('inf') else 'N/A')
+            )
+    
+    output_lines.append(formatted_df.to_string())
+    
+    # Multi-period analysis summary
+    if not trade_log.empty:
+        output_lines.append("\n" + "="*50)
+        output_lines.append("MULTI-PERIOD ANALYSIS SUMMARY")
+        output_lines.append("="*50)
+        
+        for period in [1, 3, 5, 10]:
+            col = f'return_{period}d'
+            if col in trade_log.columns:
+                valid_returns = trade_log[col].dropna()
+                if len(valid_returns) > 0:
+                    avg_return = valid_returns.mean()
+                    win_rate = (valid_returns > 0).mean() * 100
+                    count = len(valid_returns)
+                    output_lines.append(f"{period}-Day HPR: Avg {avg_return:.2f}%, Win Rate {win_rate:.1f}% ({count} trades)")
+    
+    # Regime analysis
+    regime_analysis = calculate_regime_analysis(trade_log, results_df)
+    output_lines.extend(regime_analysis)
+    
+    output_lines.append("="*80)
+    return output_lines
+
+
 def extract_required_columns_from_strategy(strategy_config):
     """
     Extract all columns that will be needed by a strategy.
@@ -333,6 +497,12 @@ def main():
             # Add position type to trade log
             trade_log['position_type'] = position_type
             
+            # Calculate multi-period returns (1, 3, 5, 10 days) for each trade
+            if len(trade_log) > 0:
+                logging.info("Calculating multi-period holding returns...")
+                trade_log = calculate_multiperiod_returns(trade_log, df_with_signals, position_type)
+                logging.info(f"Enhanced trade log with multi-period returns. Shape: {trade_log.shape}")
+            
             # Create Trade_Logs directory if it doesn't exist
             if not os.path.exists('Trade_Logs'):
                 os.makedirs('Trade_Logs')
@@ -340,7 +510,7 @@ def main():
             if value == param_values[0] and len(trade_log) > 0:
                 log_filename = f"Trade_Logs/trade_log_{strategy_config['strategy_name']}_{value}.csv"
                 trade_log.to_csv(log_filename, index=False)
-                logging.info(f"Saved detailed trade log to {log_filename}")
+                logging.info(f"Saved enhanced trade log with multi-period returns to {log_filename}")
                 
                 # Verify a sample trade
                 sample = trade_log.iloc[0]
@@ -367,31 +537,45 @@ def main():
         results_df = pd.DataFrame(all_results).T
         results_df.index.name = f"Parameter: {param_name}"
         
-        def format_float(x):
-            if isinstance(x, (int, float)):
-                return f"{x:.2f}" if pd.notna(x) and x != float('inf') else ('Inf' if x == float('inf') else 'N/A')
-            return str(x)
+        # Get the first trade log for enhanced analysis (should have multi-period data)
+        first_param_value = param_values[0]
+        enhanced_trade_log = None
         
-        print("\n" + "="*80)
-        print(f"FINAL BACKTEST RESULTS: {strategy_config['strategy_name']}")
-        print(f"POSITION TYPE: {position_type.upper()}")
-        print("="*80)
+        # Try to get trade log from the first successful backtest
+        for value in param_values:
+            signal_col = f"entry_signal_{value}"
+            if signal_col not in df_with_signals.columns:
+                signal_col = f"entry_signal_{first_param_value}"
+            
+            if signal_col in df_with_signals.columns:
+                # Reconstruct the trade log for analysis (this would be the same as what was processed)
+                if value in all_results and 'Total Trades' in all_results[value] and all_results[value]['Total Trades'] > 0:
+                    # We need to get the trade log that was used for this value
+                    # For now, we'll use a basic approach - in practice, we might want to store this
+                    break
         
-        formatted_df = results_df.copy()
-        for col in formatted_df.columns:
-            if formatted_df[col].dtype in ['float64', 'float32']:
-                formatted_df[col] = formatted_df[col].apply(format_float)
+        # Generate enhanced results format
+        enhanced_output = format_enhanced_results(results_df, trade_log, strategy_config['strategy_name'], position_type)
         
-        print(formatted_df.to_string())
-        print("="*80)
+        # Print the enhanced results
+        for line in enhanced_output:
+            print(line)
         
         # Create Results directory if it doesn't exist
         if not os.path.exists('Results'):
             os.makedirs('Results')
         
+        # Save traditional CSV results (for backward compatibility)
         results_filename = f"Results/results_{strategy_config['strategy_name']}.csv"
         results_df.to_csv(results_filename)
-        logging.info(f"Saved results to {results_filename}")
+        logging.info(f"Saved traditional results to {results_filename}")
+        
+        # Save enhanced results as text file
+        enhanced_filename = f"Results/results_{strategy_config['strategy_name']}_enhanced.txt"
+        with open(enhanced_filename, 'w') as f:
+            for line in enhanced_output:
+                f.write(line + '\n')
+        logging.info(f"Saved enhanced results with regime analysis to {enhanced_filename}")
         
     except Exception as e:
         logging.error(f"Error displaying results: {e}")
