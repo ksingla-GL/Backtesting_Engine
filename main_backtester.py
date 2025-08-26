@@ -325,6 +325,25 @@ def main():
         with open(strategy_path, 'r') as f:
             strategy_config = json.load(f)
         logging.info(f"Loaded strategy configuration: {strategy_config['strategy_name']}")
+        
+        # Auto-add ATR indicator if ATR-based stop loss is configured
+        exit_conditions = strategy_config.get('exit_conditions', {})
+        if 'stop_loss_atr_multiplier' in exit_conditions and exit_conditions['stop_loss_atr_multiplier'] > 0:
+            atr_period = exit_conditions.get('atr_period', 14)
+            atr_indicator = {
+                "name": "ATR",
+                "params": {"window": atr_period},
+                "on_column": "ES_close",
+                "output_col": f"ES_ATR_{atr_period}"
+            }
+            
+            # Add ATR indicator if not already present
+            indicators = strategy_config.get('indicators', [])
+            atr_exists = any(ind.get('name') == 'ATR' and ind.get('output_col') == f"ES_ATR_{atr_period}" for ind in indicators)
+            if not atr_exists:
+                indicators.append(atr_indicator)
+                strategy_config['indicators'] = indicators
+                logging.info(f"Auto-added ATR indicator with period {atr_period} for ATR-based stop loss")
     except FileNotFoundError as e:
         logging.error(f"Configuration file not found: {e}. Make sure '{strategy_name}.json' exists in the 'strategies' folder.")
         return
@@ -445,6 +464,20 @@ def main():
                 'ema_slow': df_with_signals['ES_EMA_15'].values,
             }
             
+            # Add ATR data if strategy uses ATR-based stop losses
+            exit_conditions = strategy_config.get('exit_conditions', {})
+            if 'stop_loss_atr_multiplier' in exit_conditions and exit_conditions['stop_loss_atr_multiplier'] > 0:
+                atr_col = 'ES_ATR_14'  # Default ATR column name
+                if atr_col not in df_with_signals.columns:
+                    logging.warning(f"ATR column {atr_col} not found, using zeros for ATR values")
+                    data_for_numba['atr_values'] = np.zeros(len(df_with_signals))
+                else:
+                    data_for_numba['atr_values'] = df_with_signals[atr_col].values
+                    logging.info(f"ATR data included: {atr_col}, sample values: {df_with_signals[atr_col].iloc[:5].values}")
+            else:
+                # Provide dummy ATR values for backward compatibility
+                data_for_numba['atr_values'] = np.zeros(len(df_with_signals))
+            
             # For liquidity_exits, we need additional data
             if exit_type == 'liquidity_exits':
                 logging.info("Preparing VIX data for liquidity_exits...")
@@ -456,11 +489,22 @@ def main():
                 data_for_numba['entry_vix_prices'] = vix_prev_day.reindex(df_with_signals.index, method='ffill').fillna(method='bfill').values
                 
                 logging.info(f"VIX data prepared. Sample VIX values: {df_with_signals['VIX_close'].iloc[:5].values}")
+            
+            # For time-based exits, we need time arrays
+            if exit_type in ['time_exits', 'time_exits_short']:
+                logging.info("Preparing time data for time-based exits...")
+                data_for_numba['hours_array'] = df_with_signals.index.hour.values.astype(np.int32)
+                data_for_numba['minutes_array'] = df_with_signals.index.minute.values.astype(np.int32)
+                logging.info(f"Time data prepared. Sample hours: {data_for_numba['hours_array'][:5]}, Sample minutes: {data_for_numba['minutes_array'][:5]}")
                 
             # Assemble all possible parameters
             backtest_params = strategy_config.get('exit_conditions', {}).copy()
             backtest_params[param_name] = value
             backtest_params['cost_pct'] = global_config['settings']['transaction_cost_pct']
+            
+            # Set default ATR parameters if not specified
+            if 'stop_loss_atr_multiplier' not in backtest_params:
+                backtest_params['stop_loss_atr_multiplier'] = 0.0
             
             # Filter the dictionary to only pass expected parameters
             final_backtest_params = {k: v for k, v in backtest_params.items() if k in expected_params}
@@ -493,6 +537,9 @@ def main():
             trade_log['entry_time'] = pd.to_datetime(trade_log['entry_time'])
             trade_log['exit_time'] = pd.to_datetime(trade_log['exit_time'])
             trade_log['pnl_pct'] = trade_log['pnl_pct'] * 100
+            
+            # Add descriptive exit reasons
+            trade_log['exit_reason_desc'] = trade_log['exit_reason'].apply(backtest_engine.get_exit_reason_description)
             
             # Add position type to trade log
             trade_log['position_type'] = position_type

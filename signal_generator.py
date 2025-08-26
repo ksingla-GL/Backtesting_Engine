@@ -50,6 +50,36 @@ def calculate_indicator(df, indicator_config):
             daily_rsi = ta.momentum.rsi(daily_close, window=window)
             df[out_col] = daily_rsi.reindex(df.index, method='ffill').ffill()
         
+        elif name == 'ATR':
+            window = params.get('window', 14)
+            # ATR requires high, low, close prices
+            high_col = params.get('high_col', 'ES_high')
+            low_col = params.get('low_col', 'ES_low')
+            close_col = params.get('close_col', 'ES_close')
+            
+            if high_col not in df.columns or low_col not in df.columns or close_col not in df.columns:
+                logging.error(f"ATR requires {high_col}, {low_col}, {close_col} columns")
+                df[out_col] = np.nan
+                return df
+            
+            # Calculate on daily data
+            daily_high = df[high_col].resample('D').max().dropna()
+            daily_low = df[low_col].resample('D').min().dropna()
+            daily_close = df[close_col].resample('D').last().dropna()
+            
+            # Calculate True Range
+            prev_close = daily_close.shift(1)
+            tr1 = daily_high - daily_low
+            tr2 = abs(daily_high - prev_close)
+            tr3 = abs(daily_low - prev_close)
+            true_range = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+            
+            # Calculate ATR as rolling mean of True Range
+            daily_atr = true_range.rolling(window=window, min_periods=window).mean()
+            df[out_col] = daily_atr.reindex(df.index, method='ffill').ffill()
+            
+            logging.info(f"    ATR calculated with window {window}, values: {df[out_col].notna().sum()}")
+        
         elif name == 'RollingHigh':
             daily_data = df[on_col].resample('D').max()
             window_size = params.get('window', 10)
@@ -391,6 +421,58 @@ def calculate_indicator(df, indicator_config):
             obv = obv.cumsum()
             
             df[out_col] = obv.reindex(df.index, method='ffill').ffill()
+
+        elif name == 'VolumeSMA':
+            # Volume Simple Moving Average
+            window = params.get('window', 20)
+            daily_volume = df[on_col].resample('D').sum().dropna()
+            daily_volume_sma = daily_volume.rolling(window=window, min_periods=window).mean()
+            df[out_col] = daily_volume_sma.reindex(df.index, method='ffill').ffill()
+            logging.info(f"    VolumeSMA calculated with window {window}")
+
+        elif name == 'VolumeEMA':
+            # Volume Exponential Moving Average
+            span = params.get('span', params.get('window', 20))
+            daily_volume = df[on_col].resample('D').sum().dropna()
+            daily_volume_ema = daily_volume.ewm(span=span, adjust=False).mean()
+            df[out_col] = daily_volume_ema.reindex(df.index, method='ffill').ffill()
+            logging.info(f"    VolumeEMA calculated with span {span}")
+
+        elif name == 'VWAP':
+            # Volume Weighted Average Price
+            instrument = on_col.split('_')[0] if '_' in on_col else on_col
+            close_col = f"{instrument}_close"
+            high_col = f"{instrument}_high"
+            low_col = f"{instrument}_low" 
+            volume_col = f"{instrument}_volume"
+            
+            # Check if required columns exist
+            required_cols = [close_col, high_col, low_col, volume_col]
+            missing_cols = [col for col in required_cols if col not in df.columns]
+            if missing_cols:
+                logging.error(f"VWAP missing required columns: {missing_cols}")
+                df[out_col] = np.nan
+                return df
+            
+            # Calculate typical price
+            typical_price = (df[high_col] + df[low_col] + df[close_col]) / 3
+            
+            # Calculate VWAP for each day separately
+            df['date'] = df.index.date
+            
+            def calc_daily_vwap(group):
+                cum_volume = group[volume_col].cumsum()
+                cum_price_volume = (typical_price.loc[group.index] * group[volume_col]).cumsum()
+                # Avoid division by zero
+                vwap = np.where(cum_volume != 0, cum_price_volume / cum_volume, typical_price.loc[group.index])
+                return pd.Series(vwap, index=group.index)
+            
+            df[out_col] = df.groupby('date').apply(calc_daily_vwap).values
+            
+            # Cleanup temp column
+            df.drop('date', axis=1, inplace=True)
+            
+            logging.info(f"    VWAP calculated for instrument {instrument}")
 
         elif name == 'OBVHighN':
             # OBV is at N-day high
