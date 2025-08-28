@@ -424,6 +424,9 @@ def main():
     expected_params = list(func_signature.parameters.keys())
     logging.info(f"Expected parameters for {exit_type}: {expected_params}")
     
+    # Collect all trade logs for comprehensive regime analysis
+    all_trade_logs = []
+    
     for value in param_values:
         logging.info(f"\n--- Running Backtest for {param_name} = {value} ---")
         
@@ -549,6 +552,10 @@ def main():
                 logging.info("Calculating multi-period holding returns...")
                 trade_log = calculate_multiperiod_returns(trade_log, df_with_signals, position_type)
                 logging.info(f"Enhanced trade log with multi-period returns. Shape: {trade_log.shape}")
+                
+                # Add parameter info and collect trade log for comprehensive analysis
+                trade_log[param_name] = value
+                all_trade_logs.append(trade_log.copy())
             
             # Create Trade_Logs directory if it doesn't exist
             if not os.path.exists('Trade_Logs'):
@@ -584,25 +591,16 @@ def main():
         results_df = pd.DataFrame(all_results).T
         results_df.index.name = f"Parameter: {param_name}"
         
-        # Get the first trade log for enhanced analysis (should have multi-period data)
-        first_param_value = param_values[0]
-        enhanced_trade_log = None
-        
-        # Try to get trade log from the first successful backtest
-        for value in param_values:
-            signal_col = f"entry_signal_{value}"
-            if signal_col not in df_with_signals.columns:
-                signal_col = f"entry_signal_{first_param_value}"
-            
-            if signal_col in df_with_signals.columns:
-                # Reconstruct the trade log for analysis (this would be the same as what was processed)
-                if value in all_results and 'Total Trades' in all_results[value] and all_results[value]['Total Trades'] > 0:
-                    # We need to get the trade log that was used for this value
-                    # For now, we'll use a basic approach - in practice, we might want to store this
-                    break
+        # Combine all trade logs for comprehensive regime analysis
+        if all_trade_logs:
+            combined_trade_log = pd.concat(all_trade_logs, ignore_index=True)
+            logging.info(f"Combined trade log created with {len(combined_trade_log)} total trades across all parameters")
+        else:
+            combined_trade_log = pd.DataFrame()
+            logging.warning("No trade logs found for regime analysis")
         
         # Generate enhanced results format
-        enhanced_output = format_enhanced_results(results_df, trade_log, strategy_config['strategy_name'], position_type)
+        enhanced_output = format_enhanced_results(results_df, combined_trade_log, strategy_config['strategy_name'], position_type)
         
         # Print the enhanced results
         for line in enhanced_output:

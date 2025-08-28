@@ -11,8 +11,8 @@ from datetime import time, datetime
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-MARKET_OPEN = time(8, 00)
-MARKET_CLOSE = time(16, 0)
+MARKET_OPEN = time(0, 0)
+MARKET_CLOSE = time(23, 59)
 
 class MacroDataPrecomputer:
     def __init__(self, db_path):
@@ -92,7 +92,7 @@ class MacroDataPrecomputer:
         
         logging.info(f"Creating market hours index from {start_date} to {end_date}")
         
-        all_dates = pd.date_range(start=start_date.date(), end=end_date.date(), freq='B')
+        all_dates = pd.date_range(start=start_date.date(), end=end_date.date(), freq='D')
         market_minutes = []
         for date in all_dates:
             day_start = pd.Timestamp.combine(date, MARKET_OPEN)

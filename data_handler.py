@@ -11,8 +11,8 @@ from datetime import time
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-MARKET_OPEN = time(8, 0)
-MARKET_CLOSE = time(16, 0)
+MARKET_OPEN = time(0, 0)
+MARKET_CLOSE = time(23, 59)
 
 def connect_db(db_path):
     """Establishes a connection to the SQLite database."""
@@ -109,8 +109,8 @@ def load_data_from_db(conn, table_name, start_date, end_date, **kwargs):
     return df
 
 def create_market_hours_index(start_date, end_date):
-    """Creates a 1-minute DatetimeIndex for US market hours."""
-    all_dates = pd.date_range(start=start_date, end=end_date, freq='B')
+    """Creates a 1-minute DatetimeIndex for 24-hour trading."""
+    all_dates = pd.date_range(start=start_date, end=end_date, freq='D')
     market_minutes = []
     for date in all_dates:
         day_start = pd.Timestamp.combine(date, MARKET_OPEN)
