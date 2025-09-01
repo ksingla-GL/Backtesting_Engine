@@ -1,14 +1,15 @@
 {
-  "strategy_name": "CPIBottomBasic",
+  "strategy_name": "FOMCRedBuy",
   "position_type": "long",
   "indicators": [],
   "param_grid": {
-    "dummy": [1]
+    "hour": [11, 12, 13]
   },
   "entry_rules": [
-    "is_post_cpi == True",
-    "cpi_worse == True",
-    "cpi_pre_es_3d < 0"
+    "is_fomc_day == True",
+    "ES_close < ES_open",
+    "index.hour == @hour",
+    "index.minute == 0"
   ],
   "exit_conditions": [
     "percentage_stop",
@@ -17,7 +18,7 @@
   ],
   "exit_parameters": {
     "stop_loss_pct": 1.0,
-    "take_profit_pct": 5.0,
-    "trailing_stop_loss_pct": 3.0
+    "take_profit_pct": 2.0,
+    "trailing_stop_loss_pct": 1.0
   }
 }

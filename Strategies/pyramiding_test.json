@@ -1,0 +1,28 @@
+{
+  "strategy_name": "PyramidingTest",
+  "position_type": "long",
+  "indicators": [
+    { "name": "SMA", "params": { "window": 50 }, "on_column": "ES_close", "output_col": "ES_SMA_50" },
+    { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
+    { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
+    { "name": "RSI", "params": { "window": 2 }, "on_column": "ES_close", "output_col": "ES_RSI_2" }
+  ],
+  "param_grid": {
+    "rsi_threshold": [20, 25]
+  },
+  "entry_rules": [
+    "ES_close > ES_SMA_50",
+    "ES_RSI_2 <= @rsi_threshold"
+  ],
+  "exit_conditions": [
+    "percentage_stop",
+    "take_profit",
+    "trailing_stop",
+    "pyramiding"
+  ],
+  "exit_parameters": {
+    "stop_loss_pct": 2.0,
+    "take_profit_pct": 5.0,
+    "trailing_stop_loss_pct": 1.5
+  }
+}

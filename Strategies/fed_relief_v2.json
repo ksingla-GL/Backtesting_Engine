@@ -1,0 +1,29 @@
+{
+  "strategy_name": "FedNextDayFade",
+  "position_type": "short",
+  "indicators": [
+    {
+      "name": "NextDaySignal",
+      "params": { "signal_col": "is_fomc_day" },
+      "on_column": "",
+      "output_col": "day_after_fed"
+    }
+  ],
+  "param_grid": {
+    "vix_threshold": [18, 20, 22]
+  },
+  "entry_rules": [
+    "day_after_fed == True",
+    "VIX_close > @vix_threshold"
+  ],
+  "exit_conditions": [
+    "percentage_stop",
+    "take_profit",
+    "trailing_stop"
+  ],
+  "exit_parameters": {
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 3.0,
+    "trailing_stop_loss_pct": 2.0
+  }
+}

@@ -1,0 +1,91 @@
+================================================================================
+FINAL BACKTEST RESULTS: TopReversalShort_FearBounce_MoreTrades
+POSITION TYPE: LONG
+================================================================================
+                          Total Trades Win Rate (%) Profit Factor Total Return (%) Max Drawdown (%) Avg Duration (hrs) Stop Loss Exits ATR Stop Loss Exits Trailing SL Exits Take Profit Exits MA Cross Exits Price Below MA Exits VIX Spike Exits Time Exit (Days) Exits Time Exit (Same Day) Exits
+Parameter: fear_threshold                                                                                                                                                                                                                                                                           
+20                               74.00        55.41          2.97            71.15            -4.95              89.24           19.00               16.00              0.00              0.00          39.00                 0.00            0.00                   0.00                       0.00
+25                              112.00        60.71          3.91           186.89            -5.00              98.55           25.00               29.00              0.00              0.00          58.00                 0.00            0.00                   0.00                       0.00
+30                              143.00        56.64          3.44           236.45            -5.56             104.24           34.00               35.00              0.00              0.00          74.00                 0.00            0.00                   0.00                       0.00
+35                              176.00        54.55          3.12           291.64            -5.00             127.72           45.00               41.00              0.00              0.00          90.00                 0.00            0.00                   0.00                       0.00
+40                              216.00        54.17          3.34           508.69            -6.20             139.38           51.00               54.00              0.00              0.00         111.00                 0.00            0.00                   0.00                       0.00
+45                              251.00        54.58          3.26           692.04            -5.10             138.98           61.00               62.00              0.00              0.00         128.00                 0.00            0.00                   0.00                       0.00
+
+==================================================
+MULTI-PERIOD ANALYSIS SUMMARY
+==================================================
+1-Day HPR: Avg 1.26%, Win Rate 76.2% (972 trades)
+3-Day HPR: Avg 1.31%, Win Rate 70.1% (972 trades)
+5-Day HPR: Avg 1.25%, Win Rate 68.0% (972 trades)
+10-Day HPR: Avg 1.90%, Win Rate 73.8% (968 trades)
+
+==================================================
+REGIME ANALYSIS - Rolling 2-Year Windows
+==================================================
+
+2013-2014:
+  Trades: 127
+  Win Rate: 53.5%
+  Avg Return: 1.48%
+  Total Return: 187.66%
+  Multi-Period Analysis:
+    1d: Avg 0.89%, Win Rate 64.6% (127 trades)
+    3d: Avg 1.11%, Win Rate 73.2% (127 trades)
+    5d: Avg 1.04%, Win Rate 70.9% (127 trades)
+    10d: Avg 2.23%, Win Rate 72.4% (127 trades)
+
+2015-2016:
+  Trades: 189
+  Win Rate: 50.8%
+  Avg Return: 0.34%
+  Total Return: 64.92%
+  Multi-Period Analysis:
+    1d: Avg 0.97%, Win Rate 75.1% (189 trades)
+    3d: Avg 1.07%, Win Rate 66.1% (189 trades)
+    5d: Avg 0.88%, Win Rate 68.3% (189 trades)
+    10d: Avg 1.14%, Win Rate 68.8% (189 trades)
+
+2017-2018:
+  Trades: 159
+  Win Rate: 53.5%
+  Avg Return: 0.81%
+  Total Return: 128.46%
+  Multi-Period Analysis:
+    1d: Avg 1.00%, Win Rate 81.1% (159 trades)
+    3d: Avg 0.76%, Win Rate 64.8% (159 trades)
+    5d: Avg 0.74%, Win Rate 60.4% (159 trades)
+    10d: Avg 0.80%, Win Rate 72.3% (159 trades)
+
+2019-2020:
+  Trades: 170
+  Win Rate: 49.4%
+  Avg Return: 0.91%
+  Total Return: 154.80%
+  Multi-Period Analysis:
+    1d: Avg 1.95%, Win Rate 74.7% (170 trades)
+    3d: Avg 1.73%, Win Rate 67.6% (170 trades)
+    5d: Avg 1.28%, Win Rate 60.6% (170 trades)
+    10d: Avg 3.31%, Win Rate 77.6% (170 trades)
+
+2021-2022:
+  Trades: 260
+  Win Rate: 62.7%
+  Avg Return: 0.76%
+  Total Return: 196.87%
+  Multi-Period Analysis:
+    1d: Avg 1.38%, Win Rate 77.7% (260 trades)
+    3d: Avg 1.47%, Win Rate 72.3% (260 trades)
+    5d: Avg 1.52%, Win Rate 68.8% (260 trades)
+    10d: Avg 1.64%, Win Rate 71.2% (260 trades)
+
+2023-2024:
+  Trades: 67
+  Win Rate: 65.7%
+  Avg Return: 1.39%
+  Total Return: 92.95%
+  Multi-Period Analysis:
+    1d: Avg 1.14%, Win Rate 88.1% (67 trades)
+    3d: Avg 2.01%, Win Rate 85.1% (67 trades)
+    5d: Avg 2.80%, Win Rate 95.5% (67 trades)
+    10d: Avg 3.47%, Win Rate 95.2% (63 trades)
+================================================================================

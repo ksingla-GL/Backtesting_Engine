@@ -1,6 +1,7 @@
 {
-  "strategy_name": "BreakoutWithRetest",
+  "strategy_name": "BreakoutWithRetest_Modular",
   "position_type": "long",
+  "exit_type": "modular",
   "indicators": [
     { "name": "SMA", "params": { "window": 50 }, "on_column": "SPX_close", "output_col": "SPX_SMA_50" },
     { "name": "SMASlope", "params": { "window": 50, "lookback": 1 }, "on_column": "ES_close", "output_col": "ES_SMA_50_slope" },
@@ -22,7 +23,7 @@
     "ES_SMA_50_slope == True",
     "ES_breakout_retest == True"
   ],
-  "exit_conditions": ["percentage_stop", "take_profit", "trailing_stop", "ma_crossover"],
+  "exit_conditions": ["percentage_stop", "take_profit", "trailing_stop", "price_below_ma"],
   "exit_parameters": {
     "stop_loss_pct": 1.0,
     "take_profit_pct": 4.0,

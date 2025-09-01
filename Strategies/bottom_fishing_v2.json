@@ -1,6 +1,6 @@
 {
-  "strategy_name": "VolatilityEvent",
-  "exit_type": "simple_exits",
+  "strategy_name": "VolatilityEventSimplest",
+  "position_type": "long",
   "indicators": [
     { "name": "SMA", "params": { "window": 50 }, "on_column": "ES_close", "output_col": "ES_SMA_50" },
     { "name": "SMA", "params": { "window": 200 }, "on_column": "ES_close", "output_col": "ES_SMA_200" },
@@ -21,7 +21,12 @@
     "ES_close > ES_SMA_200",
     "((VX_spike > 20) | (VIX_close > 30))"
   ],
-  "exit_conditions": {
+  "exit_conditions": [
+    "percentage_stop",
+    "take_profit",
+    "trailing_stop"
+  ],
+  "exit_parameters": {
     "stop_loss_pct": 1.0,
     "take_profit_pct": 3,
     "trailing_stop_loss_pct": 2

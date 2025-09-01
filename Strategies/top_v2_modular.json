@@ -1,6 +1,7 @@
 {
-  "strategy_name": "TopReversalShort_FearBounce_MoreTrades",
+  "strategy_name": "TopReversalShort_FearBounce_MoreTrades_Modular",
   "position_type": "long",
+  "exit_type": "modular",
   "indicators": [
     { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
     { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
@@ -27,11 +28,7 @@
       }
     }
   ],
-  "exit_conditions": [
-    "percentage_stop",
-    "take_profit",
-    "trailing_stop"
-  ],
+  "exit_conditions": ["percentage_stop", "take_profit", "trailing_stop"],
   "exit_parameters": {
     "stop_loss_pct": 1.0,
     "take_profit_pct": 4.0,

@@ -1,2 +1,2 @@
-Parameter: dummy_param,Total Trades,Win Rate (%),Profit Factor,Total Return (%),Max Drawdown (%),Avg Duration (hrs),Stop Loss Exits,Trailing SL Exits,Take Profit Exits,MA Cross Exits,Price Below MA Exits,VIX Spike Exits
-1,19.0,31.57894736842105,1.620450519752918,7.4020666438407545,-4.166749708475884,266.9061403508772,9.0,1.0,5.0,4.0,0.0,0.0
+Parameter: dummy_param,Total Trades,Win Rate (%),Profit Factor,Total Return (%),Max Drawdown (%),Avg Duration (hrs),Stop Loss Exits,ATR Stop Loss Exits,Trailing SL Exits,Take Profit Exits,MA Cross Exits,Price Below MA Exits,VIX Spike Exits,Time Exit (Days) Exits,Time Exit (Same Day) Exits
+1,19.0,36.84210526315789,0.903808344763809,-1.1761168965665147,-4.478074693224881,188.68684210526314,9.0,0.0,3.0,1.0,6.0,0.0,0.0,0.0,0.0

@@ -1,0 +1,74 @@
+{
+  "strategy_name": "CPIReliefV2",
+  "position_type": "long",
+  "indicators": [
+    {
+      "name": "PriceAtTime",
+      "params": { "time": "08:31:00" },
+      "on_column": "ES_close",
+      "output_col": "ES_831_price"
+    },
+    {
+      "name": "ESDeclineFromTime",
+      "params": { "base_price_col": "ES_831_price", "threshold": -0.2 },
+      "on_column": "",
+      "output_col": "es_dip_02"
+    },
+    {
+      "name": "ESDeclineFromTime",
+      "params": { "base_price_col": "ES_831_price", "threshold": -0.3 },
+      "on_column": "",
+      "output_col": "es_dip_03"
+    },
+    {
+      "name": "ESDeclineFromTime",
+      "params": { "base_price_col": "ES_831_price", "threshold": -0.4 },
+      "on_column": "",
+      "output_col": "es_dip_04"
+    },
+    {
+      "name": "VXDeclineWindow",
+      "params": {},
+      "on_column": "",
+      "output_col": "vx_not_increasing"
+    },
+    {
+      "name": "PostEventTime",
+      "params": { "event_time": "08:30:00" },
+      "on_column": "",
+      "output_col": "mins_after_cpi"
+    }
+  ],
+  "param_grid": {
+    "dip_level": [2, 3, 4]
+  },
+  "base_entry_rules": [
+    "is_cpi_window == True",
+    "mins_after_cpi >= 10",
+    "vx_not_increasing == True"
+  ],
+  "conditional_entry_rules": [
+    {
+      "condition": "@dip_level == 2",
+      "rule": "es_dip_02 == True & ((cpi_inline == True) | (cpi_better == True))"
+    },
+    {
+      "condition": "@dip_level == 3",
+      "rule": "es_dip_03 == True"
+    },
+    {
+      "condition": "@dip_level == 4",
+      "rule": "es_dip_04 == True"
+    }
+  ],
+  "exit_conditions": [
+    "percentage_stop",
+    "take_profit",
+    "trailing_stop"
+  ],
+  "exit_parameters": {
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 3.0,
+    "trailing_stop_loss_pct": 1.5
+  }
+}

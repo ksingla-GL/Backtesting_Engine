@@ -202,6 +202,18 @@ def extract_required_columns_from_strategy(strategy_config):
     
     # 1. Extract columns from indicators
     for indicator in strategy_config.get('indicators', []):
+        # Handle both old format (dict) and new format (string list)
+        if isinstance(indicator, str):
+            # New modular format - indicator is just a string like "ES_EMA_9"
+            required_columns.add(indicator)
+            # Also add base columns for the indicator
+            parts = indicator.split('_')
+            if len(parts) >= 2:
+                instrument = parts[0]
+                required_columns.update([f"{instrument}_close", f"{instrument}_high", f"{instrument}_low", f"{instrument}_open"])
+            continue
+        
+        # Old format - indicator is a dict
         # Input column
         if 'on_column' in indicator and indicator['on_column']:
             required_columns.add(indicator['on_column'])
@@ -282,8 +294,9 @@ def extract_required_columns_from_strategy(strategy_config):
     # 4. Add EMA columns for exit logic (always needed)
     required_columns.update(['ES_EMA_9', 'ES_EMA_15'])
     
-    # 5. Add VIX for liquidity exits
-    if strategy_config.get('exit_type') == 'liquidity_exits':
+    # 5. Add VIX for vix_spike conditions
+    exit_conditions = strategy_config.get('exit_conditions', [])
+    if isinstance(exit_conditions, list) and 'vix_spike' in exit_conditions:
         required_columns.update(['VIX_close'])
     
     # 6. Check for macro event requirements
@@ -326,20 +339,24 @@ def main():
             strategy_config = json.load(f)
         logging.info(f"Loaded strategy configuration: {strategy_config['strategy_name']}")
         
-        # Auto-add ATR indicator if ATR-based stop loss is configured
-        exit_conditions = strategy_config.get('exit_conditions', {})
-        if 'stop_loss_atr_multiplier' in exit_conditions and exit_conditions['stop_loss_atr_multiplier'] > 0:
-            atr_period = exit_conditions.get('atr_period', 14)
+        # Auto-add ATR indicator if ATR-based stop loss is configured (modular format)
+        exit_conditions_list = strategy_config.get('exit_conditions', [])
+        if isinstance(exit_conditions_list, list) and ('atr_stop' in exit_conditions_list):
+            exit_params = strategy_config.get('exit_parameters', {}) if isinstance(strategy_config.get('exit_parameters', {}), dict) else {}
+            atr_period = exit_params.get('atr_period', 14)
             atr_indicator = {
                 "name": "ATR",
                 "params": {"window": atr_period},
                 "on_column": "ES_close",
                 "output_col": f"ES_ATR_{atr_period}"
             }
-            
+
             # Add ATR indicator if not already present
             indicators = strategy_config.get('indicators', [])
-            atr_exists = any(ind.get('name') == 'ATR' and ind.get('output_col') == f"ES_ATR_{atr_period}" for ind in indicators)
+            atr_exists = any(
+                isinstance(ind, dict) and ind.get('name') == 'ATR' and ind.get('output_col') == f"ES_ATR_{atr_period}"
+                for ind in indicators
+            )
             if not atr_exists:
                 indicators.append(atr_indicator)
                 strategy_config['indicators'] = indicators
@@ -394,16 +411,27 @@ def main():
         return
     
     # --- 5. Select the Correct Backtest Function ---
-    exit_type = strategy_config.get('exit_type', 'simple_exits')
     position_type = strategy_config.get('position_type', 'long')
     
-    # CRITICAL FIX: Check position type to select correct function
-    if position_type == 'short':
-        if exit_type == 'simple_exits_no_ma_cross':
-            exit_type = 'simple_exits_short_no_ma_cross'
-        elif exit_type == 'simple_exits':
-            exit_type = 'simple_exits_short'
-        logging.info(f"Using SHORT position logic for '{strategy_name}'")
+    # Only modular system supported
+    exit_conditions_value = strategy_config.get('exit_conditions', [])
+    
+    # Convert legacy dictionary format to modular if needed
+    if isinstance(exit_conditions_value, dict):
+        logging.error(f"Legacy exit_conditions dictionary format is no longer supported. Please convert strategy to modular format with exit_conditions array and exit_parameters object.")
+        return
+    
+    if not isinstance(exit_conditions_value, list):
+        logging.error(f"Strategy must have 'exit_conditions' as a list, not {type(exit_conditions_value).__name__}")
+        return
+    
+    if not exit_conditions_value:
+        logging.error(f"Strategy must have 'exit_conditions' list defined and non-empty.")
+        return
+        
+    exit_type = 'modular'
+    exit_conditions = exit_conditions_value
+    logging.info(f"Using MODULAR exit system with conditions: {exit_conditions}")
     
     if exit_type not in backtest_engine.BACKTEST_FUNCTIONS:
         logging.error(f"Exit type '{exit_type}' specified in '{strategy_name}.json' is not a valid backtest function.")
@@ -467,61 +495,94 @@ def main():
                 'ema_slow': df_with_signals['ES_EMA_15'].values,
             }
             
-            # Add ATR data if strategy uses ATR-based stop losses
-            exit_conditions = strategy_config.get('exit_conditions', {})
-            if 'stop_loss_atr_multiplier' in exit_conditions and exit_conditions['stop_loss_atr_multiplier'] > 0:
-                atr_col = 'ES_ATR_14'  # Default ATR column name
+            # Prepare data based on exit type
+            # Modular system - prepare all possible data arrays
+            # ATR data (dynamic period when enabled)
+            active_exit_conditions_local = strategy_config.get('exit_conditions', [])
+            if 'atr_stop' in active_exit_conditions_local:
+                atr_period_cfg = strategy_config.get('exit_parameters', {}).get('atr_period', 14)
+                atr_col = f'ES_ATR_{atr_period_cfg}'
                 if atr_col not in df_with_signals.columns:
                     logging.warning(f"ATR column {atr_col} not found, using zeros for ATR values")
                     data_for_numba['atr_values'] = np.zeros(len(df_with_signals))
                 else:
                     data_for_numba['atr_values'] = df_with_signals[atr_col].values
-                    logging.info(f"ATR data included: {atr_col}, sample values: {df_with_signals[atr_col].iloc[:5].values}")
             else:
-                # Provide dummy ATR values for backward compatibility
                 data_for_numba['atr_values'] = np.zeros(len(df_with_signals))
             
-            # For liquidity_exits, we need additional data
-            if exit_type == 'liquidity_exits':
-                logging.info("Preparing VIX data for liquidity_exits...")
-                # Add VIX closes
+            # VIX data (always prepare for modular system)
+            if 'VIX_close' in df_with_signals.columns:
                 data_for_numba['vix_closes'] = df_with_signals['VIX_close'].values
-                
                 # Create previous day VIX close array for spike detection
                 vix_prev_day = df_with_signals['VIX_close'].resample('D').last().shift(1)
                 data_for_numba['entry_vix_prices'] = vix_prev_day.reindex(df_with_signals.index, method='ffill').fillna(method='bfill').values
+                logging.info(f"VIX data loaded: {len(data_for_numba['vix_closes'])} values, sample: {data_for_numba['vix_closes'][:5]}")
+                logging.info(f"VIX entry prices loaded: {len(data_for_numba['entry_vix_prices'])} values, sample: {data_for_numba['entry_vix_prices'][:5]}")
+            else:
+                logging.warning("VIX_close column not found, using zeros for VIX values")
+                data_for_numba['vix_closes'] = np.zeros(len(df_with_signals))
+                data_for_numba['entry_vix_prices'] = np.zeros(len(df_with_signals))
                 
-                logging.info(f"VIX data prepared. Sample VIX values: {df_with_signals['VIX_close'].iloc[:5].values}")
+            # Prepare modular backtest parameters
+            backtest_params = {}
             
-            # For time-based exits, we need time arrays
-            if exit_type in ['time_exits', 'time_exits_short']:
-                logging.info("Preparing time data for time-based exits...")
-                data_for_numba['hours_array'] = df_with_signals.index.hour.values.astype(np.int32)
-                data_for_numba['minutes_array'] = df_with_signals.index.minute.values.astype(np.int32)
-                logging.info(f"Time data prepared. Sample hours: {data_for_numba['hours_array'][:5]}, Sample minutes: {data_for_numba['minutes_array'][:5]}")
+            # Get the exit conditions from strategy config
+            active_exit_conditions = strategy_config['exit_conditions']
+            
+            # Set exit condition flags based on exit_conditions list
+            for condition_name in backtest_engine.EXIT_CONDITIONS_MAP:
+                flag_name = backtest_engine.EXIT_CONDITIONS_MAP[condition_name]
+                backtest_params[flag_name] = condition_name in active_exit_conditions
+            
+            # Handle position management (pyramiding)
+            position_management = strategy_config.get('position_management', {})
+            if position_management.get('type') == 'pyramiding':
+                backtest_params['use_pyramiding'] = True
+                backtest_params['max_pyramid_levels'] = position_management.get('max_levels', 4)
+                backtest_params['pyramid_scale_factor'] = position_management.get('scaling_factor', 2.0)
+            else:
+                backtest_params['use_pyramiding'] = False
+                backtest_params['max_pyramid_levels'] = 4
+                backtest_params['pyramid_scale_factor'] = 2.0
                 
-            # Assemble all possible parameters
-            backtest_params = strategy_config.get('exit_conditions', {}).copy()
-            backtest_params[param_name] = value
-            backtest_params['cost_pct'] = global_config['settings']['transaction_cost_pct']
+            # Set parameter values - FIXED: Only set parameters for enabled conditions
+            strategy_exit_params = strategy_config.get('exit_parameters', {}) if isinstance(strategy_config.get('exit_parameters', {}), dict) else {}
             
-            # Set default ATR parameters if not specified
-            if 'stop_loss_atr_multiplier' not in backtest_params:
-                backtest_params['stop_loss_atr_multiplier'] = 0.0
-            
-            # Filter the dictionary to only pass expected parameters
-            final_backtest_params = {k: v for k, v in backtest_params.items() if k in expected_params}
-            
-            # Special handling for liquidity_exits
-            if exit_type == 'liquidity_exits' and 'vix_spike_pct' in expected_params:
-                final_backtest_params['vix_spike_pct'] = backtest_params.get('vix_spike_pct', 10.0)
+            # Only set parameters for enabled exit conditions, use safe defaults for disabled ones
+            backtest_params.update({
+                'stop_loss_pct': strategy_exit_params.get('stop_loss_pct', 5.0) if 'percentage_stop' in active_exit_conditions else 0.0,
+                'stop_loss_atr_multiplier': strategy_exit_params.get('stop_loss_atr_multiplier', 0.0) if 'atr_stop' in active_exit_conditions else 0.0,
+                'take_profit_pct': strategy_exit_params.get('take_profit_pct', 10.0) if 'take_profit' in active_exit_conditions else 0.0,
+                'trailing_stop_loss_pct': strategy_exit_params.get('trailing_stop_loss_pct', 0.0) if 'trailing_stop' in active_exit_conditions else 0.0,
+                'vix_spike_pct': strategy_exit_params.get('vix_spike_pct', 10.0) if 'vix_spike' in active_exit_conditions else 0.0,
+                'max_days': strategy_exit_params.get('max_days', 5) if 'time_limit' in active_exit_conditions else 0,
+                'cost_pct': global_config['settings']['transaction_cost_pct'],
+                'position_type': 1 if position_type == 'long' else -1
+            })
                 
-            logging.info(f"Running backtest with parameters: {final_backtest_params}")
+            # Override with param grid value (only if it's an expected parameter)
+            if param_name in expected_params:
+                backtest_params[param_name] = value
+            
+            # Filter parameters to only include expected ones
+            backtest_params = {k: v for k, v in backtest_params.items() if k in expected_params}
+            
+            logging.info(f"Modular system - Exit conditions: {active_exit_conditions}")
+            logging.info(f"Modular system - Exit flags: use_pct_stop={backtest_params.get('use_pct_stop')}, use_atr_stop={backtest_params.get('use_atr_stop')}, use_take_profit={backtest_params.get('use_take_profit')}, use_trailing_stop={backtest_params.get('use_trailing_stop')}, use_ma_cross={backtest_params.get('use_ma_cross')}, use_vix_spike={backtest_params.get('use_vix_spike')}, use_time_limit={backtest_params.get('use_time_limit')}")
+            logging.info(f"Modular system - Parameters: {backtest_params}")
+                
+            
+            logging.info(f"Running backtest with parameters: {backtest_params}")
+            
+            # Debug: Check timestamp format
+            timestamp_sample = data_for_numba['timestamps'][:5]
+            logging.info(f"DEBUG: First 5 timestamps: {timestamp_sample}")
+            logging.info(f"DEBUG: Timestamp difference (should be ~60000 ms for 1 min): {timestamp_sample[1] - timestamp_sample[0] if len(timestamp_sample) > 1 else 'N/A'}")
             
             # Run the backtest
             trades_list = run_backtest_func(
                 **data_for_numba,
-                **final_backtest_params
+                **backtest_params
             )
             
             logging.info(f"Backtest complete. Number of trades: {len(trades_list)}")
@@ -533,10 +594,14 @@ def main():
         
         # Process results
         try:
+            # Modular system always returns 7 columns (including position_size)
+            # Modular system always includes position_size column
             trade_log = pd.DataFrame(
                 trades_list, 
-                columns=['entry_time', 'exit_time', 'entry_price', 'exit_price', 'pnl_pct', 'exit_reason']
+                columns=['entry_time', 'exit_time', 'entry_price', 'exit_price', 'pnl_pct', 'exit_reason', 'position_size']
             )
+            is_pyramiding = backtest_params.get('use_pyramiding', False)
+            
             trade_log['entry_time'] = pd.to_datetime(trade_log['entry_time'])
             trade_log['exit_time'] = pd.to_datetime(trade_log['exit_time'])
             trade_log['pnl_pct'] = trade_log['pnl_pct'] * 100

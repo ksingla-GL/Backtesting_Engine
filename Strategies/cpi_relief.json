@@ -1,7 +1,6 @@
 {
   "strategy_name": "CPIRelief",
   "position_type": "long",
-  "exit_type": "simple_exits",
   "indicators": [
     {
       "name": "PriceAtTime",
@@ -39,7 +38,8 @@
     "vx_not_increasing == True",
     "mins_after_cpi >= 15"
   ],
-  "exit_conditions": {
+  "exit_conditions": ["percentage_stop", "take_profit", "trailing_stop"],
+  "exit_parameters": {
     "stop_loss_pct": 1.0,
     "take_profit_pct": 4.0,
     "trailing_stop_loss_pct": 2.0

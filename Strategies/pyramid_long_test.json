@@ -1,0 +1,30 @@
+{
+  "strategy_name": "PyramidLongTest",
+  "position_type": "long",
+  "indicators": [
+    { "name": "SMA", "params": { "window": 50 }, "on_column": "ES_close", "output_col": "ES_SMA_50" },
+    { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
+    { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
+    { "name": "RSI", "params": { "window": 14 }, "on_column": "ES_close", "output_col": "ES_RSI_14" },
+    { "name": "ATR", "params": { "window": 14 }, "on_column": "ES_high", "high_col": "ES_high", "low_col": "ES_low", "close_col": "ES_close", "output_col": "ES_ATR_14" }
+  ],
+  "param_grid": {
+    "rsi_oversold": [25, 30]
+  },
+  "entry_rules": [
+    "ES_close > ES_SMA_50",
+    "ES_RSI_14 <= @rsi_oversold"
+  ],
+  "exit_conditions": ["percentage_stop", "atr_stop", "take_profit", "trailing_stop"],
+  "exit_parameters": {
+    "stop_loss_pct": 1.5,
+    "take_profit_pct": 4.0,
+    "trailing_stop_loss_pct": 1.0,
+    "stop_loss_atr_multiplier": 2.0
+  },
+  "position_management": {
+    "type": "pyramiding",
+    "max_levels": 3,
+    "scaling_factor": 2.0
+  }
+}

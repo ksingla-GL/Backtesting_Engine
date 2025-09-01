@@ -1,0 +1,24 @@
+{
+  "strategy_name": "PyramidFrequentTest",
+  "position_type": "long",
+  "indicators": [
+    { "name": "SMA", "params": { "window": 20 }, "on_column": "ES_close", "output_col": "ES_SMA_20" },
+    { "name": "RSI", "params": { "window": 14 }, "on_column": "ES_close", "output_col": "ES_RSI_14" }
+  ],
+  "param_grid": {
+    "rsi_level": [40]
+  },
+  "entry_rules": [
+    "ES_RSI_14 <= @rsi_level"
+  ],
+  "exit_conditions": ["take_profit", "time_limit"],
+  "exit_parameters": {
+    "take_profit_pct": 2.0,
+    "max_days": 5
+  },
+  "position_management": {
+    "type": "pyramiding",
+    "max_levels": 3,
+    "scaling_factor": 2.0
+  }
+}

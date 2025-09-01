@@ -1,7 +1,6 @@
 {
   "strategy_name": "LiquidityDrift",
   "position_type": "long",
-  "exit_type": "liquidity_exits",
   "indicators": [
     { "name": "SMA", "params": { "window": 50 }, "on_column": "SPX_close", "output_col": "SPX_SMA_50" },
     { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
@@ -25,7 +24,13 @@
     "SPX_consecutive_green >= 2",
     "SPX_close > SPX_EMA_9"
   ],
-  "exit_conditions": {
+  "exit_conditions": [
+    "percentage_stop",
+    "take_profit",
+    "trailing_stop",
+    "vix_spike"
+  ],
+  "exit_parameters": {
     "stop_loss_pct": 1.0,
     "take_profit_pct": 3.0,
     "trailing_stop_loss_pct": 3.0,

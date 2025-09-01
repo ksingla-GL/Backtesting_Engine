@@ -1,7 +1,6 @@
 {
   "strategy_name": "CPIBottom",
   "position_type": "long",
-  "exit_type": "simple_exits",
   "indicators": [
     {
       "name": "PriceAtTime",
@@ -27,12 +26,13 @@
   },
   "entry_rules": [
     "is_post_cpi == True",
-    "cpi_worse == True",
+    "cpi_better == False",
     "cpi_pre_es_3d < 0",
     "es_down_1pct_from_825 == True",
     "vix_rolling_decline <= @vix_decline_threshold"
   ],
-  "exit_conditions": {
+  "exit_conditions": ["percentage_stop", "take_profit", "trailing_stop"],
+  "exit_parameters": {
     "stop_loss_pct": 1.0,
     "take_profit_pct": 4.0,
     "trailing_stop_loss_pct": 2.0

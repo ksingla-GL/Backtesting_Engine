@@ -1,6 +1,5 @@
 {
-  "strategy_name": "QuickPanicES_10of12",
-  "position_type": "long",
+  "strategy_name": "QuickPanicMeanReversion",
   "indicators": [
     { "name": "SMA", "params": { "window": 50 }, "on_column": "ES_close", "output_col": "ES_SMA_50" },
     { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
@@ -12,41 +11,26 @@
     { "name": "VIXSpike", "params": {}, "on_column": "VX_close", "prev_close_col": "VX_Prev_day_close", "output_col": "VX_spike" }
   ],
   "param_grid": {
-    "es_decline_pct": [-0.5, -1, -2, -3]
+    "es_decline_pct": [-1, -2, -3, -4]
   },
-  "base_entry_rules": [
+  "entry_rules": [
     "ES_close > ES_SMA_50",
+    "VIX_close < 25",
     "ES_decline_from_peak <= @es_decline_pct",
-    "ES_RSI_2 > 10"
+    "VX_spike < 25",
+    "ES_RSI_2 > 10",
+    "TRIN_close < 1.5",
+    "VIX_VXV_RATIO < 1.0",
+    "FED_STANCE <= 2",
+    "CNN_FEAR_GREED > 35",
+    "NAAIM > 40",
+    "BUFFETT_INDICATOR < 200",
+    "MARKET_BREADTH > 40"
   ],
-  "conditional_entry_rules": [
-    {
-      "condition": "True",
-      "rule": {
-        "type": "sum_of_conditions",
-        "conditions": [
-          "VIX_close < 25",
-          "VX_spike < 25",
-          "TRIN_close < 1.5",
-          "VIX_VXV_RATIO < 1.0",
-          "FED_STANCE <= 2",
-          "CNN_FEAR_GREED > 35",
-          "NAAIM > 40",
-          "BUFFETT_INDICATOR < 200",
-          "MARKET_BREADTH > 40"
-        ],
-        "threshold": "8"
-      }
-    }
-  ],
-  "exit_conditions": [
-    "percentage_stop",
-    "take_profit",
-    "trailing_stop"
-  ],
+  "exit_conditions": ["percentage_stop", "take_profit", "trailing_stop"],
   "exit_parameters": {
     "stop_loss_pct": 1.0,
-    "take_profit_pct": 4,
-    "trailing_stop_loss_pct": 2
+    "take_profit_pct": 3.0,
+    "trailing_stop_loss_pct": 2.0
   }
 }

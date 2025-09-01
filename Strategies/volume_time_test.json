@@ -1,0 +1,36 @@
+{
+  "strategy_name": "VolumeTimeTest",
+  "position_type": "long",
+  "indicators": [
+    { "name": "SMA", "params": { "window": 50 }, "on_column": "ES_close", "output_col": "ES_SMA_50" },
+    { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
+    { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
+    { "name": "RSI", "params": { "window": 2 }, "on_column": "ES_close", "output_col": "ES_RSI_2" },
+    { "name": "ATR", "params": { "window": 14, "high_col": "ES_high", "low_col": "ES_low", "close_col": "ES_close" }, "on_column": "ES_close", "output_col": "ES_ATR_14" },
+    { "name": "VolumeSMA", "params": { "window": 20 }, "on_column": "ES_volume", "output_col": "ES_Volume_SMA_20" },
+    { "name": "VolumeEMA", "params": { "span": 10 }, "on_column": "ES_volume", "output_col": "ES_Volume_EMA_10" },
+    { "name": "VWAP", "params": {}, "on_column": "ES_close", "output_col": "ES_VWAP" },
+    { "name": "VolumeRatio", "params": { "window": 20 }, "on_column": "ES_volume", "output_col": "ES_Volume_Ratio" }
+  ],
+  "param_grid": {
+    "rsi_threshold": [20, 25, 30]
+  },
+  "entry_rules": [
+    "ES_close > ES_SMA_50",
+    "ES_RSI_2 <= @rsi_threshold",
+    "ES_Volume_Ratio > 1.0",
+    "VIX_close < 30"
+  ],
+  "exit_conditions": [
+    "percentage_stop",
+    "take_profit",
+    "time_exit"
+  ],
+  "exit_parameters": {
+    "stop_loss_pct": 1.5,
+    "take_profit_pct": 3.0,
+    "trailing_stop_loss_pct": 0.0,
+    "stop_loss_atr_multiplier": 0.0,
+    "max_holding_days": 1
+  }
+}
