@@ -63,7 +63,8 @@ def extract_required_indicators(required_columns):
         'NAAIM': 'NAAIM',
         'FED_STANCE': 'FED_STANCE',
         'CNN_FEAR_GREED': 'CNN_FEAR_GREED',
-        'BUFFETT_INDICATOR': 'BUFFETT_INDICATOR'
+        'BUFFETT_INDICATOR': 'BUFFETT_INDICATOR',
+        'PUT_CALL_RATIO': 'PUT_CALL_RATIO'
     }
     
     indicators = []

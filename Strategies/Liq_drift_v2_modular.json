@@ -11,14 +11,15 @@
     "vix_cap": [30, 35, 40, 50]
   },
   "entry_rules": [
-    "ES_consecutive_green >= 1",
+    "ES_consecutive_green >= 2",
     "ES_close > ES_EMA_9",
     "VIX_close < @vix_cap"
   ],
-  "exit_conditions": ["percentage_stop", "take_profit", "trailing_stop", "ma_crossover"],
+  "exit_conditions": ["percentage_stop", "take_profit", "trailing_stop", "ma_crossover","time_limit"],
   "exit_parameters": {
     "stop_loss_pct": 1.0,
     "take_profit_pct": 4.0,
-    "trailing_stop_loss_pct": 2.0
+    "trailing_stop_loss_pct": 2.0,
+    "max_days": 5
   }
 }

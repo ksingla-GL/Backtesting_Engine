@@ -1,0 +1,89 @@
+================================================================================
+FINAL BACKTEST RESULTS: MomentumPlay_Modular
+POSITION TYPE: LONG
+================================================================================
+                   Total Trades Win Rate (%) Profit Factor Total Return (%) Max Drawdown (%) Avg Duration (hrs) Stop Loss Exits ATR Stop Loss Exits Trailing SL Exits Take Profit Exits MA Cross Exits Price Below MA Exits VIX Spike Exits Time Exit (Days) Exits
+Parameter: vix_cap                                                                                                                                                                                                                                                
+30                       647.00        57.50          1.99           725.50           -11.42              93.33          169.00                0.00             60.00             10.00          23.00                 0.00            0.00                 385.00
+35                       661.00        57.19          1.95           706.51           -11.42              91.77          172.00                0.00             70.00             10.00          24.00                 0.00            0.00                 385.00
+40                       664.00        57.08          1.96           735.69           -11.42              91.62          172.00                0.00             72.00             11.00          24.00                 0.00            0.00                 385.00
+50                       670.00        57.01          1.98           790.57           -11.42              90.92          174.00                0.00             74.00             13.00          24.00                 0.00            0.00                 385.00
+
+==================================================
+MULTI-PERIOD ANALYSIS SUMMARY
+==================================================
+1-Day HPR: Avg 0.41%, Win Rate 69.5% (2642 trades)
+3-Day HPR: Avg 0.46%, Win Rate 65.0% (2642 trades)
+5-Day HPR: Avg 0.56%, Win Rate 66.4% (2642 trades)
+10-Day HPR: Avg 0.80%, Win Rate 69.4% (2638 trades)
+
+==================================================
+REGIME ANALYSIS - Rolling 2-Year Windows
+==================================================
+
+2013-2014:
+  Trades: 420
+  Win Rate: 69.5%
+  Avg Return: 0.43%
+  Total Return: 178.94%
+  Multi-Period Analysis:
+    1d: Avg 0.34%, Win Rate 73.3% (420 trades)
+    3d: Avg 0.43%, Win Rate 67.6% (420 trades)
+    5d: Avg 0.57%, Win Rate 67.6% (420 trades)
+    10d: Avg 0.81%, Win Rate 69.5% (420 trades)
+
+2015-2016:
+  Trades: 452
+  Win Rate: 46.0%
+  Avg Return: 0.11%
+  Total Return: 47.77%
+  Multi-Period Analysis:
+    1d: Avg 0.28%, Win Rate 64.6% (452 trades)
+    3d: Avg 0.39%, Win Rate 61.9% (452 trades)
+    5d: Avg 0.42%, Win Rate 61.9% (452 trades)
+    10d: Avg 0.33%, Win Rate 57.5% (452 trades)
+
+2017-2018:
+  Trades: 424
+  Win Rate: 62.5%
+  Avg Return: 0.25%
+  Total Return: 106.54%
+  Multi-Period Analysis:
+    1d: Avg 0.23%, Win Rate 66.7% (424 trades)
+    3d: Avg 0.16%, Win Rate 67.9% (424 trades)
+    5d: Avg 0.19%, Win Rate 67.7% (424 trades)
+    10d: Avg 0.44%, Win Rate 68.9% (424 trades)
+
+2019-2020:
+  Trades: 455
+  Win Rate: 59.8%
+  Avg Return: 0.47%
+  Total Return: 215.63%
+  Multi-Period Analysis:
+    1d: Avg 0.57%, Win Rate 71.9% (455 trades)
+    3d: Avg 0.71%, Win Rate 69.2% (455 trades)
+    5d: Avg 0.82%, Win Rate 73.8% (455 trades)
+    10d: Avg 1.30%, Win Rate 77.1% (455 trades)
+
+2021-2022:
+  Trades: 451
+  Win Rate: 47.5%
+  Avg Return: 0.33%
+  Total Return: 149.08%
+  Multi-Period Analysis:
+    1d: Avg 0.50%, Win Rate 64.5% (451 trades)
+    3d: Avg 0.39%, Win Rate 58.1% (451 trades)
+    5d: Avg 0.39%, Win Rate 58.5% (451 trades)
+    10d: Avg 0.66%, Win Rate 68.1% (451 trades)
+
+2023-2024:
+  Trades: 440
+  Win Rate: 59.1%
+  Avg Return: 0.40%
+  Total Return: 173.98%
+  Multi-Period Analysis:
+    1d: Avg 0.55%, Win Rate 76.4% (440 trades)
+    3d: Avg 0.65%, Win Rate 65.5% (440 trades)
+    5d: Avg 0.93%, Win Rate 69.1% (440 trades)
+    10d: Avg 1.27%, Win Rate 75.2% (436 trades)
+================================================================================

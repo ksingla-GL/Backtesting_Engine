@@ -389,14 +389,23 @@ def calculate_indicator(df, indicator_config):
             close_col = f"{instrument}_close"
             open_col = f"{instrument}_open"
             
-            # Calculate daily green/red
+            # Calculate daily green/red on trading days only (drop non-trading days)
             daily_open = df[open_col].resample('D').first()
             daily_close = df[close_col].resample('D').last()
-            is_green = daily_close > daily_open
+            daily = pd.DataFrame({'open': daily_open, 'close': daily_close}).dropna()
+            is_green = daily['close'] > daily['open']
             
-            # Count consecutive green days
+            # Count consecutive green days (trading days only)
             consecutive = is_green.astype(int).groupby((~is_green).cumsum()).cumsum()
-            df[out_col] = consecutive.reindex(df.index, method='ffill').ffill()
+            
+            # FIXED: Lag by 1 day to avoid look-ahead bias - use previous day's consecutive count
+            # This ensures we only count completed consecutive days, not including current day
+            consecutive_lagged = consecutive.shift(1).fillna(0)
+            df[out_col] = consecutive_lagged.reindex(df.index, method='ffill').ffill()
+            
+            # Original implementation (kept for reference):
+            # consecutive = is_green.astype(int).groupby((~is_green).cumsum()).cumsum()
+            # df[out_col] = consecutive.reindex(df.index, method='ffill').ffill()
 
         elif name == 'VolumeRatio':
             window = params.get('window', 20)
