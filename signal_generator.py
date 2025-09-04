@@ -83,7 +83,7 @@ def calculate_indicator(df, indicator_config):
         elif name == 'RollingHigh':
             daily_data = df[on_col].resample('D').max()
             window_size = params.get('window', 10)
-            rolling_data = daily_data.rolling(window=window_size, min_periods=1).max()
+            rolling_data = daily_data.rolling(window=window_size, min_periods=1).max().shift(1)
             df[out_col] = rolling_data.reindex(df.index, method='ffill').ffill()
         
         elif name == 'RollingLow':
@@ -427,7 +427,7 @@ def calculate_indicator(df, indicator_config):
             obv = daily_volume.copy()
             obv[close_diff < 0] *= -1
             obv[close_diff == 0] = 0
-            obv = obv.cumsum()
+            obv = obv.cumsum().shift(1)
             
             df[out_col] = obv.reindex(df.index, method='ffill').ffill()
 
@@ -493,7 +493,7 @@ def calculate_indicator(df, indicator_config):
                 return df
                 
             daily_obv = df[obv_col].resample('D').last()
-            rolling_max = daily_obv.rolling(window=window).max()
+            rolling_max = daily_obv.rolling(window=window).max().shift(1)
             is_new_high = daily_obv >= rolling_max
             df[out_col] = is_new_high.reindex(df.index, method='ffill').fillna(False)
 
