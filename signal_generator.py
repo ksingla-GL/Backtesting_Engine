@@ -35,19 +35,19 @@ def calculate_indicator(df, indicator_config):
         if name == 'SMA':
             window = params.get('window', 50)
             daily_close = df[on_col].resample('D').last().dropna()
-            daily_sma = daily_close.rolling(window=window, min_periods=window).mean()
+            daily_sma = daily_close.rolling(window=window, min_periods=window).mean().shift(1)
             df[out_col] = daily_sma.reindex(df.index, method='ffill').ffill()
                 
         elif name == 'EMA':
             span = params.get('span', params.get('window'))
             daily_close = df[on_col].resample('D').last().dropna()
-            daily_ema = daily_close.ewm(span=span, adjust=False).mean()
+            daily_ema = daily_close.ewm(span=span, adjust=False).mean().shift(1)
             df[out_col] = daily_ema.reindex(df.index, method='ffill').ffill()
                 
         elif name == 'RSI':
             window = params.get('window', 2)
             daily_close = df[on_col].resample('D').last().dropna()
-            daily_rsi = ta.momentum.rsi(daily_close, window=window)
+            daily_rsi = ta.momentum.rsi(daily_close, window=window).shift(1)
             df[out_col] = daily_rsi.reindex(df.index, method='ffill').ffill()
         
         elif name == 'ATR':
@@ -75,7 +75,7 @@ def calculate_indicator(df, indicator_config):
             true_range = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
             
             # Calculate ATR as rolling mean of True Range
-            daily_atr = true_range.rolling(window=window, min_periods=window).mean()
+            daily_atr = true_range.rolling(window=window, min_periods=window).mean().shift(1)
             df[out_col] = daily_atr.reindex(df.index, method='ffill').ffill()
             
             logging.info(f"    ATR calculated with window {window}, values: {df[out_col].notna().sum()}")
@@ -140,7 +140,7 @@ def calculate_indicator(df, indicator_config):
             macd_histogram = macd_line - signal_line
             
             # Reindex to 1-minute
-            df[out_col] = macd_histogram.reindex(df.index, method='ffill').ffill()
+            df[out_col] = macd_histogram.shift(1).reindex(df.index, method='ffill').ffill()
 
         # NEW INDICATORS START HERE
         elif name == 'PriceAtTime':
@@ -351,7 +351,7 @@ def calculate_indicator(df, indicator_config):
             daily_high = df[f"{instrument}_high"].resample('D').max().dropna()
             daily_low = df[f"{instrument}_low"].resample('D').min().dropna()
             daily_close = df[on_col].resample('D').last().dropna()
-            daily_adx = ta.trend.adx(daily_high, daily_low, daily_close, window=window)
+            daily_adx = ta.trend.adx(daily_high, daily_low, daily_close, window=window).shift(1)
             df[out_col] = daily_adx.reindex(df.index, method='ffill').ffill()
 
         elif name == 'EMASlope':
@@ -359,14 +359,14 @@ def calculate_indicator(df, indicator_config):
             lookback = params.get('lookback', 1)
             daily_close = df[on_col].resample('D').last().dropna()
             daily_ema = daily_close.ewm(span=span, adjust=False).mean()
-            daily_slope = (daily_ema - daily_ema.shift(lookback)) / daily_ema.shift(lookback)
+            daily_slope = ((daily_ema - daily_ema.shift(lookback)) / daily_ema.shift(lookback)).shift(1)
             df[out_col] = daily_slope.reindex(df.index, method='ffill').ffill()
 
         elif name == 'VIXChange':
             lookback = params.get('lookback', 20)
             daily_vix = df[on_col].resample('D').last().dropna()
             vix_sma = daily_vix.rolling(window=lookback).mean()
-            vix_declining = daily_vix < vix_sma
+            vix_declining = (daily_vix < vix_sma).shift(1)
             df[out_col] = vix_declining.reindex(df.index, method='ffill').ffill()
 
         elif name == 'SMASlope':
@@ -374,14 +374,14 @@ def calculate_indicator(df, indicator_config):
             lookback = params.get('lookback', 1)
             daily_close = df[on_col].resample('D').last().dropna()
             daily_sma = daily_close.rolling(window=window, min_periods=window).mean()
-            sma_slope = (daily_sma - daily_sma.shift(lookback)) > 0
+            sma_slope = (daily_sma - daily_sma.shift(lookback) > 0).shift(1)
             df[out_col] = sma_slope.reindex(df.index, method='ffill').ffill()
 
         elif name == 'RealizedVolatility':
             window = params.get('window', 10)
             daily_close = df[on_col].resample('D').last().dropna()
             daily_returns = daily_close.pct_change()
-            realized_vol = daily_returns.rolling(window=window).std() * np.sqrt(252) * 100
+            realized_vol = daily_returns.rolling(window=window).std().shift(1) * np.sqrt(252) * 100
             df[out_col] = realized_vol.reindex(df.index, method='ffill').ffill()
 
         elif name == 'ConsecutiveGreenDays':

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/C:\\Users\\kshit\\Desktop\\Upwork\\Kyrg_Mean_Reversion\\Backtesting_Engine/**)",
+      "Read(/C:\\Users\\kshit\\Desktop\\Upwork\\Kyrg_Mean_Reversion\\Backtesting_Engine/**)",
+      "Read(/C:\\Users\\kshit\\Desktop\\Upwork\\Kyrg_Mean_Reversion\\Backtesting_Engine/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
