@@ -1,0 +1,24 @@
+{
+  "strategy_name": "PutCallMeanReversion",
+  "position_type": "long",
+  "primary_instrument": "ES",
+  "indicators": [
+    { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
+    { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
+    { "name": "RSI", "params": { "window": 2 }, "on_column": "ES_close", "output_col": "ES_RSI_2" }
+  ],
+  "param_grid": {
+    "putcall_threshold": [0.85, 0.90, 0.95, 1.00, 1.05]
+  },
+  "entry_rules": [
+    "PUT_CALL_RATIO >= @putcall_threshold",
+    "ES_RSI_2 < 25",
+    "ES_close < ES_EMA_9"
+  ],
+  "exit_conditions": ["take_profit", "percentage_stop", "time_limit"],
+  "exit_parameters": {
+    "take_profit_pct": 3.0,
+    "stop_loss_pct": 2.0,
+    "max_days": 5
+  }
+}
