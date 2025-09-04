@@ -89,7 +89,7 @@ def calculate_indicator(df, indicator_config):
         elif name == 'RollingLow':
             daily_data = df[on_col].resample('D').min()
             window_size = params.get('window', 10)
-            rolling_data = daily_data.rolling(window=window_size, min_periods=1).min()
+            rolling_data = daily_data.rolling(window=window_size, min_periods=1).min().shift(1)
             df[out_col] = rolling_data.reindex(df.index, method='ffill').ffill()
         
         elif name == 'PrevDayClose':
@@ -410,8 +410,8 @@ def calculate_indicator(df, indicator_config):
         elif name == 'VolumeRatio':
             window = params.get('window', 20)
             daily_volume = df[on_col].resample('D').sum()
-            avg_volume = daily_volume.rolling(window=window).mean()
-            volume_ratio = daily_volume / avg_volume
+            avg_volume = daily_volume.rolling(window=window).mean().shift(1)
+            volume_ratio = (daily_volume / avg_volume).shift(1)
             df[out_col] = volume_ratio.reindex(df.index, method='ffill').ffill()
 
         elif name == 'OBV':
@@ -435,7 +435,7 @@ def calculate_indicator(df, indicator_config):
             # Volume Simple Moving Average
             window = params.get('window', 20)
             daily_volume = df[on_col].resample('D').sum().dropna()
-            daily_volume_sma = daily_volume.rolling(window=window, min_periods=window).mean()
+            daily_volume_sma = daily_volume.rolling(window=window, min_periods=window).mean().shift(1)
             df[out_col] = daily_volume_sma.reindex(df.index, method='ffill').ffill()
             logging.info(f"    VolumeSMA calculated with window {window}")
 
@@ -443,7 +443,7 @@ def calculate_indicator(df, indicator_config):
             # Volume Exponential Moving Average
             span = params.get('span', params.get('window', 20))
             daily_volume = df[on_col].resample('D').sum().dropna()
-            daily_volume_ema = daily_volume.ewm(span=span, adjust=False).mean()
+            daily_volume_ema = daily_volume.ewm(span=span, adjust=False).mean().shift(1)
             df[out_col] = daily_volume_ema.reindex(df.index, method='ffill').ffill()
             logging.info(f"    VolumeEMA calculated with span {span}")
 
