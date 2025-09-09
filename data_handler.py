@@ -11,7 +11,7 @@ from datetime import time
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-MARKET_OPEN = time(0, 0)
+MARKET_OPEN = time(12,0)
 MARKET_CLOSE = time(23, 59)
 
 def connect_db(db_path):
@@ -110,8 +110,8 @@ def load_data_from_db(conn, table_name, start_date, end_date, **kwargs):
     return df
 
 def create_market_hours_index(start_date, end_date):
-    """Creates a 1-minute DatetimeIndex for 24-hour trading."""
-    all_dates = pd.date_range(start=start_date, end=end_date, freq='D')
+    """Creates a 1-minute DatetimeIndex for 24-hour trading on business days only."""
+    all_dates = pd.date_range(start=start_date, end=end_date, freq='B')
     market_minutes = []
     for date in all_dates:
         day_start = pd.Timestamp.combine(date, MARKET_OPEN)
@@ -119,7 +119,7 @@ def create_market_hours_index(start_date, end_date):
         market_minutes.append(pd.date_range(start=day_start, end=day_end, freq='1min'))
     
     full_index = pd.DatetimeIndex(np.concatenate(market_minutes))
-    logging.info(f"Created market hours index with {len(full_index)} timestamps")
+    logging.info(f"Created market hours index with {len(full_index)} timestamps (business days only)")
     return full_index
 
 def resample_to_1min(df, prefix=''):

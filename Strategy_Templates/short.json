@@ -1,0 +1,28 @@
+{
+  "strategy_name": "TestShortStrategy",
+  "position_type": "short",
+  "indicators": [
+    { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
+    { "name": "RSI", "params": { "window": 2 }, "on_column": "ES_close", "output_col": "ES_RSI_2" },
+    { "name": "MACD", "params": { "fast": 12, "slow": 26, "signal": 9 }, "on_column": "ES_close", "output_col": "ES_MACD_histogram" }
+  ],
+  "param_grid": {
+    "rsi_threshold": [60, 65, 70]
+  },
+  "entry_rules": [
+    "ES_RSI_2 > @rsi_threshold",
+    "ES_close > ES_EMA_15",
+    "VIX_close < 25",
+    "ES_MACD_histogram > 0"
+  ],
+  "exit_conditions": [
+    "percentage_stop",
+    "take_profit",
+    "trailing_stop"
+  ],
+  "exit_parameters": {
+    "stop_loss_pct": 1.5,
+    "take_profit_pct": 2.5,
+    "trailing_stop_loss_pct": 2.0
+  }
+}

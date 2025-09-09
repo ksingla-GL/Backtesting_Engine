@@ -34,20 +34,20 @@ def calculate_indicator(df, indicator_config):
     try:
         if name == 'SMA':
             window = params.get('window', 50)
-            daily_close = df[on_col].resample('D').last().dropna()
-            daily_sma = daily_close.rolling(window=window, min_periods=window).mean().shift(1)
+            daily_open = df[on_col].resample('D').first().dropna()
+            daily_sma = daily_open.rolling(window=window, min_periods=window).mean()
             df[out_col] = daily_sma.reindex(df.index, method='ffill').ffill()
                 
         elif name == 'EMA':
             span = params.get('span', params.get('window'))
-            daily_close = df[on_col].resample('D').last().dropna()
-            daily_ema = daily_close.ewm(span=span, adjust=False).mean().shift(1)
+            daily_open = df[on_col].resample('D').first().dropna()
+            daily_ema = daily_open.ewm(span=span, adjust=False).mean()
             df[out_col] = daily_ema.reindex(df.index, method='ffill').ffill()
                 
         elif name == 'RSI':
             window = params.get('window', 2)
-            daily_close = df[on_col].resample('D').last().dropna()
-            daily_rsi = ta.momentum.rsi(daily_close, window=window).shift(1)
+            daily_open = df[on_col].resample('D').first().dropna()
+            daily_rsi = ta.momentum.rsi(daily_open, window=window)
             df[out_col] = daily_rsi.reindex(df.index, method='ffill').ffill()
         
         elif name == 'ATR':
@@ -63,12 +63,12 @@ def calculate_indicator(df, indicator_config):
                 return df
             
             # Calculate on daily data
-            daily_high = df[high_col].resample('D').max().dropna()
-            daily_low = df[low_col].resample('D').min().dropna()
-            daily_close = df[close_col].resample('D').last().dropna()
+            daily_high = df[high_col].resample('D').max().shift(1).dropna()
+            daily_low = df[low_col].resample('D').min().shift(1).dropna()
+            daily_close = df[close_col].resample('D').last().shift(1).dropna()
             
             # Calculate True Range
-            prev_close = daily_close.shift(1)
+            prev_close = daily_close
             tr1 = daily_high - daily_low
             tr2 = abs(daily_high - prev_close)
             tr3 = abs(daily_low - prev_close)
@@ -83,13 +83,13 @@ def calculate_indicator(df, indicator_config):
         elif name == 'RollingHigh':
             daily_data = df[on_col].resample('D').max()
             window_size = params.get('window', 10)
-            rolling_data = daily_data.rolling(window=window_size, min_periods=1).max().shift(1)
+            rolling_data = daily_data.rolling(window=window_size, min_periods=1).max().shift(1).dropna()
             df[out_col] = rolling_data.reindex(df.index, method='ffill').ffill()
         
         elif name == 'RollingLow':
             daily_data = df[on_col].resample('D').min()
             window_size = params.get('window', 10)
-            rolling_data = daily_data.rolling(window=window_size, min_periods=1).min().shift(1)
+            rolling_data = daily_data.rolling(window=window_size, min_periods=1).min().shift(1).dropna()
             df[out_col] = rolling_data.reindex(df.index, method='ffill').ffill()
         
         elif name == 'PrevDayClose':
@@ -125,12 +125,12 @@ def calculate_indicator(df, indicator_config):
             slow = params.get('slow', 26)
             signal = params.get('signal', 9)
             
-            # Calculate on daily data
-            daily_close = df[on_col].resample('D').last().dropna()
+            # Calculate on daily data using opens
+            daily_open = df[on_col].resample('D').first().dropna()
             
             # Calculate MACD line
-            ema_fast = daily_close.ewm(span=fast, adjust=False).mean()
-            ema_slow = daily_close.ewm(span=slow, adjust=False).mean()
+            ema_fast = daily_open.ewm(span=fast, adjust=False).mean()
+            ema_slow = daily_open.ewm(span=slow, adjust=False).mean()
             macd_line = ema_fast - ema_slow
             
             # Calculate signal line
@@ -140,7 +140,7 @@ def calculate_indicator(df, indicator_config):
             macd_histogram = macd_line - signal_line
             
             # Reindex to 1-minute
-            df[out_col] = macd_histogram.shift(1).reindex(df.index, method='ffill').ffill()
+            df[out_col] = macd_histogram.reindex(df.index, method='ffill').ffill()
 
         # NEW INDICATORS START HERE
         elif name == 'PriceAtTime':
@@ -346,42 +346,42 @@ def calculate_indicator(df, indicator_config):
         
         elif name == 'ADX':
             window = params.get('window', 14)
-            # Need high, low, close for ADX calculation
+            # Need high, low, open for ADX calculation
             instrument = on_col.split('_')[0]
-            daily_high = df[f"{instrument}_high"].resample('D').max().dropna()
-            daily_low = df[f"{instrument}_low"].resample('D').min().dropna()
-            daily_close = df[on_col].resample('D').last().dropna()
-            daily_adx = ta.trend.adx(daily_high, daily_low, daily_close, window=window).shift(1)
+            daily_high = df[f"{instrument}_high"].resample('D').max().shift(1).dropna()
+            daily_low = df[f"{instrument}_low"].resample('D').min().shift(1).dropna()
+            daily_close = df[f"{instrument}_close"].resample('D').last().shift(1).dropna()
+            daily_adx = ta.trend.adx(daily_high, daily_low, daily_close, window=window)
             df[out_col] = daily_adx.reindex(df.index, method='ffill').ffill()
 
         elif name == 'EMASlope':
             span = params.get('span')
             lookback = params.get('lookback', 1)
-            daily_close = df[on_col].resample('D').last().dropna()
-            daily_ema = daily_close.ewm(span=span, adjust=False).mean()
-            daily_slope = ((daily_ema - daily_ema.shift(lookback)) / daily_ema.shift(lookback)).shift(1)
+            daily_open = df[on_col].resample('D').first().dropna()
+            daily_ema = daily_open.ewm(span=span, adjust=False).mean()
+            daily_slope = ((daily_ema - daily_ema.shift(lookback)) / daily_ema.shift(lookback))
             df[out_col] = daily_slope.reindex(df.index, method='ffill').ffill()
 
         elif name == 'VIXChange':
             lookback = params.get('lookback', 20)
-            daily_vix = df[on_col].resample('D').last().dropna()
+            daily_vix = df[on_col].resample('D').first().dropna()
             vix_sma = daily_vix.rolling(window=lookback).mean()
-            vix_declining = (daily_vix < vix_sma).shift(1)
+            vix_declining = (daily_vix < vix_sma)
             df[out_col] = vix_declining.reindex(df.index, method='ffill').ffill()
 
         elif name == 'SMASlope':
             window = params.get('window', 50)
             lookback = params.get('lookback', 1)
-            daily_close = df[on_col].resample('D').last().dropna()
-            daily_sma = daily_close.rolling(window=window, min_periods=window).mean()
-            sma_slope = (daily_sma - daily_sma.shift(lookback) > 0).shift(1)
+            daily_open = df[on_col].resample('D').first().dropna()
+            daily_sma = daily_open.rolling(window=window, min_periods=window).mean()
+            sma_slope = (daily_sma - daily_sma.shift(lookback) > 0)
             df[out_col] = sma_slope.reindex(df.index, method='ffill').ffill()
 
         elif name == 'RealizedVolatility':
             window = params.get('window', 10)
-            daily_close = df[on_col].resample('D').last().dropna()
-            daily_returns = daily_close.pct_change()
-            realized_vol = daily_returns.rolling(window=window).std().shift(1) * np.sqrt(252) * 100
+            daily_open = df[on_col].resample('D').first().dropna()
+            daily_returns = daily_open.pct_change()
+            realized_vol = daily_returns.rolling(window=window).std() * np.sqrt(252) * 100
             df[out_col] = realized_vol.reindex(df.index, method='ffill').ffill()
 
         elif name == 'ConsecutiveGreenDays':
@@ -409,41 +409,41 @@ def calculate_indicator(df, indicator_config):
 
         elif name == 'VolumeRatio':
             window = params.get('window', 20)
-            daily_volume = df[on_col].resample('D').sum()
-            avg_volume = daily_volume.rolling(window=window).mean().shift(1)
-            volume_ratio = (daily_volume / avg_volume).shift(1)
+            daily_volume = df[on_col].resample('D').sum().shift(1)
+            avg_volume = daily_volume.rolling(window=window).mean()
+            volume_ratio = (daily_volume / avg_volume)
             df[out_col] = volume_ratio.reindex(df.index, method='ffill').ffill()
 
         elif name == 'OBV':
             # On Balance Volume
             instrument = on_col.split('_')[0]
-            close_col = f"{instrument}_close"
+            open_col = f"{instrument}_close"
             
-            daily_close = df[close_col].resample('D').last()
-            daily_volume = df[on_col].resample('D').sum()
+            daily_open = df[open_col].resample('D').last().shift(1).dropna()
+            daily_volume = df[on_col].resample('D').sum().shift(1).dropna()
             
-            # Calculate OBV
-            close_diff = daily_close.diff()
+            # Calculate OBV using opens instead of closes
+            open_diff = daily_open.diff()
             obv = daily_volume.copy()
-            obv[close_diff < 0] *= -1
-            obv[close_diff == 0] = 0
-            obv = obv.cumsum().shift(1)
+            obv[open_diff < 0] *= -1
+            obv[open_diff == 0] = 0
+            obv = obv.cumsum()
             
             df[out_col] = obv.reindex(df.index, method='ffill').ffill()
 
         elif name == 'VolumeSMA':
             # Volume Simple Moving Average
             window = params.get('window', 20)
-            daily_volume = df[on_col].resample('D').sum().dropna()
-            daily_volume_sma = daily_volume.rolling(window=window, min_periods=window).mean().shift(1)
+            daily_volume = df[on_col].resample('D').sum().shift(1).dropna()
+            daily_volume_sma = daily_volume.rolling(window=window, min_periods=window).mean()
             df[out_col] = daily_volume_sma.reindex(df.index, method='ffill').ffill()
             logging.info(f"    VolumeSMA calculated with window {window}")
 
         elif name == 'VolumeEMA':
             # Volume Exponential Moving Average
             span = params.get('span', params.get('window', 20))
-            daily_volume = df[on_col].resample('D').sum().dropna()
-            daily_volume_ema = daily_volume.ewm(span=span, adjust=False).mean().shift(1)
+            daily_volume = df[on_col].resample('D').sum().shift(1).dropna()
+            daily_volume_ema = daily_volume.ewm(span=span, adjust=False).mean()
             df[out_col] = daily_volume_ema.reindex(df.index, method='ffill').ffill()
             logging.info(f"    VolumeEMA calculated with span {span}")
 
@@ -493,7 +493,7 @@ def calculate_indicator(df, indicator_config):
                 return df
                 
             daily_obv = df[obv_col].resample('D').last()
-            rolling_max = daily_obv.rolling(window=window).max().shift(1)
+            rolling_max = daily_obv.rolling(window=window).max()
             is_new_high = daily_obv >= rolling_max
             df[out_col] = is_new_high.reindex(df.index, method='ffill').fillna(False)
 
@@ -515,7 +515,6 @@ def calculate_indicator(df, indicator_config):
             # Calculate on daily data - drop NaN values to handle weekends/holidays
             daily_high = df[high_col].resample('D').max().dropna()
             daily_low = df[low_col].resample('D').min().dropna()
-            daily_close = df[close_col].resample('D').last().dropna()
             
             # Debug: Check data quality
             logging.info(f"    BreakoutRetest Debug - Daily data shape after dropping NaN: {len(daily_high)} days")
@@ -561,7 +560,6 @@ def calculate_indicator(df, indicator_config):
             valid_dates = non_nan_rolling.index
             daily_high = daily_high.reindex(valid_dates)
             daily_low = daily_low.reindex(valid_dates)
-            daily_close = daily_close.reindex(valid_dates)
             rolling_20d_high = non_nan_rolling
             
             # Step 2: Identify breakouts - when today's high breaks above 20-day high

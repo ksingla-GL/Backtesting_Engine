@@ -1,0 +1,52 @@
+{
+  "strategy_name": "QuickPanicES_10of12",
+  "position_type": "long",
+  "indicators": [
+    { "name": "SMA", "params": { "window": 50 }, "on_column": "ES_close", "output_col": "ES_SMA_50" },
+    { "name": "EMA", "params": { "span": 9 }, "on_column": "ES_close", "output_col": "ES_EMA_9" },
+    { "name": "EMA", "params": { "span": 15 }, "on_column": "ES_close", "output_col": "ES_EMA_15" },
+    { "name": "RSI", "params": { "window": 2 }, "on_column": "ES_close", "output_col": "ES_RSI_2" },
+    { "name": "RollingHigh", "params": { "window": 10 }, "on_column": "ES_high", "output_col": "ES_High_10D" },
+    { "name": "DeclineFromPeak", "params": {}, "on_column": "ES_close", "peak_column": "ES_High_10D", "output_col": "ES_decline_from_peak" },
+    { "name": "PrevDayClose", "params": {}, "on_column": "VX_close", "output_col": "VX_Prev_day_close" },
+    { "name": "VIXSpike", "params": {}, "on_column": "VX_close", "prev_close_col": "VX_Prev_day_close", "output_col": "VX_spike" }
+  ],
+  "param_grid": {
+    "es_decline_pct": [-0.5, -1, -2, -3]
+  },
+  "base_entry_rules": [
+    "ES_close > ES_SMA_50",
+    "ES_decline_from_peak <= @es_decline_pct",
+    "ES_RSI_2 > 10"
+  ],
+  "conditional_entry_rules": [
+    {
+      "condition": "True",
+      "rule": {
+        "type": "sum_of_conditions",
+        "conditions": [
+          "VIX_close < 25",
+          "VX_spike < 25",
+          "TRIN_close < 1.5",
+          "VIX_VXV_RATIO < 1.0",
+          "FED_STANCE <= 2",
+          "CNN_FEAR_GREED > 35",
+          "NAAIM > 40",
+          "BUFFETT_INDICATOR < 200",
+          "MARKET_BREADTH > 40"
+        ],
+        "threshold": "8"
+      }
+    }
+  ],
+  "exit_conditions": [
+    "percentage_stop",
+    "take_profit",
+    "trailing_stop"
+  ],
+  "exit_parameters": {
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 4,
+    "trailing_stop_loss_pct": 2
+  }
+}
