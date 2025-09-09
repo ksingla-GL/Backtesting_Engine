@@ -515,7 +515,7 @@ def main():
                 data_for_numba['vix_closes'] = df_with_signals['VIX_close'].values
                 # Create previous day VIX close array for spike detection
                 vix_prev_day = df_with_signals['VIX_close'].resample('D').last().shift(1)
-                data_for_numba['entry_vix_prices'] = vix_prev_day.reindex(df_with_signals.index, method='ffill').fillna(method='bfill').values
+                data_for_numba['entry_vix_prices'] = vix_prev_day.reindex(df_with_signals.index, method='ffill').values
                 logging.info(f"VIX data loaded: {len(data_for_numba['vix_closes'])} values, sample: {data_for_numba['vix_closes'][:5]}")
                 logging.info(f"VIX entry prices loaded: {len(data_for_numba['entry_vix_prices'])} values, sample: {data_for_numba['entry_vix_prices'][:5]}")
             else:

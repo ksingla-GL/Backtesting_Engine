@@ -55,7 +55,7 @@ class MainDailyBacktester:
             self.logger.error(f"Error loading strategy config: {e}")
             return None
     
-    def run_strategy_backtest(self, strategy_name: str, data_file: str = 'top_v2_daily_data_2022.csv') -> dict:
+    def run_strategy_backtest(self, strategy_name: str, data_file: str = 'top_v2_daily_data_2022.csv', skip_weekends_holidays: bool = False) -> dict:
         """Run complete backtest for a strategy"""
         self.logger.info(f"Starting backtest for strategy: {strategy_name}")
         
@@ -65,7 +65,7 @@ class MainDailyBacktester:
             return None
         
         # Load data
-        data = self.data_handler.load_data(data_file)
+        data = self.data_handler.load_data(data_file, skip_weekends_holidays)
         if data is None:
             self.logger.error("Failed to load data")
             return None
@@ -409,14 +409,17 @@ def main():
     parser.add_argument('strategy', help='Strategy name (without .json extension)')
     parser.add_argument('--data', default='top_v2_daily_data_2022.csv', help='Data file name')
     parser.add_argument('--output', help='Output Excel file name (auto-generated if not provided)')
+    parser.add_argument('--include-weekends-holidays', action='store_true', 
+                       help='Include weekends and holidays in the data (default: skip them)')
     
     args = parser.parse_args()
     
     # Create backtester
     backtester = MainDailyBacktester()
     
-    # Run backtest
-    results = backtester.run_strategy_backtest(args.strategy, args.data)
+    # Run backtest (skip_weekends_holidays is opposite of include_weekends_holidays)
+    results = backtester.run_strategy_backtest(args.strategy, args.data, 
+                                             skip_weekends_holidays=not args.include_weekends_holidays)
     
     if results:
         # Print performance summary

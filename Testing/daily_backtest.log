@@ -1,0 +1,1256 @@
+2025-09-09 22:50:29,925 - __main__ - INFO - Starting backtest for strategy: top_v2
+2025-09-09 22:50:29,926 - __main__ - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 22:50:29,932 - daily_data_handler - INFO - Loaded 310 days of data
+2025-09-09 22:50:29,932 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 22:50:29,933 - daily_data_handler - INFO - Data validation passed
+2025-09-09 22:50:29,935 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 22:50:29,935 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 22:50:29,936 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 22:50:29,936 - __main__ - INFO - Calculating indicators...
+2025-09-09 22:50:29,936 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 22:50:29,936 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 22:50:29,937 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 22:50:29,937 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 22:50:29,937 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 22:50:29,938 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 22:50:29,940 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 22:50:29,941 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 22:50:29,941 - __main__ - INFO - Generating signals...
+2025-09-09 22:50:29,941 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 22:50:29,941 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 22:50:29,943 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 22:50:29,943 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 22:50:29,945 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 22:50:29,946 - daily_signal_generator - INFO - Generated 49 entry signals
+2025-09-09 22:50:29,946 - __main__ - INFO - Running backtest...
+2025-09-09 22:50:29,946 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 22:50:29,946 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 22:50:29,946 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 22:50:29,946 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 22:50:29,946 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 22:50:29,947 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 22:50:29,948 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 22:50:29,949 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 22:50:29,949 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 22:50:29,949 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 22:50:29,950 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 22:50:29,950 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 22:50:29,951 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 22:50:29,951 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 22:50:29,951 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 22:50:29,952 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 22:50:29,953 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 22:50:29,953 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 22:50:29,953 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 22:50:29,953 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 22:50:29,954 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 22:50:29,954 - daily_backtest_engine - INFO - Enter long position on 2022-05-15: $4025.00, size: 4.92
+2025-09-09 22:50:29,955 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-471.00
+2025-09-09 22:50:29,955 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.01
+2025-09-09 22:50:29,955 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1166.50
+2025-09-09 22:50:29,955 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.77
+2025-09-09 22:50:29,956 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-357.92
+2025-09-09 22:50:29,956 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 22:50:29,956 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-313.95
+2025-09-09 22:50:29,957 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 22:50:29,957 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.37
+2025-09-09 22:50:29,957 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 22:50:29,958 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.10
+2025-09-09 22:50:29,958 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.25
+2025-09-09 22:50:29,958 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $945.27
+2025-09-09 22:50:29,959 - daily_backtest_engine - INFO - Enter long position on 2022-07-03: $3828.50, size: 5.17
+2025-09-09 22:50:29,959 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-135.78
+2025-09-09 22:50:29,964 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.30
+2025-09-09 22:50:29,964 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-448.92
+2025-09-09 22:50:29,965 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.29
+2025-09-09 22:50:29,965 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-454.54
+2025-09-09 22:50:29,965 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.29
+2025-09-09 22:50:29,966 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-601.66
+2025-09-09 22:50:29,966 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.19
+2025-09-09 22:50:29,966 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.24
+2025-09-09 22:50:29,973 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 22:50:29,973 - daily_backtest_engine - INFO - Final portfolio value: $97086.95
+2025-09-09 22:50:29,974 - __main__ - INFO - Backtest completed successfully
+2025-09-09 22:50:29,974 - __main__ - INFO - Creating Excel report: Backtest_Report_top_v2_20250909_225029.xlsx
+2025-09-09 22:50:30,274 - __main__ - INFO - Excel report saved: Backtest_Report_top_v2_20250909_225029.xlsx
+2025-09-09 22:50:38,816 - main_daily_backtester - INFO - Starting backtest for strategy: top_v2
+2025-09-09 22:50:38,816 - main_daily_backtester - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 22:50:38,821 - daily_data_handler - INFO - Loaded 310 days of data
+2025-09-09 22:50:38,821 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 22:50:38,822 - daily_data_handler - INFO - Data validation passed
+2025-09-09 22:50:38,823 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 22:50:38,824 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 22:50:38,824 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 22:50:38,824 - main_daily_backtester - INFO - Calculating indicators...
+2025-09-09 22:50:38,824 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 22:50:38,824 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 22:50:38,825 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 22:50:38,825 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 22:50:38,826 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 22:50:38,826 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 22:50:38,829 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 22:50:38,829 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 22:50:38,829 - main_daily_backtester - INFO - Generating signals...
+2025-09-09 22:50:38,830 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 22:50:38,830 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 22:50:38,831 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 22:50:38,832 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 22:50:38,833 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 22:50:38,834 - daily_signal_generator - INFO - Generated 49 entry signals
+2025-09-09 22:50:38,834 - main_daily_backtester - INFO - Running backtest...
+2025-09-09 22:50:38,834 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 22:50:38,834 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 22:50:38,834 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 22:50:38,834 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 22:50:38,834 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 22:50:38,836 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 22:50:38,836 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 22:50:38,837 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 22:50:38,837 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 22:50:38,837 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 22:50:38,838 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 22:50:38,838 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 22:50:38,838 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 22:50:38,838 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 22:50:38,838 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 22:50:38,840 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 22:50:38,840 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 22:50:38,840 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 22:50:38,840 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 22:50:38,840 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 22:50:38,841 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 22:50:38,841 - daily_backtest_engine - INFO - Enter long position on 2022-05-15: $4025.00, size: 4.92
+2025-09-09 22:50:38,841 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-471.00
+2025-09-09 22:50:38,841 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.01
+2025-09-09 22:50:38,842 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1166.50
+2025-09-09 22:50:38,842 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.77
+2025-09-09 22:50:38,842 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-357.92
+2025-09-09 22:50:38,842 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 22:50:38,842 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-313.95
+2025-09-09 22:50:38,843 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 22:50:38,843 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.37
+2025-09-09 22:50:38,843 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 22:50:38,843 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.10
+2025-09-09 22:50:38,844 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.25
+2025-09-09 22:50:38,844 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $945.27
+2025-09-09 22:50:38,844 - daily_backtest_engine - INFO - Enter long position on 2022-07-03: $3828.50, size: 5.17
+2025-09-09 22:50:38,845 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-135.78
+2025-09-09 22:50:38,848 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.30
+2025-09-09 22:50:38,848 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-448.92
+2025-09-09 22:50:38,848 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.29
+2025-09-09 22:50:38,848 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-454.54
+2025-09-09 22:50:38,849 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.29
+2025-09-09 22:50:38,849 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-601.66
+2025-09-09 22:50:38,849 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.19
+2025-09-09 22:50:38,849 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.24
+2025-09-09 22:50:38,855 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 22:50:38,855 - daily_backtest_engine - INFO - Final portfolio value: $97086.95
+2025-09-09 22:50:38,855 - main_daily_backtester - INFO - Backtest completed successfully
+2025-09-09 22:56:16,289 - __main__ - INFO - Starting backtest for strategy: top_v2
+2025-09-09 22:56:16,289 - __main__ - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 22:56:16,296 - daily_data_handler - INFO - Filtered out 60 non-trading days (weekends/holidays)
+2025-09-09 22:56:16,296 - daily_data_handler - INFO - Loaded 250 trading days of data
+2025-09-09 22:56:16,297 - daily_data_handler - INFO - Date range: 2022-01-04 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 22:56:16,297 - daily_data_handler - INFO - Data validation passed
+2025-09-09 22:56:16,299 - daily_data_handler - INFO - Forward filled 19 missing values in CNN_FEAR_GREED
+2025-09-09 22:56:16,299 - __main__ - INFO - Calculating indicators...
+2025-09-09 22:56:16,300 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 22:56:16,300 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 22:56:16,300 - daily_signal_generator - INFO - Calculated EMA(9) for 250 data points
+2025-09-09 22:56:16,301 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 22:56:16,301 - daily_signal_generator - INFO - Calculated EMA(15) for 250 data points
+2025-09-09 22:56:16,301 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 22:56:16,303 - daily_signal_generator - INFO - Calculated RSI(2) for 250 data points
+2025-09-09 22:56:16,304 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 22:56:16,304 - __main__ - INFO - Generating signals...
+2025-09-09 22:56:16,304 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 22:56:16,304 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 22:56:16,305 - daily_signal_generator - INFO - Base rule 1: 99 true signals
+2025-09-09 22:56:16,306 - daily_signal_generator - INFO - Base rule 2: 118 true signals
+2025-09-09 22:56:16,308 - daily_signal_generator - INFO - Conditional group 1: 247 true signals
+2025-09-09 22:56:16,309 - daily_signal_generator - INFO - Generated 44 entry signals
+2025-09-09 22:56:16,309 - __main__ - INFO - Running backtest...
+2025-09-09 22:56:16,309 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 22:56:16,309 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 22:56:16,309 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 22:56:16,309 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 22:56:16,309 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 22:56:16,310 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 22:56:16,311 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 22:56:16,311 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 22:56:16,311 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 22:56:16,312 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 22:56:16,312 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 22:56:16,312 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 22:56:16,312 - daily_backtest_engine - INFO - Exit trade on 2022-03-14: stop_loss, PnL: $-256.32
+2025-09-09 22:56:16,313 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 22:56:16,313 - daily_backtest_engine - INFO - Exit trade on 2022-03-21: take_profit, PnL: $882.68
+2025-09-09 22:56:16,315 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.69
+2025-09-09 22:56:16,315 - daily_backtest_engine - INFO - Exit trade on 2022-05-02: stop_loss, PnL: $-547.94
+2025-09-09 22:56:16,315 - daily_backtest_engine - INFO - Enter long position on 2022-05-04: $4173.25, size: 4.77
+2025-09-09 22:56:16,316 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-157.51
+2025-09-09 22:56:16,316 - daily_backtest_engine - INFO - Enter long position on 2022-05-16: $4000.00, size: 4.97
+2025-09-09 22:56:16,316 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-351.76
+2025-09-09 22:56:16,316 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.04
+2025-09-09 22:56:16,317 - daily_backtest_engine - INFO - Exit trade on 2022-05-31: take_profit, PnL: $1180.69
+2025-09-09 22:56:16,317 - daily_backtest_engine - INFO - Enter long position on 2022-06-01: $4146.75, size: 4.84
+2025-09-09 22:56:16,317 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-211.57
+2025-09-09 22:56:16,317 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.79
+2025-09-09 22:56:16,318 - daily_backtest_engine - INFO - Exit trade on 2022-06-06: stop_loss, PnL: $-224.00
+2025-09-09 22:56:16,318 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.86
+2025-09-09 22:56:16,318 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-454.05
+2025-09-09 22:56:16,318 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.23
+2025-09-09 22:56:16,318 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-502.18
+2025-09-09 22:56:16,319 - daily_backtest_engine - INFO - Enter long position on 2022-06-22: $3734.25, size: 5.30
+2025-09-09 22:56:16,319 - daily_backtest_engine - INFO - Exit trade on 2022-06-27: take_profit, PnL: $1020.72
+2025-09-09 22:56:16,319 - daily_backtest_engine - INFO - Enter long position on 2022-06-28: $3899.50, size: 5.12
+2025-09-09 22:56:16,319 - daily_backtest_engine - INFO - Exit trade on 2022-06-29: stop_loss, PnL: $-344.56
+2025-09-09 22:56:16,320 - daily_backtest_engine - INFO - Enter long position on 2022-07-05: $3843.00, size: 5.18
+2025-09-09 22:56:16,320 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: stop_loss, PnL: $-211.12
+2025-09-09 22:56:16,323 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.32
+2025-09-09 22:56:16,323 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-451.00
+2025-09-09 22:56:16,324 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.31
+2025-09-09 22:56:16,324 - daily_backtest_engine - INFO - Exit trade on 2022-10-10: stop_loss, PnL: $-446.03
+2025-09-09 22:56:16,324 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.31
+2025-09-09 22:56:16,324 - daily_backtest_engine - INFO - Exit trade on 2022-10-17: stop_loss, PnL: $-483.61
+2025-09-09 22:56:16,325 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.22
+2025-09-09 22:56:16,325 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-290.98
+2025-09-09 22:56:16,332 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 22:56:16,332 - daily_backtest_engine - INFO - Final portfolio value: $97668.46
+2025-09-09 22:56:16,333 - __main__ - INFO - Backtest completed successfully
+2025-09-09 22:56:16,333 - __main__ - INFO - Creating Excel report: Backtest_Report_top_v2_20250909_225616.xlsx
+2025-09-09 22:56:16,640 - __main__ - INFO - Excel report saved: Backtest_Report_top_v2_20250909_225616.xlsx
+2025-09-09 22:56:22,890 - __main__ - INFO - Starting backtest for strategy: top_v2
+2025-09-09 22:56:22,891 - __main__ - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 22:56:22,903 - daily_data_handler - INFO - Loaded 310 trading days of data
+2025-09-09 22:56:22,904 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 22:56:22,905 - daily_data_handler - INFO - Data validation passed
+2025-09-09 22:56:22,908 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 22:56:22,909 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 22:56:22,910 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 22:56:22,910 - __main__ - INFO - Calculating indicators...
+2025-09-09 22:56:22,910 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 22:56:22,910 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 22:56:22,911 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 22:56:22,913 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 22:56:22,914 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 22:56:22,915 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 22:56:22,921 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 22:56:22,922 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 22:56:22,922 - __main__ - INFO - Generating signals...
+2025-09-09 22:56:22,922 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 22:56:22,922 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 22:56:22,925 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 22:56:22,926 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 22:56:22,929 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 22:56:22,932 - daily_signal_generator - INFO - Generated 49 entry signals
+2025-09-09 22:56:22,932 - __main__ - INFO - Running backtest...
+2025-09-09 22:56:22,932 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 22:56:22,932 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 22:56:22,932 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 22:56:22,932 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 22:56:22,932 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 22:56:22,937 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 22:56:22,938 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 22:56:22,939 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 22:56:22,939 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 22:56:22,940 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 22:56:22,940 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 22:56:22,940 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 22:56:22,941 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 22:56:22,941 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 22:56:22,941 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 22:56:22,943 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 22:56:22,943 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 22:56:22,944 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 22:56:22,944 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 22:56:22,944 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 22:56:22,945 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 22:56:22,945 - daily_backtest_engine - INFO - Enter long position on 2022-05-15: $4025.00, size: 4.92
+2025-09-09 22:56:22,946 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-471.00
+2025-09-09 22:56:22,946 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.01
+2025-09-09 22:56:22,947 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1166.50
+2025-09-09 22:56:22,947 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.77
+2025-09-09 22:56:22,948 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-357.92
+2025-09-09 22:56:22,948 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 22:56:22,948 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-313.95
+2025-09-09 22:56:22,949 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 22:56:22,949 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.37
+2025-09-09 22:56:22,950 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 22:56:22,950 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.10
+2025-09-09 22:56:22,950 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.25
+2025-09-09 22:56:22,951 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $945.27
+2025-09-09 22:56:22,951 - daily_backtest_engine - INFO - Enter long position on 2022-07-03: $3828.50, size: 5.17
+2025-09-09 22:56:22,952 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-135.78
+2025-09-09 22:56:22,958 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.30
+2025-09-09 22:56:22,958 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-448.92
+2025-09-09 22:56:22,959 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.29
+2025-09-09 22:56:22,959 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-454.54
+2025-09-09 22:56:22,960 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.29
+2025-09-09 22:56:22,960 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-601.66
+2025-09-09 22:56:22,960 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.19
+2025-09-09 22:56:22,961 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.24
+2025-09-09 22:56:22,973 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 22:56:22,973 - daily_backtest_engine - INFO - Final portfolio value: $97086.95
+2025-09-09 22:56:22,974 - __main__ - INFO - Backtest completed successfully
+2025-09-09 22:56:22,974 - __main__ - INFO - Creating Excel report: Backtest_Report_top_v2_20250909_225622.xlsx
+2025-09-09 22:56:23,378 - __main__ - INFO - Excel report saved: Backtest_Report_top_v2_20250909_225622.xlsx
+2025-09-09 22:57:55,172 - __main__ - INFO - Starting backtest for strategy: top_v2
+2025-09-09 22:57:55,172 - __main__ - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 22:57:55,179 - daily_data_handler - INFO - Filtered out 60 non-trading days (weekends/holidays)
+2025-09-09 22:57:55,179 - daily_data_handler - INFO - Loaded 250 trading days of data
+2025-09-09 22:57:55,180 - daily_data_handler - INFO - Date range: 2022-01-04 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 22:57:55,180 - daily_data_handler - INFO - Data validation passed
+2025-09-09 22:57:55,182 - daily_data_handler - INFO - Forward filled 19 missing values in CNN_FEAR_GREED
+2025-09-09 22:57:55,182 - __main__ - INFO - Calculating indicators...
+2025-09-09 22:57:55,182 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 22:57:55,182 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 22:57:55,183 - daily_signal_generator - INFO - Calculated EMA(9) for 250 data points
+2025-09-09 22:57:55,183 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 22:57:55,184 - daily_signal_generator - INFO - Calculated EMA(15) for 250 data points
+2025-09-09 22:57:55,184 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 22:57:55,186 - daily_signal_generator - INFO - Calculated RSI(2) for 250 data points
+2025-09-09 22:57:55,186 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 22:57:55,186 - __main__ - INFO - Generating signals...
+2025-09-09 22:57:55,186 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 22:57:55,186 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 22:57:55,188 - daily_signal_generator - INFO - Base rule 1: 99 true signals
+2025-09-09 22:57:55,188 - daily_signal_generator - INFO - Base rule 2: 118 true signals
+2025-09-09 22:57:55,190 - daily_signal_generator - INFO - Conditional group 1: 247 true signals
+2025-09-09 22:57:55,191 - daily_signal_generator - INFO - Generated 44 entry signals
+2025-09-09 22:57:55,192 - __main__ - INFO - Running backtest...
+2025-09-09 22:57:55,192 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 22:57:55,192 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 22:57:55,192 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 22:57:55,192 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 22:57:55,192 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 22:57:55,193 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 22:57:55,193 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 22:57:55,194 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 22:57:55,194 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 22:57:55,194 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 22:57:55,194 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 22:57:55,195 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 22:57:55,195 - daily_backtest_engine - INFO - Exit trade on 2022-03-14: stop_loss, PnL: $-256.32
+2025-09-09 22:57:55,195 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 22:57:55,195 - daily_backtest_engine - INFO - Exit trade on 2022-03-21: take_profit, PnL: $882.68
+2025-09-09 22:57:55,196 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.69
+2025-09-09 22:57:55,197 - daily_backtest_engine - INFO - Exit trade on 2022-05-02: stop_loss, PnL: $-547.94
+2025-09-09 22:57:55,197 - daily_backtest_engine - INFO - Enter long position on 2022-05-04: $4173.25, size: 4.77
+2025-09-09 22:57:55,197 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-157.51
+2025-09-09 22:57:55,197 - daily_backtest_engine - INFO - Enter long position on 2022-05-16: $4000.00, size: 4.97
+2025-09-09 22:57:55,197 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-351.76
+2025-09-09 22:57:55,198 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.04
+2025-09-09 22:57:55,198 - daily_backtest_engine - INFO - Exit trade on 2022-05-31: take_profit, PnL: $1180.69
+2025-09-09 22:57:55,198 - daily_backtest_engine - INFO - Enter long position on 2022-06-01: $4146.75, size: 4.84
+2025-09-09 22:57:55,198 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-211.57
+2025-09-09 22:57:55,198 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.79
+2025-09-09 22:57:55,198 - daily_backtest_engine - INFO - Exit trade on 2022-06-06: stop_loss, PnL: $-224.00
+2025-09-09 22:57:55,199 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.86
+2025-09-09 22:57:55,199 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-454.05
+2025-09-09 22:57:55,199 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.23
+2025-09-09 22:57:55,199 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-502.18
+2025-09-09 22:57:55,199 - daily_backtest_engine - INFO - Enter long position on 2022-06-22: $3734.25, size: 5.30
+2025-09-09 22:57:55,199 - daily_backtest_engine - INFO - Exit trade on 2022-06-27: take_profit, PnL: $1020.72
+2025-09-09 22:57:55,200 - daily_backtest_engine - INFO - Enter long position on 2022-06-28: $3899.50, size: 5.12
+2025-09-09 22:57:55,200 - daily_backtest_engine - INFO - Exit trade on 2022-06-29: stop_loss, PnL: $-344.56
+2025-09-09 22:57:55,200 - daily_backtest_engine - INFO - Enter long position on 2022-07-05: $3843.00, size: 5.18
+2025-09-09 22:57:55,200 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: stop_loss, PnL: $-211.12
+2025-09-09 22:57:55,203 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.32
+2025-09-09 22:57:55,203 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-451.00
+2025-09-09 22:57:55,203 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.31
+2025-09-09 22:57:55,203 - daily_backtest_engine - INFO - Exit trade on 2022-10-10: stop_loss, PnL: $-446.03
+2025-09-09 22:57:55,203 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.31
+2025-09-09 22:57:55,204 - daily_backtest_engine - INFO - Exit trade on 2022-10-17: stop_loss, PnL: $-483.61
+2025-09-09 22:57:55,204 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.22
+2025-09-09 22:57:55,204 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-290.98
+2025-09-09 22:57:55,210 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 22:57:55,210 - daily_backtest_engine - INFO - Final portfolio value: $97668.46
+2025-09-09 22:57:55,211 - __main__ - INFO - Backtest completed successfully
+2025-09-09 22:57:55,211 - __main__ - INFO - Creating Excel report: Backtest_Report_top_v2_20250909_225755.xlsx
+2025-09-09 22:57:55,442 - __main__ - INFO - Excel report saved: Backtest_Report_top_v2_20250909_225755.xlsx
+2025-09-09 22:58:05,467 - main_daily_backtester - INFO - Starting backtest for strategy: top_v2
+2025-09-09 22:58:05,467 - main_daily_backtester - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 22:58:05,474 - daily_data_handler - INFO - Filtered out 60 non-trading days (weekends/holidays)
+2025-09-09 22:58:05,474 - daily_data_handler - INFO - Loaded 250 trading days of data
+2025-09-09 22:58:05,474 - daily_data_handler - INFO - Date range: 2022-01-04 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 22:58:05,475 - daily_data_handler - INFO - Data validation passed
+2025-09-09 22:58:05,477 - daily_data_handler - INFO - Forward filled 19 missing values in CNN_FEAR_GREED
+2025-09-09 22:58:05,477 - main_daily_backtester - INFO - Calculating indicators...
+2025-09-09 22:58:05,477 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 22:58:05,477 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 22:58:05,478 - daily_signal_generator - INFO - Calculated EMA(9) for 250 data points
+2025-09-09 22:58:05,478 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 22:58:05,479 - daily_signal_generator - INFO - Calculated EMA(15) for 250 data points
+2025-09-09 22:58:05,479 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 22:58:05,480 - daily_signal_generator - INFO - Calculated RSI(2) for 250 data points
+2025-09-09 22:58:05,481 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 22:58:05,481 - main_daily_backtester - INFO - Generating signals...
+2025-09-09 22:58:05,481 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 22:58:05,481 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 22:58:05,483 - daily_signal_generator - INFO - Base rule 1: 99 true signals
+2025-09-09 22:58:05,483 - daily_signal_generator - INFO - Base rule 2: 118 true signals
+2025-09-09 22:58:05,485 - daily_signal_generator - INFO - Conditional group 1: 247 true signals
+2025-09-09 22:58:05,486 - daily_signal_generator - INFO - Generated 44 entry signals
+2025-09-09 22:58:05,486 - main_daily_backtester - INFO - Running backtest...
+2025-09-09 22:58:05,486 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 22:58:05,486 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 22:58:05,486 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 22:58:05,486 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 22:58:05,486 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 22:58:05,487 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 22:58:05,488 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 22:58:05,488 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 22:58:05,489 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 22:58:05,489 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 22:58:05,489 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 22:58:05,490 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 22:58:05,490 - daily_backtest_engine - INFO - Exit trade on 2022-03-14: stop_loss, PnL: $-256.32
+2025-09-09 22:58:05,490 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 22:58:05,491 - daily_backtest_engine - INFO - Exit trade on 2022-03-21: take_profit, PnL: $882.68
+2025-09-09 22:58:05,492 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.69
+2025-09-09 22:58:05,493 - daily_backtest_engine - INFO - Exit trade on 2022-05-02: stop_loss, PnL: $-547.94
+2025-09-09 22:58:05,493 - daily_backtest_engine - INFO - Enter long position on 2022-05-04: $4173.25, size: 4.77
+2025-09-09 22:58:05,493 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-157.51
+2025-09-09 22:58:05,493 - daily_backtest_engine - INFO - Enter long position on 2022-05-16: $4000.00, size: 4.97
+2025-09-09 22:58:05,494 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-351.76
+2025-09-09 22:58:05,494 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.04
+2025-09-09 22:58:05,494 - daily_backtest_engine - INFO - Exit trade on 2022-05-31: take_profit, PnL: $1180.69
+2025-09-09 22:58:05,495 - daily_backtest_engine - INFO - Enter long position on 2022-06-01: $4146.75, size: 4.84
+2025-09-09 22:58:05,495 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-211.57
+2025-09-09 22:58:05,495 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.79
+2025-09-09 22:58:05,495 - daily_backtest_engine - INFO - Exit trade on 2022-06-06: stop_loss, PnL: $-224.00
+2025-09-09 22:58:05,495 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.86
+2025-09-09 22:58:05,495 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-454.05
+2025-09-09 22:58:05,496 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.23
+2025-09-09 22:58:05,496 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-502.18
+2025-09-09 22:58:05,496 - daily_backtest_engine - INFO - Enter long position on 2022-06-22: $3734.25, size: 5.30
+2025-09-09 22:58:05,496 - daily_backtest_engine - INFO - Exit trade on 2022-06-27: take_profit, PnL: $1020.72
+2025-09-09 22:58:05,496 - daily_backtest_engine - INFO - Enter long position on 2022-06-28: $3899.50, size: 5.12
+2025-09-09 22:58:05,497 - daily_backtest_engine - INFO - Exit trade on 2022-06-29: stop_loss, PnL: $-344.56
+2025-09-09 22:58:05,497 - daily_backtest_engine - INFO - Enter long position on 2022-07-05: $3843.00, size: 5.18
+2025-09-09 22:58:05,497 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: stop_loss, PnL: $-211.12
+2025-09-09 22:58:05,500 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.32
+2025-09-09 22:58:05,500 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-451.00
+2025-09-09 22:58:05,500 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.31
+2025-09-09 22:58:05,500 - daily_backtest_engine - INFO - Exit trade on 2022-10-10: stop_loss, PnL: $-446.03
+2025-09-09 22:58:05,501 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.31
+2025-09-09 22:58:05,501 - daily_backtest_engine - INFO - Exit trade on 2022-10-17: stop_loss, PnL: $-483.61
+2025-09-09 22:58:05,501 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.22
+2025-09-09 22:58:05,501 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-290.98
+2025-09-09 22:58:05,508 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 22:58:05,509 - daily_backtest_engine - INFO - Final portfolio value: $97668.46
+2025-09-09 22:58:05,509 - main_daily_backtester - INFO - Backtest completed successfully
+2025-09-09 23:00:26,143 - __main__ - INFO - Starting backtest for strategy: top_v2
+2025-09-09 23:00:26,143 - __main__ - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 23:00:26,151 - daily_data_handler - INFO - Filtered out 60 non-trading days (weekends/holidays)
+2025-09-09 23:00:26,151 - daily_data_handler - INFO - Loaded 250 trading days of data
+2025-09-09 23:00:26,151 - daily_data_handler - INFO - Date range: 2022-01-04 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 23:00:26,152 - daily_data_handler - INFO - Data validation passed
+2025-09-09 23:00:26,153 - daily_data_handler - INFO - Forward filled 19 missing values in CNN_FEAR_GREED
+2025-09-09 23:00:26,154 - __main__ - INFO - Calculating indicators...
+2025-09-09 23:00:26,154 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 23:00:26,154 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 23:00:26,154 - daily_signal_generator - INFO - Calculated EMA(9) for 250 data points
+2025-09-09 23:00:26,155 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 23:00:26,155 - daily_signal_generator - INFO - Calculated EMA(15) for 250 data points
+2025-09-09 23:00:26,155 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 23:00:26,157 - daily_signal_generator - INFO - Calculated RSI(2) for 250 data points
+2025-09-09 23:00:26,157 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 23:00:26,157 - __main__ - INFO - Generating signals...
+2025-09-09 23:00:26,158 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 23:00:26,158 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 23:00:26,159 - daily_signal_generator - INFO - Base rule 1: 99 true signals
+2025-09-09 23:00:26,160 - daily_signal_generator - INFO - Base rule 2: 118 true signals
+2025-09-09 23:00:26,161 - daily_signal_generator - INFO - Conditional group 1: 247 true signals
+2025-09-09 23:00:26,162 - daily_signal_generator - INFO - Generated 44 entry signals
+2025-09-09 23:00:26,162 - __main__ - INFO - Running backtest...
+2025-09-09 23:00:26,163 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 23:00:26,163 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 23:00:26,163 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 23:00:26,163 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 23:00:26,163 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 23:00:26,164 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 23:00:26,164 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 23:00:26,165 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 23:00:26,165 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 23:00:26,165 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 23:00:26,165 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 23:00:26,166 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 23:00:26,166 - daily_backtest_engine - INFO - Exit trade on 2022-03-14: stop_loss, PnL: $-256.32
+2025-09-09 23:00:26,166 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 23:00:26,166 - daily_backtest_engine - INFO - Exit trade on 2022-03-21: take_profit, PnL: $882.68
+2025-09-09 23:00:26,168 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.69
+2025-09-09 23:00:26,168 - daily_backtest_engine - INFO - Exit trade on 2022-05-02: stop_loss, PnL: $-547.94
+2025-09-09 23:00:26,168 - daily_backtest_engine - INFO - Enter long position on 2022-05-04: $4173.25, size: 4.77
+2025-09-09 23:00:26,168 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-157.51
+2025-09-09 23:00:26,169 - daily_backtest_engine - INFO - Enter long position on 2022-05-16: $4000.00, size: 4.97
+2025-09-09 23:00:26,169 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-351.76
+2025-09-09 23:00:26,169 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.04
+2025-09-09 23:00:26,169 - daily_backtest_engine - INFO - Exit trade on 2022-05-31: take_profit, PnL: $1180.69
+2025-09-09 23:00:26,169 - daily_backtest_engine - INFO - Enter long position on 2022-06-01: $4146.75, size: 4.84
+2025-09-09 23:00:26,169 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-211.57
+2025-09-09 23:00:26,170 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.79
+2025-09-09 23:00:26,170 - daily_backtest_engine - INFO - Exit trade on 2022-06-06: stop_loss, PnL: $-224.00
+2025-09-09 23:00:26,170 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.86
+2025-09-09 23:00:26,170 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-454.05
+2025-09-09 23:00:26,170 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.23
+2025-09-09 23:00:26,171 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-502.18
+2025-09-09 23:00:26,171 - daily_backtest_engine - INFO - Enter long position on 2022-06-22: $3734.25, size: 5.30
+2025-09-09 23:00:26,171 - daily_backtest_engine - INFO - Exit trade on 2022-06-27: take_profit, PnL: $1020.72
+2025-09-09 23:00:26,171 - daily_backtest_engine - INFO - Enter long position on 2022-06-28: $3899.50, size: 5.12
+2025-09-09 23:00:26,171 - daily_backtest_engine - INFO - Exit trade on 2022-06-29: stop_loss, PnL: $-344.56
+2025-09-09 23:00:26,171 - daily_backtest_engine - INFO - Enter long position on 2022-07-05: $3843.00, size: 5.18
+2025-09-09 23:00:26,172 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: stop_loss, PnL: $-211.12
+2025-09-09 23:00:26,174 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.32
+2025-09-09 23:00:26,174 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-451.00
+2025-09-09 23:00:26,175 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.31
+2025-09-09 23:00:26,175 - daily_backtest_engine - INFO - Exit trade on 2022-10-10: stop_loss, PnL: $-446.03
+2025-09-09 23:00:26,175 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.31
+2025-09-09 23:00:26,175 - daily_backtest_engine - INFO - Exit trade on 2022-10-17: stop_loss, PnL: $-483.61
+2025-09-09 23:00:26,175 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.22
+2025-09-09 23:00:26,176 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-290.98
+2025-09-09 23:00:26,182 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 23:00:26,182 - daily_backtest_engine - INFO - Final portfolio value: $97668.46
+2025-09-09 23:00:26,183 - __main__ - INFO - Backtest completed successfully
+2025-09-09 23:00:26,183 - __main__ - INFO - Creating Excel report: Backtest_Report_top_v2_20250909_230026.xlsx
+2025-09-09 23:00:26,465 - __main__ - INFO - Excel report saved: Backtest_Report_top_v2_20250909_230026.xlsx
+2025-09-09 23:00:32,612 - __main__ - INFO - Starting backtest for strategy: top_v2
+2025-09-09 23:00:32,612 - __main__ - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 23:00:32,618 - daily_data_handler - INFO - Loaded 310 trading days of data
+2025-09-09 23:00:32,619 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 23:00:32,619 - daily_data_handler - INFO - Data validation passed
+2025-09-09 23:00:32,620 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 23:00:32,621 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 23:00:32,621 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 23:00:32,621 - __main__ - INFO - Calculating indicators...
+2025-09-09 23:00:32,622 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 23:00:32,622 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 23:00:32,622 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 23:00:32,623 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 23:00:32,623 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 23:00:32,623 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 23:00:32,626 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 23:00:32,626 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 23:00:32,626 - __main__ - INFO - Generating signals...
+2025-09-09 23:00:32,626 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 23:00:32,627 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 23:00:32,628 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 23:00:32,629 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 23:00:32,631 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 23:00:32,632 - daily_signal_generator - INFO - Generated 49 entry signals
+2025-09-09 23:00:32,632 - __main__ - INFO - Running backtest...
+2025-09-09 23:00:32,632 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 23:00:32,632 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 23:00:32,632 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 23:00:32,632 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 23:00:32,632 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 23:00:32,634 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 23:00:32,635 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 23:00:32,635 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 23:00:32,635 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 23:00:32,636 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 23:00:32,636 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 23:00:32,636 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 23:00:32,636 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 23:00:32,637 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 23:00:32,637 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 23:00:32,638 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 23:00:32,638 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 23:00:32,639 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 23:00:32,639 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 23:00:32,639 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 23:00:32,639 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 23:00:32,640 - daily_backtest_engine - INFO - Enter long position on 2022-05-15: $4025.00, size: 4.92
+2025-09-09 23:00:32,640 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-471.00
+2025-09-09 23:00:32,640 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.01
+2025-09-09 23:00:32,641 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1166.50
+2025-09-09 23:00:32,641 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.77
+2025-09-09 23:00:32,641 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-357.92
+2025-09-09 23:00:32,641 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 23:00:32,641 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-313.95
+2025-09-09 23:00:32,642 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 23:00:32,642 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.37
+2025-09-09 23:00:32,642 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 23:00:32,642 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.10
+2025-09-09 23:00:32,643 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.25
+2025-09-09 23:00:32,643 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $945.27
+2025-09-09 23:00:32,643 - daily_backtest_engine - INFO - Enter long position on 2022-07-03: $3828.50, size: 5.17
+2025-09-09 23:00:32,644 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-135.78
+2025-09-09 23:00:32,648 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.30
+2025-09-09 23:00:32,648 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-448.92
+2025-09-09 23:00:32,648 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.29
+2025-09-09 23:00:32,649 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-454.54
+2025-09-09 23:00:32,649 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.29
+2025-09-09 23:00:32,649 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-601.66
+2025-09-09 23:00:32,649 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.19
+2025-09-09 23:00:32,649 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.24
+2025-09-09 23:00:32,656 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 23:00:32,656 - daily_backtest_engine - INFO - Final portfolio value: $97086.95
+2025-09-09 23:00:32,657 - __main__ - INFO - Backtest completed successfully
+2025-09-09 23:00:32,657 - __main__ - INFO - Creating Excel report: Backtest_Report_top_v2_20250909_230032.xlsx
+2025-09-09 23:00:32,927 - __main__ - INFO - Excel report saved: Backtest_Report_top_v2_20250909_230032.xlsx
+2025-09-09 23:00:45,968 - main_daily_backtester - INFO - Starting backtest for strategy: top_v2
+2025-09-09 23:00:45,969 - main_daily_backtester - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 23:00:45,974 - daily_data_handler - INFO - Loaded 310 trading days of data
+2025-09-09 23:00:45,975 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 23:00:45,975 - daily_data_handler - INFO - Data validation passed
+2025-09-09 23:00:45,977 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 23:00:45,977 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 23:00:45,978 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 23:00:45,978 - main_daily_backtester - INFO - Calculating indicators...
+2025-09-09 23:00:45,978 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 23:00:45,978 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 23:00:45,978 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 23:00:45,979 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 23:00:45,979 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 23:00:45,979 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 23:00:45,982 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 23:00:45,982 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 23:00:45,982 - main_daily_backtester - INFO - Generating signals...
+2025-09-09 23:00:45,982 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 23:00:45,982 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 23:00:45,984 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 23:00:45,984 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 23:00:45,986 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 23:00:45,987 - daily_signal_generator - INFO - Generated 49 entry signals
+2025-09-09 23:00:45,987 - main_daily_backtester - INFO - Running backtest...
+2025-09-09 23:00:45,987 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 23:00:45,987 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 23:00:45,987 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 23:00:45,987 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 23:00:45,987 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 23:00:45,989 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 23:00:45,989 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 23:00:45,990 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 23:00:45,990 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 23:00:45,991 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 23:00:45,991 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 23:00:45,992 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 23:00:45,992 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 23:00:45,993 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 23:00:45,993 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 23:00:45,995 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 23:00:45,995 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 23:00:45,995 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 23:00:45,995 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 23:00:45,995 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 23:00:45,996 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 23:00:45,996 - daily_backtest_engine - INFO - Enter long position on 2022-05-15: $4025.00, size: 4.92
+2025-09-09 23:00:45,996 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-471.00
+2025-09-09 23:00:45,997 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.01
+2025-09-09 23:00:45,997 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1166.50
+2025-09-09 23:00:45,997 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.77
+2025-09-09 23:00:45,997 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-357.92
+2025-09-09 23:00:45,997 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 23:00:45,998 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-313.95
+2025-09-09 23:00:45,998 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 23:00:45,998 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.37
+2025-09-09 23:00:45,998 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 23:00:45,998 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.10
+2025-09-09 23:00:45,999 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.25
+2025-09-09 23:00:45,999 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $945.27
+2025-09-09 23:00:45,999 - daily_backtest_engine - INFO - Enter long position on 2022-07-03: $3828.50, size: 5.17
+2025-09-09 23:00:46,000 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-135.78
+2025-09-09 23:00:46,003 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.30
+2025-09-09 23:00:46,003 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-448.92
+2025-09-09 23:00:46,003 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.29
+2025-09-09 23:00:46,004 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-454.54
+2025-09-09 23:00:46,004 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.29
+2025-09-09 23:00:46,004 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-601.66
+2025-09-09 23:00:46,005 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.19
+2025-09-09 23:00:46,005 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.24
+2025-09-09 23:00:46,012 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 23:00:46,013 - daily_backtest_engine - INFO - Final portfolio value: $97086.95
+2025-09-09 23:00:46,013 - main_daily_backtester - INFO - Backtest completed successfully
+2025-09-09 23:02:33,588 - __main__ - INFO - Starting backtest for strategy: top_v2
+2025-09-09 23:02:33,588 - __main__ - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 23:02:33,595 - daily_data_handler - INFO - Filtered out 60 non-trading days (weekends/holidays)
+2025-09-09 23:02:33,595 - daily_data_handler - INFO - Loaded 250 trading days of data
+2025-09-09 23:02:33,596 - daily_data_handler - INFO - Date range: 2022-01-04 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 23:02:33,596 - daily_data_handler - INFO - Data validation passed
+2025-09-09 23:02:33,598 - daily_data_handler - INFO - Forward filled 19 missing values in CNN_FEAR_GREED
+2025-09-09 23:02:33,598 - __main__ - INFO - Calculating indicators...
+2025-09-09 23:02:33,598 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 23:02:33,598 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 23:02:33,599 - daily_signal_generator - INFO - Calculated EMA(9) for 250 data points
+2025-09-09 23:02:33,599 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 23:02:33,600 - daily_signal_generator - INFO - Calculated EMA(15) for 250 data points
+2025-09-09 23:02:33,600 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 23:02:33,602 - daily_signal_generator - INFO - Calculated RSI(2) for 250 data points
+2025-09-09 23:02:33,602 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 23:02:33,602 - __main__ - INFO - Generating signals...
+2025-09-09 23:02:33,602 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 23:02:33,602 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 23:02:33,604 - daily_signal_generator - INFO - Base rule 1: 99 true signals
+2025-09-09 23:02:33,604 - daily_signal_generator - INFO - Base rule 2: 118 true signals
+2025-09-09 23:02:33,606 - daily_signal_generator - INFO - Conditional group 1: 247 true signals
+2025-09-09 23:02:33,607 - daily_signal_generator - INFO - Generated 44 entry signals
+2025-09-09 23:02:33,607 - __main__ - INFO - Running backtest...
+2025-09-09 23:02:33,607 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 23:02:33,607 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 23:02:33,607 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 23:02:33,607 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 23:02:33,607 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 23:02:33,609 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 23:02:33,609 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 23:02:33,609 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 23:02:33,609 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 23:02:33,610 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 23:02:33,610 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 23:02:33,610 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 23:02:33,610 - daily_backtest_engine - INFO - Exit trade on 2022-03-14: stop_loss, PnL: $-256.32
+2025-09-09 23:02:33,611 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 23:02:33,611 - daily_backtest_engine - INFO - Exit trade on 2022-03-21: take_profit, PnL: $882.68
+2025-09-09 23:02:33,612 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.69
+2025-09-09 23:02:33,612 - daily_backtest_engine - INFO - Exit trade on 2022-05-02: stop_loss, PnL: $-547.94
+2025-09-09 23:02:33,612 - daily_backtest_engine - INFO - Enter long position on 2022-05-04: $4173.25, size: 4.77
+2025-09-09 23:02:33,612 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-157.51
+2025-09-09 23:02:33,613 - daily_backtest_engine - INFO - Enter long position on 2022-05-16: $4000.00, size: 4.97
+2025-09-09 23:02:33,613 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-351.76
+2025-09-09 23:02:33,613 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.04
+2025-09-09 23:02:33,613 - daily_backtest_engine - INFO - Exit trade on 2022-05-31: take_profit, PnL: $1180.69
+2025-09-09 23:02:33,613 - daily_backtest_engine - INFO - Enter long position on 2022-06-01: $4146.75, size: 4.84
+2025-09-09 23:02:33,614 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-211.57
+2025-09-09 23:02:33,614 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.79
+2025-09-09 23:02:33,614 - daily_backtest_engine - INFO - Exit trade on 2022-06-06: stop_loss, PnL: $-224.00
+2025-09-09 23:02:33,614 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.86
+2025-09-09 23:02:33,614 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-454.05
+2025-09-09 23:02:33,614 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.23
+2025-09-09 23:02:33,615 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-502.18
+2025-09-09 23:02:33,615 - daily_backtest_engine - INFO - Enter long position on 2022-06-22: $3734.25, size: 5.30
+2025-09-09 23:02:33,615 - daily_backtest_engine - INFO - Exit trade on 2022-06-27: take_profit, PnL: $1020.72
+2025-09-09 23:02:33,615 - daily_backtest_engine - INFO - Enter long position on 2022-06-28: $3899.50, size: 5.12
+2025-09-09 23:02:33,615 - daily_backtest_engine - INFO - Exit trade on 2022-06-29: stop_loss, PnL: $-344.56
+2025-09-09 23:02:33,616 - daily_backtest_engine - INFO - Enter long position on 2022-07-05: $3843.00, size: 5.18
+2025-09-09 23:02:33,616 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: stop_loss, PnL: $-211.12
+2025-09-09 23:02:33,618 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.32
+2025-09-09 23:02:33,618 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-451.00
+2025-09-09 23:02:33,618 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.31
+2025-09-09 23:02:33,619 - daily_backtest_engine - INFO - Exit trade on 2022-10-10: stop_loss, PnL: $-446.03
+2025-09-09 23:02:33,619 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.31
+2025-09-09 23:02:33,619 - daily_backtest_engine - INFO - Exit trade on 2022-10-17: stop_loss, PnL: $-483.61
+2025-09-09 23:02:33,619 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.22
+2025-09-09 23:02:33,619 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-290.98
+2025-09-09 23:02:33,625 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 23:02:33,625 - daily_backtest_engine - INFO - Final portfolio value: $97668.46
+2025-09-09 23:02:33,625 - __main__ - INFO - Backtest completed successfully
+2025-09-09 23:02:33,625 - __main__ - INFO - Creating Excel report: Backtest_Report_top_v2_20250909_230233.xlsx
+2025-09-09 23:02:33,859 - __main__ - INFO - Excel report saved: Backtest_Report_top_v2_20250909_230233.xlsx
+2025-09-09 23:02:41,360 - __main__ - INFO - Starting backtest for strategy: top_v2
+2025-09-09 23:02:41,360 - __main__ - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 23:02:41,366 - daily_data_handler - INFO - Loaded 310 trading days of data
+2025-09-09 23:02:41,366 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 23:02:41,367 - daily_data_handler - INFO - Data validation passed
+2025-09-09 23:02:41,368 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 23:02:41,369 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 23:02:41,369 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 23:02:41,369 - __main__ - INFO - Calculating indicators...
+2025-09-09 23:02:41,369 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 23:02:41,369 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 23:02:41,370 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 23:02:41,370 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 23:02:41,370 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 23:02:41,371 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 23:02:41,373 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 23:02:41,374 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 23:02:41,374 - __main__ - INFO - Generating signals...
+2025-09-09 23:02:41,374 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 23:02:41,374 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 23:02:41,376 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 23:02:41,376 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 23:02:41,378 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 23:02:41,379 - daily_signal_generator - INFO - Filtered out 4 weekend signals, keeping 45 business day signals
+2025-09-09 23:02:41,380 - daily_signal_generator - INFO - Generated 45 entry signals
+2025-09-09 23:02:41,380 - __main__ - INFO - Running backtest...
+2025-09-09 23:02:41,380 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 23:02:41,380 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 23:02:41,380 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 23:02:41,380 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 23:02:41,380 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 23:02:41,381 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 23:02:41,382 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 23:02:41,382 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 23:02:41,382 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 23:02:41,383 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 23:02:41,383 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 23:02:41,383 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 23:02:41,383 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 23:02:41,384 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 23:02:41,384 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 23:02:41,385 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 23:02:41,385 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 23:02:41,385 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 23:02:41,385 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 23:02:41,386 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 23:02:41,386 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 23:02:41,387 - daily_backtest_engine - INFO - Enter long position on 2022-05-16: $4000.00, size: 4.95
+2025-09-09 23:02:41,387 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-350.20
+2025-09-09 23:02:41,387 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.02
+2025-09-09 23:02:41,388 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1167.93
+2025-09-09 23:02:41,388 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.78
+2025-09-09 23:02:41,388 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-358.36
+2025-09-09 23:02:41,388 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 23:02:41,388 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-314.33
+2025-09-09 23:02:41,388 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 23:02:41,389 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.92
+2025-09-09 23:02:41,389 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 23:02:41,389 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.71
+2025-09-09 23:02:41,389 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.26
+2025-09-09 23:02:41,390 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $946.43
+2025-09-09 23:02:41,390 - daily_backtest_engine - INFO - Enter long position on 2022-07-04: $3803.00, size: 5.21
+2025-09-09 23:02:41,391 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-3.91
+2025-09-09 23:02:41,393 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.31
+2025-09-09 23:02:41,393 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-450.07
+2025-09-09 23:02:41,394 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.30
+2025-09-09 23:02:41,394 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-455.70
+2025-09-09 23:02:41,394 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.30
+2025-09-09 23:02:41,394 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-603.20
+2025-09-09 23:02:41,395 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.20
+2025-09-09 23:02:41,395 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.98
+2025-09-09 23:02:41,401 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 23:02:41,401 - daily_backtest_engine - INFO - Final portfolio value: $97335.63
+2025-09-09 23:02:41,401 - __main__ - INFO - Backtest completed successfully
+2025-09-09 23:02:41,401 - __main__ - INFO - Creating Excel report: Backtest_Report_top_v2_20250909_230241.xlsx
+2025-09-09 23:02:41,709 - __main__ - INFO - Excel report saved: Backtest_Report_top_v2_20250909_230241.xlsx
+2025-09-09 23:02:49,286 - main_daily_backtester - INFO - Starting backtest for strategy: top_v2
+2025-09-09 23:02:49,287 - main_daily_backtester - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 23:02:49,292 - daily_data_handler - INFO - Loaded 310 trading days of data
+2025-09-09 23:02:49,293 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 23:02:49,293 - daily_data_handler - INFO - Data validation passed
+2025-09-09 23:02:49,294 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 23:02:49,295 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 23:02:49,296 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 23:02:49,296 - main_daily_backtester - INFO - Calculating indicators...
+2025-09-09 23:02:49,296 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 23:02:49,297 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 23:02:49,297 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 23:02:49,298 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 23:02:49,298 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 23:02:49,298 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 23:02:49,301 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 23:02:49,301 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 23:02:49,301 - main_daily_backtester - INFO - Generating signals...
+2025-09-09 23:02:49,302 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 23:02:49,302 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 23:02:49,303 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 23:02:49,304 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 23:02:49,305 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 23:02:49,307 - daily_signal_generator - INFO - Filtered out 4 weekend signals, keeping 45 business day signals
+2025-09-09 23:02:49,307 - daily_signal_generator - INFO - Generated 45 entry signals
+2025-09-09 23:02:49,307 - main_daily_backtester - INFO - Running backtest...
+2025-09-09 23:02:49,307 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 23:02:49,307 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 23:02:49,307 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 23:02:49,307 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 23:02:49,308 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 23:02:49,309 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 23:02:49,310 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 23:02:49,310 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 23:02:49,311 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 23:02:49,311 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 23:02:49,312 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 23:02:49,312 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 23:02:49,312 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 23:02:49,313 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 23:02:49,313 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 23:02:49,315 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 23:02:49,315 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 23:02:49,315 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 23:02:49,316 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 23:02:49,316 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 23:02:49,316 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 23:02:49,316 - daily_backtest_engine - INFO - Enter long position on 2022-05-16: $4000.00, size: 4.95
+2025-09-09 23:02:49,317 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-350.20
+2025-09-09 23:02:49,317 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.02
+2025-09-09 23:02:49,318 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1167.93
+2025-09-09 23:02:49,318 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.78
+2025-09-09 23:02:49,318 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-358.36
+2025-09-09 23:02:49,318 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 23:02:49,318 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-314.33
+2025-09-09 23:02:49,319 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 23:02:49,319 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.92
+2025-09-09 23:02:49,319 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 23:02:49,319 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.71
+2025-09-09 23:02:49,320 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.26
+2025-09-09 23:02:49,320 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $946.43
+2025-09-09 23:02:49,320 - daily_backtest_engine - INFO - Enter long position on 2022-07-04: $3803.00, size: 5.21
+2025-09-09 23:02:49,321 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-3.91
+2025-09-09 23:02:49,324 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.31
+2025-09-09 23:02:49,325 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-450.07
+2025-09-09 23:02:49,325 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.30
+2025-09-09 23:02:49,325 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-455.70
+2025-09-09 23:02:49,326 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.30
+2025-09-09 23:02:49,326 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-603.20
+2025-09-09 23:02:49,326 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.20
+2025-09-09 23:02:49,326 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.98
+2025-09-09 23:02:49,334 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 23:02:49,334 - daily_backtest_engine - INFO - Final portfolio value: $97335.63
+2025-09-09 23:02:49,335 - main_daily_backtester - INFO - Backtest completed successfully
+2025-09-09 23:04:31,201 - __main__ - INFO - Starting backtest for strategy: top_v2
+2025-09-09 23:04:31,202 - __main__ - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 23:04:31,207 - daily_data_handler - INFO - Loaded 310 trading days of data
+2025-09-09 23:04:31,207 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 23:04:31,208 - daily_data_handler - INFO - Data validation passed
+2025-09-09 23:04:31,209 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 23:04:31,209 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 23:04:31,210 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 23:04:31,210 - __main__ - INFO - Calculating indicators...
+2025-09-09 23:04:31,210 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 23:04:31,210 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 23:04:31,210 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 23:04:31,211 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 23:04:31,212 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 23:04:31,212 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 23:04:31,213 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 23:04:31,214 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 23:04:31,214 - __main__ - INFO - Generating signals...
+2025-09-09 23:04:31,214 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 23:04:31,214 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 23:04:31,215 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 23:04:31,216 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 23:04:31,217 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 23:04:31,218 - daily_signal_generator - INFO - Generated 49 entry signals
+2025-09-09 23:04:31,218 - __main__ - INFO - Running backtest...
+2025-09-09 23:04:31,218 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 23:04:31,218 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 23:04:31,218 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 23:04:31,219 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 23:04:31,219 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 23:04:31,220 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 23:04:31,220 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 23:04:31,221 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 23:04:31,221 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 23:04:31,221 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 23:04:31,222 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 23:04:31,222 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 23:04:31,222 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 23:04:31,222 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 23:04:31,222 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 23:04:31,224 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 23:04:31,224 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 23:04:31,224 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 23:04:31,224 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 23:04:31,224 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 23:04:31,225 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 23:04:31,225 - daily_backtest_engine - INFO - Enter long position on 2022-05-15: $4025.00, size: 4.92
+2025-09-09 23:04:31,225 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-471.00
+2025-09-09 23:04:31,225 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.01
+2025-09-09 23:04:31,226 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1166.50
+2025-09-09 23:04:31,226 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.77
+2025-09-09 23:04:31,226 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-357.92
+2025-09-09 23:04:31,226 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 23:04:31,226 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-313.95
+2025-09-09 23:04:31,226 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 23:04:31,227 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.37
+2025-09-09 23:04:31,227 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 23:04:31,227 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.10
+2025-09-09 23:04:31,227 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.25
+2025-09-09 23:04:31,227 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $945.27
+2025-09-09 23:04:31,228 - daily_backtest_engine - INFO - Enter long position on 2022-07-03: $3828.50, size: 5.17
+2025-09-09 23:04:31,228 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-135.78
+2025-09-09 23:04:31,230 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.30
+2025-09-09 23:04:31,231 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-448.92
+2025-09-09 23:04:31,231 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.29
+2025-09-09 23:04:31,231 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-454.54
+2025-09-09 23:04:31,232 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.29
+2025-09-09 23:04:31,232 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-601.66
+2025-09-09 23:04:31,232 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.19
+2025-09-09 23:04:31,232 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.24
+2025-09-09 23:04:31,239 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 23:04:31,239 - daily_backtest_engine - INFO - Final portfolio value: $97086.95
+2025-09-09 23:04:31,239 - __main__ - INFO - Backtest completed successfully
+2025-09-09 23:04:31,239 - __main__ - INFO - Creating Excel report: Backtest_Report_top_v2_20250909_230431.xlsx
+2025-09-09 23:04:31,516 - __main__ - INFO - Excel report saved: Backtest_Report_top_v2_20250909_230431.xlsx
+2025-09-09 23:04:37,187 - main_daily_backtester - INFO - Starting backtest for strategy: top_v2
+2025-09-09 23:04:37,188 - main_daily_backtester - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 23:04:37,193 - daily_data_handler - INFO - Loaded 310 trading days of data
+2025-09-09 23:04:37,194 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 23:04:37,194 - daily_data_handler - INFO - Data validation passed
+2025-09-09 23:04:37,195 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 23:04:37,196 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 23:04:37,196 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 23:04:37,196 - main_daily_backtester - INFO - Calculating indicators...
+2025-09-09 23:04:37,196 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 23:04:37,196 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 23:04:37,197 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 23:04:37,197 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 23:04:37,197 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 23:04:37,198 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 23:04:37,200 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 23:04:37,200 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 23:04:37,200 - main_daily_backtester - INFO - Generating signals...
+2025-09-09 23:04:37,201 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 23:04:37,201 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 23:04:37,203 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 23:04:37,205 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 23:04:37,206 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 23:04:37,208 - daily_signal_generator - INFO - Generated 49 entry signals
+2025-09-09 23:04:37,208 - main_daily_backtester - INFO - Running backtest...
+2025-09-09 23:04:37,208 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 23:04:37,208 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 23:04:37,209 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 23:04:37,209 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 23:04:37,209 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 23:04:37,211 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 23:04:37,212 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 23:04:37,212 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 23:04:37,212 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 23:04:37,213 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 23:04:37,213 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 23:04:37,213 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 23:04:37,214 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 23:04:37,214 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 23:04:37,214 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 23:04:37,216 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 23:04:37,216 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 23:04:37,216 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 23:04:37,216 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 23:04:37,217 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 23:04:37,217 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 23:04:37,217 - daily_backtest_engine - INFO - Enter long position on 2022-05-15: $4025.00, size: 4.92
+2025-09-09 23:04:37,218 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-471.00
+2025-09-09 23:04:37,218 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.01
+2025-09-09 23:04:37,218 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1166.50
+2025-09-09 23:04:37,219 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.77
+2025-09-09 23:04:37,219 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-357.92
+2025-09-09 23:04:37,219 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 23:04:37,219 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-313.95
+2025-09-09 23:04:37,219 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 23:04:37,220 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.37
+2025-09-09 23:04:37,220 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 23:04:37,220 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.10
+2025-09-09 23:04:37,220 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.25
+2025-09-09 23:04:37,220 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $945.27
+2025-09-09 23:04:37,221 - daily_backtest_engine - INFO - Enter long position on 2022-07-03: $3828.50, size: 5.17
+2025-09-09 23:04:37,221 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-135.78
+2025-09-09 23:04:37,225 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.30
+2025-09-09 23:04:37,225 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-448.92
+2025-09-09 23:04:37,225 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.29
+2025-09-09 23:04:37,225 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-454.54
+2025-09-09 23:04:37,226 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.29
+2025-09-09 23:04:37,226 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-601.66
+2025-09-09 23:04:37,226 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.19
+2025-09-09 23:04:37,226 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.24
+2025-09-09 23:04:37,233 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 23:04:37,233 - daily_backtest_engine - INFO - Final portfolio value: $97086.95
+2025-09-09 23:04:37,233 - main_daily_backtester - INFO - Backtest completed successfully
+2025-09-09 23:08:01,435 - main_daily_backtester - INFO - Starting backtest for strategy: top_v2
+2025-09-09 23:08:01,436 - main_daily_backtester - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 23:08:01,443 - daily_data_handler - INFO - Loaded 310 trading days of data
+2025-09-09 23:08:01,443 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 23:08:01,444 - daily_data_handler - INFO - Data validation passed
+2025-09-09 23:08:01,445 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 23:08:01,446 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 23:08:01,446 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 23:08:01,446 - main_daily_backtester - INFO - Calculating indicators...
+2025-09-09 23:08:01,446 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 23:08:01,447 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 23:08:01,447 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 23:08:01,448 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 23:08:01,448 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 23:08:01,448 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 23:08:01,451 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 23:08:01,451 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 23:08:01,452 - main_daily_backtester - INFO - Generating signals...
+2025-09-09 23:08:01,452 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 23:08:01,452 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 23:08:01,453 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 23:08:01,454 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 23:08:01,456 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 23:08:01,457 - daily_signal_generator - INFO - Generated 49 entry signals
+2025-09-09 23:08:01,458 - main_daily_backtester - INFO - Running backtest...
+2025-09-09 23:08:01,458 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 23:08:01,458 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 23:08:01,458 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 23:08:01,458 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 23:08:01,458 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 23:08:01,460 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 23:08:01,461 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 23:08:01,462 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 23:08:01,462 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 23:08:01,462 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 23:08:01,463 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 23:08:01,463 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 23:08:01,463 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 23:08:01,464 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 23:08:01,464 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 23:08:01,466 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 23:08:01,466 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 23:08:01,466 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 23:08:01,466 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 23:08:01,466 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 23:08:01,467 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 23:08:01,467 - daily_backtest_engine - INFO - Enter long position on 2022-05-15: $4025.00, size: 4.92
+2025-09-09 23:08:01,468 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-471.00
+2025-09-09 23:08:01,468 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.01
+2025-09-09 23:08:01,468 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1166.50
+2025-09-09 23:08:01,469 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.77
+2025-09-09 23:08:01,469 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-357.92
+2025-09-09 23:08:01,469 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 23:08:01,469 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-313.95
+2025-09-09 23:08:01,469 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 23:08:01,470 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.37
+2025-09-09 23:08:01,470 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 23:08:01,470 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.10
+2025-09-09 23:08:01,470 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.25
+2025-09-09 23:08:01,471 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $945.27
+2025-09-09 23:08:01,471 - daily_backtest_engine - INFO - Enter long position on 2022-07-03: $3828.50, size: 5.17
+2025-09-09 23:08:01,472 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-135.78
+2025-09-09 23:08:01,476 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.30
+2025-09-09 23:08:01,476 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-448.92
+2025-09-09 23:08:01,476 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.29
+2025-09-09 23:08:01,477 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-454.54
+2025-09-09 23:08:01,477 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.29
+2025-09-09 23:08:01,477 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-601.66
+2025-09-09 23:08:01,477 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.19
+2025-09-09 23:08:01,478 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.24
+2025-09-09 23:08:01,485 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 23:08:01,486 - daily_backtest_engine - INFO - Final portfolio value: $97086.95
+2025-09-09 23:08:01,486 - main_daily_backtester - INFO - Backtest completed successfully
+2025-09-09 23:09:17,365 - main_daily_backtester - INFO - Starting backtest for strategy: top_v2
+2025-09-09 23:09:17,366 - main_daily_backtester - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 23:09:17,371 - daily_data_handler - INFO - Loaded 310 trading days of data
+2025-09-09 23:09:17,371 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 23:09:17,372 - daily_data_handler - INFO - Data validation passed
+2025-09-09 23:09:17,373 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 23:09:17,374 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 23:09:17,374 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 23:09:17,374 - main_daily_backtester - INFO - Calculating indicators...
+2025-09-09 23:09:17,374 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 23:09:17,374 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 23:09:17,375 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 23:09:17,375 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 23:09:17,376 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 23:09:17,376 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 23:09:17,379 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 23:09:17,379 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 23:09:17,379 - main_daily_backtester - INFO - Generating signals...
+2025-09-09 23:09:17,379 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 23:09:17,379 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 23:09:17,381 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 23:09:17,381 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 23:09:17,383 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 23:09:17,384 - daily_signal_generator - INFO - Generated 49 entry signals
+2025-09-09 23:09:17,384 - main_daily_backtester - INFO - Running backtest...
+2025-09-09 23:09:17,384 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 23:09:17,384 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 23:09:17,384 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 23:09:17,384 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 23:09:17,384 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 23:09:17,386 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 23:09:17,386 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 23:09:17,386 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 23:09:17,386 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 23:09:17,387 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 23:09:17,387 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 23:09:17,387 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 23:09:17,387 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 23:09:17,388 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 23:09:17,388 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 23:09:17,389 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 23:09:17,389 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 23:09:17,389 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 23:09:17,390 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 23:09:17,390 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 23:09:17,390 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 23:09:17,391 - daily_backtest_engine - INFO - Enter long position on 2022-05-15: $4025.00, size: 4.92
+2025-09-09 23:09:17,391 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-471.00
+2025-09-09 23:09:17,391 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.01
+2025-09-09 23:09:17,392 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1166.50
+2025-09-09 23:09:17,392 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.77
+2025-09-09 23:09:17,392 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-357.92
+2025-09-09 23:09:17,392 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 23:09:17,392 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-313.95
+2025-09-09 23:09:17,392 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 23:09:17,393 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.37
+2025-09-09 23:09:17,393 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 23:09:17,393 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.10
+2025-09-09 23:09:17,393 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.25
+2025-09-09 23:09:17,394 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $945.27
+2025-09-09 23:09:17,394 - daily_backtest_engine - INFO - Enter long position on 2022-07-03: $3828.50, size: 5.17
+2025-09-09 23:09:17,395 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-135.78
+2025-09-09 23:09:17,397 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.30
+2025-09-09 23:09:17,398 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-448.92
+2025-09-09 23:09:17,398 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.29
+2025-09-09 23:09:17,398 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-454.54
+2025-09-09 23:09:17,398 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.29
+2025-09-09 23:09:17,399 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-601.66
+2025-09-09 23:09:17,399 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.19
+2025-09-09 23:09:17,399 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.24
+2025-09-09 23:09:17,406 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 23:09:17,406 - daily_backtest_engine - INFO - Final portfolio value: $97086.95
+2025-09-09 23:09:17,406 - main_daily_backtester - INFO - Backtest completed successfully
+2025-09-09 23:09:48,350 - main_daily_backtester - INFO - Starting backtest for strategy: top_v2
+2025-09-09 23:09:48,351 - main_daily_backtester - INFO - Loaded strategy config for: TopReversalShort_FearBounce_MoreTrades
+2025-09-09 23:09:48,356 - daily_data_handler - INFO - Loaded 310 trading days of data
+2025-09-09 23:09:48,357 - daily_data_handler - INFO - Date range: 2022-01-02 00:00:00 to 2022-12-30 00:00:00
+2025-09-09 23:09:48,357 - daily_data_handler - INFO - Data validation passed
+2025-09-09 23:09:48,358 - daily_data_handler - INFO - Forward filled 55 missing values in VIX_close
+2025-09-09 23:09:48,359 - daily_data_handler - INFO - Forward filled 58 missing values in TRIN_close
+2025-09-09 23:09:48,359 - daily_data_handler - INFO - Forward filled 51 missing values in CNN_FEAR_GREED
+2025-09-09 23:09:48,359 - main_daily_backtester - INFO - Calculating indicators...
+2025-09-09 23:09:48,359 - daily_signal_generator - INFO - Starting indicator calculations...
+2025-09-09 23:09:48,359 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_9
+2025-09-09 23:09:48,360 - daily_signal_generator - INFO - Calculated EMA(9) for 310 data points
+2025-09-09 23:09:48,360 - daily_signal_generator - INFO - Calculating EMA on ES_close -> ES_EMA_15
+2025-09-09 23:09:48,361 - daily_signal_generator - INFO - Calculated EMA(15) for 310 data points
+2025-09-09 23:09:48,361 - daily_signal_generator - INFO - Calculating RSI on ES_close -> ES_RSI_2
+2025-09-09 23:09:48,364 - daily_signal_generator - INFO - Calculated RSI(2) for 310 data points
+2025-09-09 23:09:48,364 - daily_signal_generator - INFO - Calculated 3 indicators
+2025-09-09 23:09:48,364 - main_daily_backtester - INFO - Generating signals...
+2025-09-09 23:09:48,365 - daily_signal_generator - INFO - Generating trading signals...
+2025-09-09 23:09:48,365 - daily_signal_generator - INFO - Using parameters: {'fear_threshold': 30}
+2025-09-09 23:09:48,366 - daily_signal_generator - INFO - Base rule 1: 121 true signals
+2025-09-09 23:09:48,367 - daily_signal_generator - INFO - Base rule 2: 138 true signals
+2025-09-09 23:09:48,368 - daily_signal_generator - INFO - Conditional group 1: 306 true signals
+2025-09-09 23:09:48,369 - daily_signal_generator - INFO - Generated 49 entry signals
+2025-09-09 23:09:48,369 - main_daily_backtester - INFO - Running backtest...
+2025-09-09 23:09:48,369 - daily_backtest_engine - INFO - Starting daily backtest...
+2025-09-09 23:09:48,369 - daily_backtest_engine - INFO - Position type: long
+2025-09-09 23:09:48,369 - daily_backtest_engine - INFO - Stop loss: 1.0%
+2025-09-09 23:09:48,369 - daily_backtest_engine - INFO - Take profit: 4.0%
+2025-09-09 23:09:48,369 - daily_backtest_engine - INFO - Trailing stop: 2.0%
+2025-09-09 23:09:48,371 - daily_backtest_engine - INFO - Enter long position on 2022-02-01: $4494.25, size: 4.45
+2025-09-09 23:09:48,371 - daily_backtest_engine - INFO - Exit trade on 2022-02-11: trailing_stop, PnL: $-160.20
+2025-09-09 23:09:48,372 - daily_backtest_engine - INFO - Enter long position on 2022-02-16: $4457.50, size: 4.48
+2025-09-09 23:09:48,372 - daily_backtest_engine - INFO - Exit trade on 2022-02-18: stop_loss, PnL: $-253.10
+2025-09-09 23:09:48,372 - daily_backtest_engine - INFO - Enter long position on 2022-02-28: $4286.75, size: 4.65
+2025-09-09 23:09:48,372 - daily_backtest_engine - INFO - Exit trade on 2022-03-07: trailing_stop, PnL: $-69.69
+2025-09-09 23:09:48,373 - daily_backtest_engine - INFO - Enter long position on 2022-03-10: $4270.75, size: 4.66
+2025-09-09 23:09:48,373 - daily_backtest_engine - INFO - Exit trade on 2022-03-13: stop_loss, PnL: $-298.27
+2025-09-09 23:09:48,373 - daily_backtest_engine - INFO - Enter long position on 2022-03-16: $4250.75, size: 4.67
+2025-09-09 23:09:48,373 - daily_backtest_engine - INFO - Exit trade on 2022-03-20: take_profit, PnL: $976.84
+2025-09-09 23:09:48,375 - daily_backtest_engine - INFO - Enter long position on 2022-04-26: $4301.50, size: 4.66
+2025-09-09 23:09:48,375 - daily_backtest_engine - INFO - Exit trade on 2022-04-27: stop_loss, PnL: $-512.45
+2025-09-09 23:09:48,375 - daily_backtest_engine - INFO - Enter long position on 2022-04-29: $4267.50, size: 4.67
+2025-09-09 23:09:48,375 - daily_backtest_engine - INFO - Exit trade on 2022-05-01: stop_loss, PnL: $-576.96
+2025-09-09 23:09:48,375 - daily_backtest_engine - INFO - Enter long position on 2022-05-03: $4163.25, size: 4.76
+2025-09-09 23:09:48,375 - daily_backtest_engine - INFO - Exit trade on 2022-05-06: trailing_stop, PnL: $-109.50
+2025-09-09 23:09:48,376 - daily_backtest_engine - INFO - Enter long position on 2022-05-15: $4025.00, size: 4.92
+2025-09-09 23:09:48,376 - daily_backtest_engine - INFO - Exit trade on 2022-05-19: stop_loss, PnL: $-471.00
+2025-09-09 23:09:48,376 - daily_backtest_engine - INFO - Enter long position on 2022-05-23: $3931.75, size: 5.01
+2025-09-09 23:09:48,377 - daily_backtest_engine - INFO - Exit trade on 2022-05-29: take_profit, PnL: $1166.50
+2025-09-09 23:09:48,377 - daily_backtest_engine - INFO - Enter long position on 2022-05-30: $4178.00, size: 4.77
+2025-09-09 23:09:48,377 - daily_backtest_engine - INFO - Exit trade on 2022-06-02: stop_loss, PnL: $-357.92
+2025-09-09 23:09:48,377 - daily_backtest_engine - INFO - Enter long position on 2022-06-03: $4176.50, size: 4.76
+2025-09-09 23:09:48,377 - daily_backtest_engine - INFO - Exit trade on 2022-06-05: stop_loss, PnL: $-313.95
+2025-09-09 23:09:48,377 - daily_backtest_engine - INFO - Enter long position on 2022-06-09: $4111.50, size: 4.82
+2025-09-09 23:09:48,378 - daily_backtest_engine - INFO - Exit trade on 2022-06-10: stop_loss, PnL: $-450.37
+2025-09-09 23:09:48,378 - daily_backtest_engine - INFO - Enter long position on 2022-06-16: $3799.50, size: 5.19
+2025-09-09 23:09:48,378 - daily_backtest_engine - INFO - Exit trade on 2022-06-17: stop_loss, PnL: $-498.10
+2025-09-09 23:09:48,378 - daily_backtest_engine - INFO - Enter long position on 2022-06-21: $3735.00, size: 5.25
+2025-09-09 23:09:48,379 - daily_backtest_engine - INFO - Exit trade on 2022-06-26: take_profit, PnL: $945.27
+2025-09-09 23:09:48,379 - daily_backtest_engine - INFO - Enter long position on 2022-07-03: $3828.50, size: 5.17
+2025-09-09 23:09:48,380 - daily_backtest_engine - INFO - Exit trade on 2022-07-14: trailing_stop, PnL: $-135.78
+2025-09-09 23:09:48,382 - daily_backtest_engine - INFO - Enter long position on 2022-09-29: $3733.50, size: 5.30
+2025-09-09 23:09:48,382 - daily_backtest_engine - INFO - Exit trade on 2022-09-30: stop_loss, PnL: $-448.92
+2025-09-09 23:09:48,382 - daily_backtest_engine - INFO - Enter long position on 2022-10-04: $3724.75, size: 5.29
+2025-09-09 23:09:48,383 - daily_backtest_engine - INFO - Exit trade on 2022-10-09: stop_loss, PnL: $-454.54
+2025-09-09 23:09:48,383 - daily_backtest_engine - INFO - Enter long position on 2022-10-14: $3704.75, size: 5.29
+2025-09-09 23:09:48,383 - daily_backtest_engine - INFO - Exit trade on 2022-10-16: stop_loss, PnL: $-601.66
+2025-09-09 23:09:48,383 - daily_backtest_engine - INFO - Enter long position on 2022-10-18: $3753.75, size: 5.19
+2025-09-09 23:09:48,384 - daily_backtest_engine - INFO - Exit trade on 2022-10-20: stop_loss, PnL: $-289.24
+2025-09-09 23:09:48,390 - daily_backtest_engine - INFO - Backtest completed: 20 trades
+2025-09-09 23:09:48,390 - daily_backtest_engine - INFO - Final portfolio value: $97086.95
+2025-09-09 23:09:48,390 - main_daily_backtester - INFO - Backtest completed successfully

@@ -11,8 +11,8 @@ from datetime import time
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-MARKET_OPEN = time(12,0)
-MARKET_CLOSE = time(23, 59)
+MARKET_OPEN = time(0,0)
+MARKET_CLOSE = time(23,59)
 
 def connect_db(db_path):
     """Establishes a connection to the SQLite database."""

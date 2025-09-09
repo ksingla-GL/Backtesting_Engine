@@ -5,7 +5,7 @@ Loads and manages daily price data for backtesting
 import pandas as pd
 import numpy as np
 import os
-from datetime import datetime
+from datetime import datetime, date
 import logging
 
 class DailyDataHandler:
@@ -13,13 +13,133 @@ class DailyDataHandler:
         self.data = None
         self.symbols = ['ES', 'VIX', 'TRIN']
         self.logger = self._setup_logger()
+        self.us_holidays = self._get_us_market_holidays()
         
     def _setup_logger(self):
         logging.basicConfig(level=logging.INFO)
         return logging.getLogger(__name__)
+    
+    def _get_us_market_holidays(self):
+        """Get list of US market holidays for common years"""
+        holidays = set()
         
-    def load_data(self, file_path='top_v2_daily_data_2022.csv'):
-        """Load daily data from CSV file"""
+        # Common years to cover typical backtesting periods
+        for year in range(2020, 2026):
+            # New Year's Day (observed)
+            new_years = date(year, 1, 1)
+            if new_years.weekday() == 5:  # Saturday
+                holidays.add(date(year, 1, 3))  # Monday
+            elif new_years.weekday() == 6:  # Sunday
+                holidays.add(date(year, 1, 2))  # Monday
+            else:
+                holidays.add(new_years)
+            
+            # Martin Luther King Jr. Day (3rd Monday in January)
+            holidays.add(self._get_nth_weekday(year, 1, 0, 3))
+            
+            # Presidents Day (3rd Monday in February)
+            holidays.add(self._get_nth_weekday(year, 2, 0, 3))
+            
+            # Good Friday (Friday before Easter) - approximate
+            easter = self._get_easter_date(year)
+            good_friday = easter - pd.Timedelta(days=2)
+            holidays.add(good_friday.date())
+            
+            # Memorial Day (last Monday in May)
+            holidays.add(self._get_last_weekday(year, 5, 0))
+            
+            # Juneteenth (June 19, observed if weekend)
+            juneteenth = date(year, 6, 19)
+            if juneteenth.weekday() == 5:  # Saturday
+                holidays.add(date(year, 6, 18))  # Friday
+            elif juneteenth.weekday() == 6:  # Sunday
+                holidays.add(date(year, 6, 20))  # Monday
+            else:
+                holidays.add(juneteenth)
+            
+            # Independence Day (July 4, observed if weekend)
+            july4 = date(year, 7, 4)
+            if july4.weekday() == 5:  # Saturday
+                holidays.add(date(year, 7, 3))  # Friday
+            elif july4.weekday() == 6:  # Sunday
+                holidays.add(date(year, 7, 5))  # Monday
+            else:
+                holidays.add(july4)
+            
+            # Labor Day (1st Monday in September)
+            holidays.add(self._get_nth_weekday(year, 9, 0, 1))
+            
+            # Thanksgiving (4th Thursday in November)
+            holidays.add(self._get_nth_weekday(year, 11, 3, 4))
+            
+            # Christmas Day (December 25, observed if weekend)
+            christmas = date(year, 12, 25)
+            if christmas.weekday() == 5:  # Saturday
+                holidays.add(date(year, 12, 24))  # Friday
+            elif christmas.weekday() == 6:  # Sunday
+                holidays.add(date(year, 12, 26))  # Monday
+            else:
+                holidays.add(christmas)
+        
+        return holidays
+    
+    def _get_nth_weekday(self, year, month, weekday, n):
+        """Get the nth occurrence of weekday in given month/year"""
+        first_day = date(year, month, 1)
+        # Find first occurrence of weekday
+        days_ahead = weekday - first_day.weekday()
+        if days_ahead < 0:
+            days_ahead += 7
+        first_occurrence = pd.Timestamp(first_day) + pd.Timedelta(days=days_ahead)
+        # Get nth occurrence
+        nth_occurrence = first_occurrence + pd.Timedelta(days=7 * (n - 1))
+        return nth_occurrence.date()
+    
+    def _get_last_weekday(self, year, month, weekday):
+        """Get the last occurrence of weekday in given month/year"""
+        # Start from last day of month and work backwards
+        if month == 12:
+            last_day = pd.Timestamp(date(year + 1, 1, 1)) - pd.Timedelta(days=1)
+        else:
+            last_day = pd.Timestamp(date(year, month + 1, 1)) - pd.Timedelta(days=1)
+        
+        days_back = (last_day.weekday() - weekday) % 7
+        last_occurrence = last_day - pd.Timedelta(days=days_back)
+        return last_occurrence.date()
+    
+    def _get_easter_date(self, year):
+        """Calculate Easter date using algorithm"""
+        # Using the algorithm for Western Easter
+        a = year % 19
+        b = year // 100
+        c = year % 100
+        d = b // 4
+        e = b % 4
+        f = (b + 8) // 25
+        g = (b - f + 1) // 3
+        h = (19 * a + b - d - g + 15) % 30
+        i = c // 4
+        k = c % 4
+        l = (32 + 2 * e + 2 * i - h - k) % 7
+        m = (a + 11 * h + 22 * l) // 451
+        n = (h + l - 7 * m + 114) // 31
+        p = (h + l - 7 * m + 114) % 31
+        return pd.Timestamp(year, n, p + 1)
+    
+    def _is_weekend(self, date_obj):
+        """Check if date is weekend (Saturday=5, Sunday=6)"""
+        return date_obj.weekday() >= 5
+    
+    def _is_holiday(self, date_obj):
+        """Check if date is a US market holiday"""
+        return date_obj.date() in self.us_holidays
+    
+    def _is_trading_day(self, date_obj):
+        """Check if date is a valid trading day (not weekend or holiday)"""
+        return not (self._is_weekend(date_obj) or self._is_holiday(date_obj))
+        
+    def load_data(self, file_path='top_v2_daily_data_2022.csv', skip_weekends_holidays=False):
+        """Load daily data from CSV file with optional weekend/holiday filtering"""
         try:
             if not os.path.exists(file_path):
                 self.logger.error(f"Data file not found: {file_path}")
@@ -29,7 +149,19 @@ class DailyDataHandler:
             self.data['date'] = pd.to_datetime(self.data['date'])
             self.data = self.data.sort_values('date').reset_index(drop=True)
             
-            self.logger.info(f"Loaded {len(self.data)} days of data")
+            initial_count = len(self.data)
+            
+            # Filter out weekends and holidays if requested
+            if skip_weekends_holidays:
+                trading_days_mask = self.data['date'].apply(self._is_trading_day)
+                filtered_data = self.data[trading_days_mask].copy()
+                
+                removed_count = len(self.data) - len(filtered_data)
+                self.data = filtered_data.reset_index(drop=True)
+                
+                self.logger.info(f"Filtered out {removed_count} non-trading days (weekends/holidays)")
+            
+            self.logger.info(f"Loaded {len(self.data)} trading days of data")
             self.logger.info(f"Date range: {self.data['date'].min()} to {self.data['date'].max()}")
             
             return self.data
@@ -156,6 +288,33 @@ class DailyDataHandler:
         except Exception as e:
             self.logger.error(f"Error exporting data: {e}")
             return False
+    
+    def get_filtered_dates_info(self, file_path='top_v2_daily_data_2022.csv'):
+        """Get information about which dates were filtered out"""
+        try:
+            # Load raw data without filtering
+            raw_data = pd.read_csv(file_path)
+            raw_data['date'] = pd.to_datetime(raw_data['date'])
+            
+            weekends = []
+            holidays = []
+            
+            for _, row in raw_data.iterrows():
+                date_obj = row['date']
+                if self._is_weekend(date_obj):
+                    weekends.append(date_obj.strftime('%Y-%m-%d'))
+                elif self._is_holiday(date_obj):
+                    holidays.append(date_obj.strftime('%Y-%m-%d'))
+            
+            return {
+                'weekends_filtered': weekends,
+                'holidays_filtered': holidays,
+                'total_filtered': len(weekends) + len(holidays)
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Error getting filtered dates info: {e}")
+            return None
 
 if __name__ == "__main__":
     # Test the data handler

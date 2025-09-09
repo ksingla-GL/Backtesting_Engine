@@ -56,8 +56,8 @@ class DailySignalGenerator:
             avg_losses = losses.rolling(window=window, min_periods=window).mean()
             
             # Calculate RS and RSI
-            rs = avg_gains / avg_losses.replace(0, np.inf)
-            rsi = 100 - (100 / (1 + rs))
+            rs = np.where(avg_losses == 0, np.inf, avg_gains / avg_losses)
+            rsi = pd.Series(100 - (100 / (1 + rs)), index=avg_gains.index)
             
             # Handle edge cases
             rsi = rsi.fillna(50.0)

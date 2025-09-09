@@ -788,16 +788,14 @@ def generate_signals(df, strategy_config):
         for value in param_values:
             signal_col_name = f"entry_signal_{value}"
             if signal_col_name in df.columns:
-                # Shift signals by 1 day
                 daily_signals = df[signal_col_name].resample('D').max()
-                next_day_signals = daily_signals.shift(1)
-                df[signal_col_name] = next_day_signals.reindex(df.index, method='ffill').fillna(0).astype(int)
+                df[signal_col_name] = daily_signals.reindex(df.index, method='ffill').fillna(0).astype(int)
                 
                 # Re-apply one signal per day logic
                 df[signal_col_name] = df[signal_col_name].groupby(df.index.date).transform(
                     lambda x: (x.cumsum() == 1) & (x == 1)
                 ).astype(int)
                 
-                logging.info(f"Delayed signals for {signal_col_name} - now {df[signal_col_name].sum()} signals")
+                logging.info(f"Signals for {signal_col_name} - now {df[signal_col_name].sum()} signals")
 
     return df
