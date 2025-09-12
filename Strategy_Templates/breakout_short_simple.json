@@ -1,0 +1,27 @@
+{
+  "strategy_name": "SimpleBreakoutShort",
+  "position_type": "short",
+  "indicators": [
+    { 
+      "name": "Breakout", 
+      "params": { 
+        "instrument": "ES", 
+        "window": 20, 
+        "position_type": "short" 
+      }, 
+      "on_column": "", 
+      "output_col": "ES_breakout_short" 
+    }
+  ],
+  "param_grid": {
+    "threshold": [1]
+  },
+  "entry_rules": [
+    "ES_breakout_short == True"
+  ],
+  "exit_conditions": ["percentage_stop", "take_profit"],
+  "exit_parameters": {
+    "stop_loss_pct": 2.0,
+    "take_profit_pct": 3.0
+  }
+}
