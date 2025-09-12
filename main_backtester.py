@@ -46,8 +46,12 @@ def extract_entry_indicators(entry_row, strategy_config, param_name, param_value
         # Convert entry_row to dict for eval() usage
         entry_dict = entry_row.to_dict()
         
-        # 1. Evaluate base entry rules individually (ZERO RISK)
+        # 1. Evaluate entry rules individually (ZERO RISK)
+        # Handle both 'base_entry_rules' and 'entry_rules' formats
         base_rules = strategy_config.get('base_entry_rules', [])
+        if not base_rules:
+            base_rules = strategy_config.get('entry_rules', [])
+        
         for i, rule in enumerate(base_rules):
             rule_with_params = rule.replace(f"@{param_name}", str(param_value))
             try:
@@ -56,10 +60,11 @@ def extract_entry_indicators(entry_row, strategy_config, param_name, param_value
             except Exception:
                 result[f'base_rule_{i+1}'] = f"{rule_with_params} (ERROR)"
         
-        # 2. Handle sum_of_conditions specially (ZERO RISK) 
+        # 2. Handle conditional entry rules (ZERO RISK) 
         cond_rules = strategy_config.get('conditional_entry_rules', [])
         for j, cond_rule in enumerate(cond_rules):
             if isinstance(cond_rule.get('rule'), dict) and cond_rule['rule'].get('type') == 'sum_of_conditions':
+                # Handle sum_of_conditions type
                 conditions = cond_rule['rule']['conditions']
                 threshold_str = str(cond_rule['rule']['threshold']).replace(f"@{param_name}", str(param_value))
                 threshold = int(threshold_str)
@@ -77,6 +82,29 @@ def extract_entry_indicators(entry_row, strategy_config, param_name, param_value
                 result['sum_conditions_met'] = f"{met_count}/{len(conditions)}"
                 result['sum_conditions_passed'] = met_count >= threshold
                 result['sum_threshold'] = threshold
+                
+            elif isinstance(cond_rule.get('rule'), str):
+                # Handle simple string conditional rules
+                condition = cond_rule.get('condition', 'True')
+                rule = cond_rule.get('rule', '')
+                
+                # Replace parameter placeholders
+                condition_with_params = condition.replace(f"@{param_name}", str(param_value))
+                rule_with_params = rule.replace(f"@{param_name}", str(param_value))
+                
+                try:
+                    # Check if condition is met
+                    condition_result = eval(condition_with_params, {}, entry_dict)
+                    if condition_result:
+                        # Evaluate the rule
+                        rule_result = eval(rule_with_params, {}, entry_dict)
+                        result[f'cond_rule_{j+1}'] = f"{rule_with_params} ({rule_result})"
+                        result[f'cond_rule_{j+1}_triggered'] = True
+                    else:
+                        result[f'cond_rule_{j+1}'] = f"Condition not met: {condition_with_params}"
+                        result[f'cond_rule_{j+1}_triggered'] = False
+                except Exception:
+                    result[f'cond_rule_{j+1}'] = f"{rule_with_params} (ERROR)"
         
         # 3. Add only relevant indicator values used in entry rules (ZERO RISK)
         from signal_generator import get_columns_from_rules
