@@ -153,6 +153,7 @@ def run_backtest_modular(
         entry_price = 0.0
     
     entry_time = 0
+    entry_index = 0  # Track data index when entry occurred
     
     # Common variables
     entry_vix = 0.0
@@ -258,8 +259,8 @@ def run_backtest_modular(
                     else:  # Short position
                         pnl = (weighted_entry_price / exit_price - 1) - effective_cost
                     
-                    # Create trade record with position size
-                    trades.append((entry_time, timestamps[i], weighted_entry_price, exit_price, pnl, exit_reason, position_size))
+                    # Create trade record with position size and entry index
+                    trades.append((entry_time, timestamps[i], weighted_entry_price, exit_price, pnl, exit_reason, position_size, entry_index))
                     
                     # Reset pyramiding state
                     position_size = 0.0
@@ -274,7 +275,7 @@ def run_backtest_modular(
                     else:  # Short position
                         pnl = (entry_price / exit_price - 1) - cost_pct
                     
-                    trades.append((entry_time, timestamps[i], entry_price, exit_price, pnl, exit_reason, 1.0))
+                    trades.append((entry_time, timestamps[i], entry_price, exit_price, pnl, exit_reason, 1.0, entry_index))
                     in_position = False
                     entry_vix = 0.0
         
@@ -303,6 +304,7 @@ def run_backtest_modular(
                     pyramid_levels = 1
                     weighted_entry_price = current_price
                     entry_time = timestamps[i]
+                    entry_index = i  # Capture entry data index
                     in_position = True
                     # Capture VIX baseline at entry (prefer prior day's close if available)
                     if i < len(entry_vix_prices) and entry_vix_prices[i] > 0.0:
@@ -324,6 +326,7 @@ def run_backtest_modular(
                 # Regular single position entry
                 in_position = True
                 entry_time = timestamps[i]
+                entry_index = i  # Capture entry data index
                 entry_price = current_price
                 # Capture VIX baseline at entry (prefer prior day's close if available)
                 if i < len(entry_vix_prices) and entry_vix_prices[i] > 0.0:

@@ -225,7 +225,7 @@ def load_precomputed_macro_data(conn, master_df, start_date, end_date, required_
         # Fill NaN values for boolean columns with False
         for col in bool_columns:
             if col in master_df.columns:
-                master_df[col] = master_df[col].fillna(False)
+                master_df[col] = master_df[col].fillna(False).infer_objects(copy=False)
         
         logging.info(f"Loaded pre-computed macro data with {len(needed_cols)} columns")
         

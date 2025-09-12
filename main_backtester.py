@@ -29,6 +29,89 @@ def list_available_strategies():
         return []
     return [f.replace('.json', '') for f in os.listdir(strategy_dir) if f.endswith('.json')]
 
+def extract_entry_indicators(entry_row, strategy_config, param_name, param_value):
+    """
+    Extract entry trigger information showing which specific conditions triggered.
+    Returns a clean, focused dictionary showing rule evaluations and key values.
+    """
+    result = {}
+    
+    # Helper function to clean numpy types (ZERO RISK)
+    def clean_val(v):
+        if hasattr(v, 'item'):  # numpy scalar
+            return v.item()
+        return v
+    
+    try:
+        # Convert entry_row to dict for eval() usage
+        entry_dict = entry_row.to_dict()
+        
+        # 1. Evaluate base entry rules individually (ZERO RISK)
+        base_rules = strategy_config.get('base_entry_rules', [])
+        for i, rule in enumerate(base_rules):
+            rule_with_params = rule.replace(f"@{param_name}", str(param_value))
+            try:
+                rule_result = eval(rule_with_params, {}, entry_dict)
+                result[f'base_rule_{i+1}'] = f"{rule_with_params} ({rule_result})"
+            except Exception:
+                result[f'base_rule_{i+1}'] = f"{rule_with_params} (ERROR)"
+        
+        # 2. Handle sum_of_conditions specially (ZERO RISK) 
+        cond_rules = strategy_config.get('conditional_entry_rules', [])
+        for j, cond_rule in enumerate(cond_rules):
+            if isinstance(cond_rule.get('rule'), dict) and cond_rule['rule'].get('type') == 'sum_of_conditions':
+                conditions = cond_rule['rule']['conditions']
+                threshold_str = str(cond_rule['rule']['threshold']).replace(f"@{param_name}", str(param_value))
+                threshold = int(threshold_str)
+                met_count = 0
+                
+                for k, condition in enumerate(conditions):
+                    try:
+                        cond_result = eval(condition, {}, entry_dict)
+                        if cond_result:
+                            met_count += 1
+                        result[f'sum_cond_{k+1}'] = f"{condition} ({cond_result})"
+                    except Exception:
+                        result[f'sum_cond_{k+1}'] = f"{condition} (ERROR)"
+                
+                result['sum_conditions_met'] = f"{met_count}/{len(conditions)}"
+                result['sum_conditions_passed'] = met_count >= threshold
+                result['sum_threshold'] = threshold
+        
+        # 3. Add only relevant indicator values used in entry rules (ZERO RISK)
+        from signal_generator import get_columns_from_rules
+        
+        all_rules = list(base_rules)
+        for cond_rule in cond_rules:
+            if isinstance(cond_rule.get('rule'), str):
+                all_rules.append(cond_rule['rule'])
+            elif isinstance(cond_rule.get('rule'), dict) and cond_rule['rule'].get('type') == 'sum_of_conditions':
+                all_rules.extend(cond_rule['rule']['conditions'])
+        
+        relevant_columns = get_columns_from_rules(all_rules)
+        for col in relevant_columns:
+            if col in entry_row.index and not pd.isna(entry_row[col]):
+                result[col] = clean_val(entry_row[col])
+        
+        # 4. Add parameter and signal info (ZERO RISK)
+        result[param_name] = param_value
+        result['entry_signal_final'] = True
+        
+    except Exception as e:
+        # Fallback to basic info if anything fails (ZERO RISK)
+        logging.warning(f"Failed to parse entry rules, using basic info: {e}")
+        result = {
+            param_name: param_value,
+            'entry_signal_final': True,
+            'parse_error': str(e)
+        }
+        # Add a few key values if available
+        for col in ['ES_close', 'VIX_close', 'ES_RSI_2']:
+            if col in entry_row.index and not pd.isna(entry_row[col]):
+                result[col] = clean_val(entry_row[col])
+    
+    return result
+
 def calculate_multiperiod_returns(trade_log, df_with_signals, position_type='long'):
     """
     Calculate 1, 3, 5, and 10-day holding period returns for each trade.
@@ -594,11 +677,11 @@ def main():
         
         # Process results
         try:
-            # Modular system always returns 7 columns (including position_size)
-            # Modular system always includes position_size column
+            # Modular system now returns 8 columns (including position_size and entry_index)
+            # Modular system always includes position_size and entry_index columns
             trade_log = pd.DataFrame(
                 trades_list, 
-                columns=['entry_time', 'exit_time', 'entry_price', 'exit_price', 'pnl_pct', 'exit_reason', 'position_size']
+                columns=['entry_time', 'exit_time', 'entry_price', 'exit_price', 'pnl_pct', 'exit_reason', 'position_size', 'entry_index']
             )
             is_pyramiding = backtest_params.get('use_pyramiding', False)
             
@@ -617,6 +700,23 @@ def main():
                 logging.info("Calculating multi-period holding returns...")
                 trade_log = calculate_multiperiod_returns(trade_log, df_with_signals, position_type)
                 logging.info(f"Enhanced trade log with multi-period returns. Shape: {trade_log.shape}")
+                
+                # Add entry indicators for each trade
+                logging.info("Extracting entry indicators for each trade...")
+                def get_entry_indicators(row):
+                    try:
+                        entry_idx = int(row['entry_index'])
+                        if entry_idx < len(df_with_signals):
+                            entry_row = df_with_signals.iloc[entry_idx]
+                            indicators = extract_entry_indicators(entry_row, strategy_config, param_name, value)
+                            return str(indicators)  # Convert to string for CSV compatibility
+                        return "{}"
+                    except Exception as e:
+                        logging.warning(f"Failed to extract indicators for trade: {e}")
+                        return "{}"
+                
+                trade_log['entry_indicators'] = trade_log.apply(get_entry_indicators, axis=1)
+                logging.info(f"Added entry indicators column. Sample: {trade_log['entry_indicators'].iloc[0][:100]}...")
                 
                 # Add parameter info and collect trade log for comprehensive analysis
                 trade_log[param_name] = value
