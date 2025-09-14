@@ -21,12 +21,12 @@ def calculate_indicator(df, indicator_config):
 
     logging.info(f"Calculating {name} -> {out_col}")
     
-    if name not in ['IsUpDay', 'MACD', 'ConsecutiveGreenDays', 'BreakoutRetest', 'OBVHighN', 'PreEventWeakness', 'PostEventVIXDecline', 'IntraydayESDecline', 'MarketBreadthStrong', 'VWAPReclaim', 'FedDovishSurprise', 'PostEventRally', 'PostEventTime'] and on_col and on_col not in df.columns:
+    if name not in ['IsUpDay', 'MACD', 'ConsecutiveGreenDays', 'BreakoutRetest', 'Breakout', 'OBVHighN', 'PreEventWeakness', 'PostEventVIXDecline', 'IntraydayESDecline', 'MarketBreadthStrong', 'VWAPReclaim', 'FedDovishSurprise', 'PostEventRally', 'PostEventTime'] and on_col and on_col not in df.columns:
         logging.error(f"Input column '{on_col}' not found for indicator {name}")
         df[out_col] = np.nan
         return df
     
-    if name not in ['IsUpDay', 'MACD', 'ConsecutiveGreenDays', 'BreakoutRetest', 'OBVHighN', 'PreEventWeakness', 'PostEventVIXDecline', 'IntraydayESDecline', 'MarketBreadthStrong', 'VWAPReclaim', 'FedDovishSurprise', 'PostEventRally', 'PostEventTime'] and on_col and df[on_col].isna().all():
+    if name not in ['IsUpDay', 'MACD', 'ConsecutiveGreenDays', 'BreakoutRetest', 'Breakout', 'OBVHighN', 'PreEventWeakness', 'PostEventVIXDecline', 'IntraydayESDecline', 'MarketBreadthStrong', 'VWAPReclaim', 'FedDovishSurprise', 'PostEventRally', 'PostEventTime'] and on_col and df[on_col].isna().all():
         logging.error(f"Input column '{on_col}' is all NaN for indicator {name}")
         df[out_col] = np.nan
         return df
@@ -188,7 +188,7 @@ def calculate_indicator(df, indicator_config):
             decline_pct[valid_mask] = (df.loc[valid_mask, 'ES_close'] / df.loc[valid_mask, base_price_col] - 1) * 100
             
             df[out_col] = decline_pct <= threshold
-            df[out_col] = df[out_col].fillna(False)
+            df[out_col] = df[out_col].fillna(False).infer_objects(copy=False)
             
             logging.info(f"    ESDeclineFromTime threshold {threshold}%: {df[out_col].sum()} times met")
             
@@ -495,7 +495,7 @@ def calculate_indicator(df, indicator_config):
             daily_obv = df[obv_col].resample('D').last()
             rolling_max = daily_obv.rolling(window=window).max()
             is_new_high = daily_obv >= rolling_max
-            df[out_col] = is_new_high.reindex(df.index, method='ffill').fillna(False)
+            df[out_col] = is_new_high.reindex(df.index, method='ffill').fillna(False).infer_objects(copy=False)
 
         elif name == 'BreakoutRetest':
             # Breakout and retest logic based on user's specification
@@ -603,7 +603,51 @@ def calculate_indicator(df, indicator_config):
             retest_signals = retest_signals.fillna(False).astype(bool)
             
             # Reindex to intraday data
-            df[out_col] = retest_signals.reindex(df.index, method='ffill').fillna(False)
+            df[out_col] = retest_signals.reindex(df.index, method='ffill').fillna(False).infer_objects(copy=False)
+
+        elif name == 'Breakout':
+            # Simple breakout logic - immediate entry on breakout/breakdown
+            instrument = params.get('instrument', 'ES')
+            high_col = f"{instrument}_high"
+            low_col = f"{instrument}_low"
+            breakout_window = params.get('window', 20)
+            position_type = params.get('position_type', 'long')
+            
+            # Check if columns exist
+            if high_col not in df.columns or low_col not in df.columns:
+                logging.error(f"Required columns {high_col} or {low_col} not found!")
+                df[out_col] = False
+                return df
+            
+            # Calculate on daily data - drop NaN values to handle weekends/holidays
+            daily_high = df[high_col].resample('D').max().dropna()
+            daily_low = df[low_col].resample('D').min().dropna()
+            
+            logging.info(f"    Breakout Debug - Position type: {position_type}")
+            logging.info(f"    Breakout Debug - Daily data shape: {len(daily_high)} days")
+            
+            if position_type.lower() == 'long':
+                # Long breakout: Enter when current high > 20-day rolling high (not including today)
+                rolling_high = daily_high.rolling(window=breakout_window, min_periods=min(breakout_window, len(daily_high))).max().shift(1)
+                rolling_high_intraday = rolling_high.reindex(df.index, method='ffill')
+                breakout_signals = df[high_col] > rolling_high_intraday
+                
+            elif position_type.lower() == 'short':
+                # Short breakout: Enter when current low < 20-day rolling low (not including today)
+                rolling_low = daily_low.rolling(window=breakout_window, min_periods=min(breakout_window, len(daily_low))).min().shift(1)
+                rolling_low_intraday = rolling_low.reindex(df.index, method='ffill')
+                breakout_signals = df[low_col] < rolling_low_intraday
+                
+            else:
+                logging.error(f"Invalid position_type '{position_type}' for Breakout indicator")
+                df[out_col] = False
+                return df
+            
+            # Convert to boolean and reindex to original dataframe
+            breakout_signals = breakout_signals.fillna(False).astype(bool)
+            
+            # Reindex to intraday data
+            df[out_col] = breakout_signals.reindex(df.index, method='ffill').fillna(False).infer_objects(copy=False)
 
         # MACRO INDICATORS
         elif name == 'PostEventTime':
