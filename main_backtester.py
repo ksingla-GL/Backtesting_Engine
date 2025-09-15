@@ -140,6 +140,39 @@ def extract_entry_indicators(entry_row, strategy_config, param_name, param_value
     
     return result
 
+def extract_indicator_columns(entry_indicators_str):
+    """
+    Parse entry_indicators string and extract ALL numeric indicator values as separate columns.
+    Automatically detects and extracts any numeric values that look like indicators (not rule evaluations).
+    """
+    try:
+        import ast
+        indicators_dict = ast.literal_eval(entry_indicators_str)
+        extracted = {}
+
+        # Skip non-indicator keys (rule evaluations, conditions, etc.)
+        skip_keys = {
+            'entry_signal_final', 'sum_conditions_met', 'sum_conditions_passed',
+            'sum_threshold', 'parse_error'
+        }
+
+        # Extract all numeric values that appear to be indicators
+        for key, value in indicators_dict.items():
+            # Skip rule evaluations (contain parentheses and boolean results)
+            if isinstance(key, str) and ('rule_' in key or 'cond_' in key or key in skip_keys):
+                continue
+
+            # Extract numeric indicator values
+            if isinstance(value, (int, float)) and not pd.isna(value):
+                # Skip threshold parameters but keep actual indicator values
+                if not key.endswith('_threshold'):
+                    extracted[key] = value
+
+        return extracted
+    except Exception as e:
+        logging.warning(f"Failed to extract indicator columns: {e}")
+        return {}
+
 def calculate_multiperiod_returns(trade_log, df_with_signals, position_type='long'):
     """
     Calculate 1, 3, 5, and 10-day holding period returns for each trade.
@@ -745,7 +778,24 @@ def main():
                 
                 trade_log['entry_indicators'] = trade_log.apply(get_entry_indicators, axis=1)
                 logging.info(f"Added entry indicators column. Sample: {trade_log['entry_indicators'].iloc[0][:100]}...")
-                
+
+                # Extract indicator values as separate columns
+                logging.info("Extracting indicator values as separate columns...")
+                def add_indicator_columns(row):
+                    indicators = extract_indicator_columns(row['entry_indicators'])
+                    for key, value in indicators.items():
+                        row[key] = value
+                    return row
+
+                trade_log = trade_log.apply(add_indicator_columns, axis=1)
+
+                # Log dynamically detected indicator columns
+                original_cols = {'entry_time', 'exit_time', 'entry_price', 'exit_price', 'pnl_pct', 'exit_reason',
+                               'position_size', 'entry_index', 'exit_reason_desc', 'position_type',
+                               'return_1d', 'return_3d', 'return_5d', 'return_10d', 'entry_indicators', param_name}
+                new_indicator_cols = [col for col in trade_log.columns if col not in original_cols]
+                logging.info(f"Added {len(new_indicator_cols)} separate indicator columns: {new_indicator_cols}")
+
                 # Add parameter info and collect trade log for comprehensive analysis
                 trade_log[param_name] = value
                 all_trade_logs.append(trade_log.copy())
